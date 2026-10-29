@@ -50,17 +50,17 @@
   .avatar svg{width:29px;height:29px;transform:translateY(4px);}
 
   /* ============ LANES (3 BARIS) ============ */
-  main{position:absolute;top:76px;bottom:88px;left:0;right:0;z-index:4;
-    display:flex;flex-direction:column;justify-content:space-evenly;gap:6px;
+  main{position:absolute;top:66px;bottom:70px;left:0;right:0;z-index:4;
+    display:flex;flex-direction:column;justify-content:space-evenly;gap:2px;
     overflow-y:auto;scrollbar-width:none;}
   main::-webkit-scrollbar{display:none;}
-  .lane{display:flex;flex-direction:column;gap:6px;}
+  .lane{display:flex;flex-direction:column;gap:3px;}
   .lane-head{padding:0 70px;display:flex;align-items:baseline;gap:12px;}
-  .lane-head h2{font-size:12px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.85);}
-  .lane-head h2::before{content:"";display:inline-block;width:16px;height:3px;border-radius:2px;
-    background:var(--yellow);margin-right:10px;vertical-align:middle;}
-  .lane-head em{font-style:normal;font-size:10px;color:var(--muted);letter-spacing:.06em;}
-  .row{display:flex;gap:22px;overflow-x:auto;padding:24px 70px;width:100%;
+  .lane-head h2{font-size:11.5px;font-weight:800;letter-spacing:.20em;text-transform:uppercase;color:rgba(255,255,255,.85);}
+  .lane-head h2::before{content:"";display:inline-block;width:14px;height:3px;border-radius:2px;
+    background:var(--yellow);margin-right:8px;vertical-align:middle;}
+  .lane-head em{font-style:normal;font-size:9.5px;color:var(--muted);letter-spacing:.05em;}
+  .row{display:flex;gap:20px;overflow-x:auto;padding:14px 70px;width:100%;
     align-items:center;scroll-snap-type:x proximity;scrollbar-width:none;}
   .row::-webkit-scrollbar{display:none;}
   .item{position:relative;flex:0 0 auto;scroll-snap-align:center;
@@ -69,24 +69,24 @@
   .item.pulse{box-shadow:0 0 0 3px rgba(246,197,21,.9), 0 24px 60px rgba(0,0,0,.5) !important;}
 
   /* --- Baris 1 : Sumber / Input --- */
-  .src{width:272px;height:148px;border-radius:20px;padding:18px 22px;color:var(--txt);
+  .src{width:254px;height:128px;border-radius:18px;padding:14px 18px;color:var(--txt);
     display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;
     background:linear-gradient(150deg,var(--glass-1),var(--glass-2) 55%,rgba(255,255,255,.02));
     border:1px solid rgba(255,255,255,.13);
     backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
     box-shadow:0 16px 38px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.12);}
   .src:hover{transform:translateY(-6px);border-color:rgba(255,255,255,.25);}
-  .src h3{font-size:19px;font-weight:700;}
-  .src .count{font-size:12.5px;font-weight:600;opacity:.92;}
-  .src .stat{margin-top:4px;font-size:10px;color:var(--muted);display:flex;align-items:center;gap:6px;}
+  .src h3{font-size:17.5px;font-weight:700;}
+  .src .count{font-size:11.5px;font-weight:600;opacity:.92;}
+  .src .stat{margin-top:2px;font-size:9.5px;color:var(--muted);display:flex;align-items:center;gap:6px;}
   .dot{width:6px;height:6px;border-radius:50%;background:#42d77d;box-shadow:0 0 8px #42d77d;}
   .dot.off{background:rgba(255,255,255,.25);box-shadow:none;}
-  .src-icon{position:absolute;right:22px;top:50%;transform:translateY(-50%);width:66px;height:66px;
+  .src-icon{position:absolute;right:18px;top:50%;transform:translateY(-50%);width:56px;height:56px;
     filter:drop-shadow(0 6px 14px rgba(0,0,0,.35));}
   .src-icon svg{width:100%;height:100%;}
-  .tab{position:absolute;top:-12px;left:50%;transform:translateX(-50%) scale(.5);width:80px;height:18px;
+  .tab{position:absolute;top:-10px;left:50%;transform:translateX(-50%) scale(.5);width:74px;height:16px;
     border-radius:8px;background:var(--yellow);opacity:0;transition:.4s cubic-bezier(.22,1,.36,1);}
-  .src.focus{transform:rotate(-4deg) translateY(-10px) scale(1.05);z-index:2;
+  .src.focus{transform:rotate(-4deg) translateY(-8px) scale(1.05);z-index:2;
     background:linear-gradient(155deg,var(--teal-1),var(--teal-2) 45%,var(--teal-3));
     border-color:rgba(255,255,255,.28);
     box-shadow:0 28px 66px rgba(0,0,0,.55), 0 0 46px rgba(64,190,185,.18), inset 0 1px 0 rgba(255,255,255,.3);}
@@ -95,28 +95,33 @@
   @keyframes glow{0%,100%{box-shadow:0 0 22px rgba(246,197,21,.45);}50%{box-shadow:0 0 44px rgba(246,197,21,.85);}}
 
   /* --- Baris 2 : Aplikasi --- */
-  .app{display:flex;flex-direction:column;align-items:center;gap:9px;width:104px;}
-  .thumb{width:104px;height:104px;border-radius:26px;overflow:hidden;display:grid;place-items:center;
-    border:1px solid rgba(255,255,255,.1);box-shadow:0 14px 30px rgba(0,0,0,.5);transition:inherit;}
+  .app{display:flex;flex-direction:column;align-items:center;gap:7px;width:92px;}
+  .thumb{width:92px;height:92px;border-radius:22px;overflow:hidden;display:grid;place-items:center;
+    border:1px solid rgba(255,255,255,.1);box-shadow:0 12px 26px rgba(0,0,0,.5);transition:inherit;}
   .thumb svg{width:100%;height:100%;display:block;}
-  .app-name{font-size:11px;font-weight:600;color:var(--muted);transition:.3s;white-space:nowrap;}
+  .app-name{font-size:10.5px;font-weight:600;color:var(--muted);transition:.3s;white-space:nowrap;}
   .app:hover .thumb{transform:translateY(-5px);}
-  .app.focus{transform:translateY(-8px) scale(1.12);z-index:2;}
-  .app.focus .thumb{box-shadow:0 0 0 3px var(--yellow), 0 0 40px rgba(246,197,21,.35), 0 22px 44px rgba(0,0,0,.6);}
+  .app.focus{transform:translateY(-6px) scale(1.10);z-index:2;}
+  .app.focus .thumb{box-shadow:0 0 0 3px var(--yellow), 0 0 35px rgba(246,197,21,.35), 0 20px 40px rgba(0,0,0,.6);}
   .app.focus .app-name{color:var(--yellow);}
   .thumb.add{background:rgba(255,255,255,.05);border:1.5px dashed rgba(255,255,255,.28);
-    backdrop-filter:blur(12px);color:rgba(255,255,255,.6);font-size:34px;font-weight:300;}
+    backdrop-filter:blur(12px);color:rgba(255,255,255,.6);font-size:30px;font-weight:300;}
 
   /* --- Baris 3 : Pengaturan cepat --- */
-  .set{display:flex;align-items:center;gap:14px;width:288px;padding:14px 16px;border-radius:18px;color:var(--txt);
+  .set{display:flex;align-items:center;gap:12px;width:264px;padding:11px 14px;border-radius:16px;color:var(--txt);
     background:linear-gradient(150deg,rgba(255,255,255,.1),rgba(255,255,255,.03));
     border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(14px);
-    box-shadow:0 12px 28px rgba(0,0,0,.4);}
-  .set:hover{transform:translateY(-4px);}
-  .s-ico{width:42px;height:42px;flex:0 0 auto;border-radius:12px;background:rgba(255,255,255,.08);
+    box-shadow:0 10px 24px rgba(0,0,0,.4);}
+  .set:hover{transform:translateY(-3px);}
+  .s-ico{width:36px;height:36px;flex:0 0 auto;border-radius:10px;background:rgba(255,255,255,.08);
     border:1px solid rgba(255,255,255,.08);display:grid;place-items:center;transition:.35s;}
-  .s-ico svg{width:20px;height:20px;}
-  .s-txt b{display:block;font-size:13.5px;font-weight:700;}
+  .s-ico svg{width:18px;height:18px;}
+  .s-txt b{display:block;font-size:12.5px;font-weight:700;}
+  .s-txt span{font-size:9.5px;color:var(--muted);}
+  .set.focus{transform:scale(1.04);border-color:rgba(246,197,21,.65);z-index:2;
+    background:linear-gradient(150deg,rgba(246,197,21,.16),rgba(255,255,255,.04));
+    box-shadow:0 0 0 2px rgba(246,197,21,.55), 0 16px 36px rgba(0,0,0,.5);}
+  .set.focus .s-ico{background:var(--yellow);color:#151006;border-color:transparent;}
   .s-txt span{font-size:10.5px;color:var(--muted);}
   .set.focus{transform:scale(1.04);border-color:rgba(246,197,21,.65);z-index:2;
     background:linear-gradient(150deg,rgba(246,197,21,.16),rgba(255,255,255,.04));
@@ -291,10 +296,10 @@
   <div class="status">
     <div class="time" id="clock">12:51 <small>am</small></div>
     <div class="divider"></div>
-    <div class="place"><b>Los Angeles</b><span>Humidity: 87%</span></div>
+    <div class="place"><b>Indonesia</b><span>Zona WIB</span></div>
     <div class="weather">
       <svg viewBox="0 0 64 64"><circle cx="24" cy="18" r="9" fill="#f6c515"/><path transform="translate(8,10) scale(2.2)" d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" fill="#fff" opacity=".92"/></svg>
-      <span class="temp">24°</span>
+      <span class="temp">28°</span>
     </div>
   </div>
 </footer>
