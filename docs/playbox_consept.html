@@ -77,16 +77,16 @@
   .avatar svg{width:24px;height:24px;transform:translateY(2px);}
 
   /* ============ LANES (3 BARIS) ============ */
-  main{position:absolute;top:94px;bottom:52px;left:0;right:0;z-index:4;
+  main{position:absolute;top:88px;bottom:66px;left:0;right:0;z-index:4;
     display:flex;flex-direction:column;justify-content:space-evenly;
     overflow-y:hidden;overflow-x:hidden;}
   .lane{display:flex;flex-direction:column;gap:1px;}
-  .lane-head{padding:0 50px;display:flex;align-items:baseline;gap:8px;}
+  .lane-head{padding:0 44px;display:flex;align-items:baseline;gap:8px;}
   .lane-head h2{font-size:9.5px;font-weight:800;letter-spacing:.20em;text-transform:uppercase;color:rgba(255,255,255,.85);}
   .lane-head h2::before{content:"";display:inline-block;width:10px;height:3px;border-radius:2px;
     background:var(--yellow);margin-right:6px;vertical-align:middle;}
   .lane-head em{font-style:normal;font-size:8px;color:var(--muted);letter-spacing:.05em;}
-  .row{display:flex;gap:14px;overflow-x:auto;padding:2px 50px;width:100%;
+  .row{display:flex;gap:12px;overflow-x:auto;padding:2px 44px;width:100%;
     align-items:center;scroll-snap-type:x proximity;scrollbar-width:none;}
   .row::-webkit-scrollbar{display:none;}
   .item{position:relative;flex:0 0 auto;scroll-snap-align:center;
@@ -95,22 +95,22 @@
   .item.pulse{box-shadow:0 0 0 3px rgba(246,197,21,.9), 0 24px 60px rgba(0,0,0,.5) !important;}
 
   /* --- Baris 1 : Sumber / Input --- */
-  .src{width:205px;height:95px;border-radius:14px;padding:9px 12px;color:var(--txt);
+  .src{width:188px;height:84px;border-radius:13px;padding:8px 11px;color:var(--txt);
     display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;
     background:linear-gradient(150deg,var(--glass-1),var(--glass-2) 55%,rgba(255,255,255,.02));
     border:1px solid rgba(255,255,255,.13);
     backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
     box-shadow:0 12px 28px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.12);}
   .src:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.25);}
-  .src h3{font-size:14px;font-weight:700;}
-  .src .count{font-size:10px;font-weight:600;opacity:.92;}
-  .src .stat{margin-top:1px;font-size:8px;color:var(--muted);display:flex;align-items:center;gap:4px;}
+  .src h3{font-size:13.5px;font-weight:700;}
+  .src .count{font-size:9.5px;font-weight:600;opacity:.92;}
+  .src .stat{margin-top:1px;font-size:7.5px;color:var(--muted);display:flex;align-items:center;gap:4px;}
   .dot{width:5px;height:5px;border-radius:50%;background:#42d77d;box-shadow:0 0 8px #42d77d;}
   .dot.off{background:rgba(255,255,255,.25);box-shadow:none;}
-  .src-icon{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:40px;height:40px;
+  .src-icon{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:36px;height:36px;
     filter:drop-shadow(0 6px 14px rgba(0,0,0,.35));}
   .src-icon svg{width:100%;height:100%;}
-  .tab{position:absolute;top:-7px;left:50%;transform:translateX(-50%) scale(.5);width:58px;height:12px;
+  .tab{position:absolute;top:-7px;left:50%;transform:translateX(-50%) scale(.5);width:54px;height:12px;
     border-radius:6px;background:var(--yellow);opacity:0;transition:.4s cubic-bezier(.22,1,.36,1);}
   .src.focus{transform:rotate(-4deg) translateY(-4px) scale(1.05);z-index:2;
     background:linear-gradient(155deg,var(--teal-1),var(--teal-2) 45%,var(--teal-3));
@@ -121,48 +121,48 @@
   @keyframes glow{0%,100%{box-shadow:0 0 18px rgba(246,197,21,.45);}50%{box-shadow:0 0 36px rgba(246,197,21,.85);}}
 
   /* --- Baris 2 : Aplikasi --- */
-  .app{display:flex;flex-direction:column;align-items:center;gap:4px;width:70px;}
-  .thumb{width:68px;height:68px;border-radius:16px;overflow:hidden;display:grid;place-items:center;
+  .app{display:flex;flex-direction:column;align-items:center;gap:3px;width:66px;}
+  .thumb{width:62px;height:62px;border-radius:15px;overflow:hidden;display:grid;place-items:center;
     border:1px solid rgba(255,255,255,.1);box-shadow:0 8px 18px rgba(0,0,0,.5);transition:inherit;}
   .thumb svg{width:100%;height:100%;display:block;}
-  .app-name{font-size:9px;font-weight:600;color:var(--muted);transition:.3s;white-space:nowrap;}
+  .app-name{font-size:8.5px;font-weight:600;color:var(--muted);transition:.3s;white-space:nowrap;}
   .app:hover .thumb{transform:translateY(-3px);}
   .app.focus{transform:translateY(-3px) scale(1.08);z-index:2;}
   .app.focus .thumb{box-shadow:0 0 0 3px var(--yellow), 0 0 24px rgba(246,197,21,.35), 0 14px 28px rgba(0,0,0,.6);}
   .app.focus .app-name{color:var(--yellow);}
 
   /* --- Baris 3 : Pengaturan cepat --- */
-  .set{display:flex;align-items:center;gap:8px;width:195px;padding:6px 9px;border-radius:11px;color:var(--txt);
+  .set{display:flex;align-items:center;gap:8px;width:182px;height:34px;padding:4px 8px;border-radius:10px;color:var(--txt);
     background:linear-gradient(150deg,rgba(255,255,255,.1),rgba(255,255,255,.03));
     border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(14px);
     box-shadow:0 6px 16px rgba(0,0,0,.4);}
   .set:hover{transform:translateY(-2px);}
-  .s-ico{width:24px;height:24px;flex:0 0 auto;border-radius:7px;background:rgba(255,255,255,.08);
+  .s-ico{width:22px;height:22px;flex:0 0 auto;border-radius:6px;background:rgba(255,255,255,.08);
     border:1px solid rgba(255,255,255,.08);display:grid;place-items:center;transition:.35s;}
-  .s-ico svg{width:13px;height:13px;}
-  .s-txt b{display:block;font-size:9.5px;font-weight:700;}
-  .s-txt span{font-size:7.5px;color:var(--muted);}
+  .s-ico svg{width:12px;height:12px;}
+  .s-txt b{display:block;font-size:9px;font-weight:700;}
+  .s-txt span{font-size:7px;color:var(--muted);}
   .set.focus{transform:scale(1.04);border-color:rgba(246,197,21,.65);z-index:2;
     background:linear-gradient(150deg,rgba(246,197,21,.16),rgba(255,255,255,.04));
     box-shadow:0 0 0 2px rgba(246,197,21,.55), 0 12px 24px rgba(0,0,0,.5);}
   .set.focus .s-ico{background:var(--yellow);color:#151006;border-color:transparent;}
 
   /* ============ FOOTER ============ */
-  footer{position:absolute;left:0;right:0;bottom:0;z-index:6;padding:10px 50px;
+  footer{position:absolute;left:0;right:0;bottom:0;z-index:6;padding:8px 44px;
     display:flex;justify-content:space-between;align-items:center;color:var(--txt);}
-  .shift{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:600;}
-  .shift .ico{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.08);
+  .shift{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;}
+  .shift .ico{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.08);
     border:1px solid rgba(255,255,255,.1);display:grid;place-items:center;}
-  .shift .ico svg{width:16px;height:16px;}
-  .status{display:flex;align-items:center;gap:14px;}
-  .time{font-size:18px;font-weight:800;letter-spacing:.5px;}
-  .time small{font-size:10px;font-weight:600;opacity:.6;margin-left:3px;}
-  .divider{width:1px;height:34px;background:rgba(255,255,255,.16);}
-  .place b{display:block;font-size:15px;font-weight:700;}
-  .place span{font-size:10px;color:var(--muted);}
+  .shift .ico svg{width:14px;height:14px;}
+  .status{display:flex;align-items:center;gap:12px;}
+  .time{font-size:16px;font-weight:800;letter-spacing:.5px;}
+  .time small{font-size:9.5px;font-weight:600;opacity:.6;margin-left:3px;}
+  .divider{width:1px;height:26px;background:rgba(255,255,255,.16);}
+  .place b{display:block;font-size:13px;font-weight:700;}
+  .place span{font-size:9px;color:var(--muted);}
   .weather{display:flex;align-items:center;gap:8px;}
-  .weather svg{width:36px;height:36px;}
-  .temp{font-size:13px;font-weight:600;opacity:.85;}
+  .weather svg{width:32px;height:32px;}
+  .temp{font-size:12px;font-weight:600;opacity:.85;}
 
   /* ============ TOAST & HINT ============ */
   .toast{position:fixed;left:50%;bottom:104px;transform:translate(-50%,16px);z-index:9;
