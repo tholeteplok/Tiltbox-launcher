@@ -244,10 +244,10 @@
     </div>
   </section>
 
-  <!-- ===== BARIS 2 : APLIKASI TERPASANG ===== -->
-  <section class="lane">
+  <!-- ===== BARIS 2 : APLIKASI TERPASANG (MAX 9 + SEMUA APLIKASI 9-DOT GRID) ===== -->
+  <section class="lane" id="appsLane">
     <div class="lane-head"><h2>Aplikasi Terpasang</h2><em>Streaming &amp; Hiburan</em></div>
-    <div class="row">
+    <div class="row" id="appsRow">
       <button class="item app" data-name="YouTube" data-action="app" data-pkg="com.google.android.youtube.tv">
         <span class="thumb"><svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#f00"/><path d="M19 15v18l16-9z" fill="#fff"/></svg></span>
         <span class="app-name">YouTube</span>
@@ -271,6 +271,25 @@
       <button class="item app" data-name="Play Store" data-action="app" data-pkg="com.android.vending">
         <span class="thumb"><svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#141a21"/><path d="M13 11v26l14-13z" fill="#00d6ff"/><path d="M27 24L33.5 30.2 13 11z" fill="#00f076"/><path d="M27 24l4.2-2.7 5.2 3c1 .6 1 1.7 0 2.2l-5.2 3.1L27 24z" fill="#ffc107"/><path d="M13 37l14-13 6.5 6.2L14.8 38.6c-.9.5-1.8.1-1.8-1.6z" fill="#ff3d00"/></svg></span>
         <span class="app-name">Play Store</span>
+      </button>
+      <button class="item app" data-name="Semua Aplikasi" data-action="apps">
+        <span class="thumb" style="border-color:rgba(246,197,21,.35);background:rgba(255,255,255,.05);">
+          <svg viewBox="0 0 48 48">
+            <rect width="48" height="48" rx="14" fill="rgba(255,255,255,.06)"/>
+            <g fill="#f6c515">
+              <circle cx="16" cy="16" r="3.2"/>
+              <circle cx="24" cy="16" r="3.2"/>
+              <circle cx="32" cy="16" r="3.2"/>
+              <circle cx="16" cy="24" r="3.2"/>
+              <circle cx="24" cy="24" r="3.2"/>
+              <circle cx="32" cy="24" r="3.2"/>
+              <circle cx="16" cy="32" r="3.2"/>
+              <circle cx="24" cy="32" r="3.2"/>
+              <circle cx="32" cy="32" r="3.2"/>
+            </g>
+          </svg>
+        </span>
+        <span class="app-name" style="color:var(--yellow);font-weight:700;">Semua Aplikasi</span>
       </button>
     </div>
   </section>
@@ -324,13 +343,52 @@
 <div class="toast" id="toast"><span class="t-dot"></span><span id="toastMsg"></span></div>
 
 <script>
+  const KNOWN_APP_ICONS = {
+    'com.google.android.youtube.tv': '<rect width="48" height="48" fill="#f00"/><path d="M19 15v18l16-9z" fill="#fff"/>',
+    'com.spotify.tv.android': '<rect width="48" height="48" fill="#1db954"/><g fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round"><path d="M13 18c8-2.2 16-1.6 22 1.4"/><path d="M14.5 24.5c6.6-1.8 12.6-1.3 17.6 1.1"/><path d="M16 30.5c5-1.3 9.4-.9 13.2 1"/></g>',
+    'id.visionplus.android.atv': '<rect width="48" height="48" fill="#002b49"/><text x="24" y="32" text-anchor="middle" font-family="Manrope,sans-serif" font-size="20" font-weight="900" fill="#00d6ff">V+</text>',
+    'com.mxtech.videoplayer.ad': '<rect width="48" height="48" fill="#0078d7"/><text x="24" y="30" text-anchor="middle" font-family="Manrope,sans-serif" font-size="16" font-weight="800" fill="#fff">MX</text>',
+    'com.lonelycatgames.Xplore': '<rect width="48" height="48" fill="#f59e0b"/><path d="M12 16h8l4 4h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V18a2 2 0 0 1 2-2z" fill="#fff"/>',
+    'com.android.vending': '<rect width="48" height="48" fill="#141a21"/><path d="M13 11v26l14-13z" fill="#00d6ff"/><path d="M27 24L33.5 30.2 13 11z" fill="#00f076"/><path d="M27 24l4.2-2.7 5.2 3c1 .6 1 1.7 0 2.2l-5.2 3.1L27 24z" fill="#ffc107"/><path d="M13 37l14-13 6.5 6.2L14.8 38.6c-.9.5-1.8.1-1.8-1.6z" fill="#ff3d00"/>',
+    'com.netflix.ninja': '<rect width="48" height="48" fill="#0b0b0b"/><text x="24" y="34" text-anchor="middle" font-family="Manrope,sans-serif" font-size="27" font-weight="800" fill="#e50914">N</text>',
+    'com.kmk.video.tcl': '<rect width="48" height="48" fill="#e52d27"/><path d="M17 14l16 10-16 10V14z" fill="#fff"/>',
+    'com.android.gallery3d': '<rect width="48" height="48" fill="#0284c7"/><circle cx="20" cy="18" r="5" fill="#f6c515"/><polygon points="10,38 22,24 32,34 38,28 44,38" fill="#fff"/>'
+  };
+
+  const ALL_APPS_GRID_SVG = `
+    <rect width="48" height="48" rx="14" fill="rgba(255,255,255,.06)"/>
+    <g fill="#f6c515">
+      <circle cx="16" cy="16" r="3.2"/>
+      <circle cx="24" cy="16" r="3.2"/>
+      <circle cx="32" cy="16" r="3.2"/>
+      <circle cx="16" cy="24" r="3.2"/>
+      <circle cx="24" cy="24" r="3.2"/>
+      <circle cx="32" cy="24" r="3.2"/>
+      <circle cx="16" cy="32" r="3.2"/>
+      <circle cx="24" cy="32" r="3.2"/>
+      <circle cx="32" cy="32" r="3.2"/>
+    </g>
+  `;
+
   /* ===== Navigasi 2D ala remote TV ===== */
-  const headerItems = [...document.querySelectorAll('header .item')];
-  const laneRows = [...document.querySelectorAll('main .lane')].map(l => [...l.querySelectorAll('.item')]);
-  const lanes = [headerItems, ...laneRows];
-  const cols = lanes.map(() => 0);
+  let lanes = [];
+  let cols = [];
   let r = 1, toastTimer; // default pada Baris 1 (Live TV's)
   const mainEl = document.querySelector('main');
+
+  function rebindNav() {
+    const headerItems = [...document.querySelectorAll('header .item')];
+    const laneRows = [...document.querySelectorAll('main .lane')].map(l => [...l.querySelectorAll('.item')]);
+    lanes = [headerItems, ...laneRows];
+    cols = lanes.map(() => 0);
+
+    lanes.forEach((lane, rI) => lane.forEach((el, cI) => {
+      el.onclick = () => { focusItem(rI, cI); select(el); };
+      el.onmouseenter = () => focusItem(rI, cI, false);
+    }));
+
+    focusItem(1, 0, false);
+  }
 
   function focusItem(rI, cI, scroll = true){
     r = Math.max(0, Math.min(lanes.length - 1, rI));
@@ -339,23 +397,83 @@
     cols[r] = c;
     document.querySelectorAll('.item.focus').forEach(el => el.classList.remove('focus'));
     const el = lane[c];
-    el.classList.add('focus');
+    if (el) el.classList.add('focus');
 
-    if (scroll) {
+    if (scroll && el) {
       if (r <= 1) {
-        // Kembali ke atas: pastikan main selalu reset ke scrollTop 0 agar tidak terpotong header
+        // Reset penuh ke scrollTop 0 agar kartu Sumber & Input tidak pernah terpotong header
         if (mainEl) mainEl.scrollTo({ top: 0, behavior: 'smooth' });
-        // Scroll horizontal saja untuk kartu dalam row
         el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
       } else if (r === 2) {
-        // Baris 2 Aplikasi Terpasang
         el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
       } else if (r >= 3) {
-        // Baris 3 Pengaturan Cepat
         if (mainEl) mainEl.scrollTo({ top: mainEl.scrollHeight, behavior: 'smooth' });
         el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
       }
     }
+  }
+
+  /* ===== Render Aplikasi Terpasang Dinamis (Maks 9 + Semua Aplikasi Grid) ===== */
+  function renderInstalledApps() {
+    let appList = [];
+    if (window.TiltboxBridge && window.TiltboxBridge.getInstalledApps) {
+      try {
+        const raw = window.TiltboxBridge.getInstalledApps();
+        if (raw) appList = JSON.parse(raw);
+      } catch(e) {
+        console.error("Error parsing apps", e);
+      }
+    }
+
+    if (!appList || appList.length === 0) {
+      appList = [
+        { packageName: 'com.google.android.youtube.tv', name: 'YouTube' },
+        { packageName: 'com.spotify.tv.android', name: 'Spotify' },
+        { packageName: 'id.visionplus.android.atv', name: 'Vision+' },
+        { packageName: 'com.mxtech.videoplayer.ad', name: 'MX Player' },
+        { packageName: 'com.lonelycatgames.Xplore', name: 'X-plore' },
+        { packageName: 'com.android.vending', name: 'Play Store' }
+      ];
+    }
+
+    // Maksimal 9 aplikasi terlihat
+    const maxVisibleApps = appList.slice(0, 9);
+    const rowEl = document.getElementById('appsRow');
+    if (!rowEl) return;
+
+    let html = '';
+    maxVisibleApps.forEach(app => {
+      let iconSvg = KNOWN_APP_ICONS[app.packageName];
+      let innerContent = '';
+      if (iconSvg) {
+        innerContent = `<svg viewBox="0 0 48 48">${iconSvg}</svg>`;
+      } else if (app.icon && app.icon.startsWith('data:image')) {
+        innerContent = `<img src="${app.icon}" style="width:100%;height:100%;object-fit:cover;border-radius:24px;" />`;
+      } else {
+        const initial = (app.name || 'A').charAt(0).toUpperCase();
+        innerContent = `<svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#1e293b"/><text x="24" y="32" text-anchor="middle" font-family="Manrope,sans-serif" font-size="20" font-weight="800" fill="#f6c515">${initial}</text></svg>`;
+      }
+
+      html += `
+        <button class="item app" data-name="${app.name}" data-action="app" data-pkg="${app.packageName}">
+          <span class="thumb">${innerContent}</span>
+          <span class="app-name">${app.name}</span>
+        </button>
+      `;
+    });
+
+    // 1 tombol "Semua Aplikasi" di ujung dengan ikon 9-dot grid
+    html += `
+      <button class="item app" data-name="Semua Aplikasi" data-action="apps">
+        <span class="thumb" style="border-color:rgba(246,197,21,.35);background:rgba(255,255,255,.05);">
+          <svg viewBox="0 0 48 48">${ALL_APPS_GRID_SVG}</svg>
+        </span>
+        <span class="app-name" style="color:var(--yellow);font-weight:700;">Semua Aplikasi</span>
+      </button>
+    `;
+
+    rowEl.innerHTML = html;
+    rebindNav();
   }
 
   function select(el){
@@ -468,12 +586,8 @@
     else if(e.key === 'Enter' || e.key === ' '){ select(lanes[r][cols[r]]); e.preventDefault(); }
   });
 
-  lanes.forEach((lane, rI) => lane.forEach((el, cI) => {
-    el.addEventListener('click', () => { focusItem(rI, cI); select(el); });
-    el.addEventListener('mouseenter', () => focusItem(rI, cI, false));
-  }));
-
-  focusItem(1, 0, false);
+  rebindNav();
+  renderInstalledApps();
 
   /* ===== Jam real-time ===== */
   function tick(){

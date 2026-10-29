@@ -6,12 +6,18 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
 import android.speech.RecognizerIntent
+import android.util.Base64
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
@@ -27,6 +33,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.ByteArrayOutputStream
 
 class MainActivity : AppCompatActivity() {
 
@@ -384,24 +391,66 @@ class MainActivity : AppCompatActivity() {
             val pm = context.packageManager
 
             try {
-                val tvIntent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LEANBACK_LAUNCHER)
-                val appList = pm.queryIntentActivities(tvIntent, 0)
+                val intentLeanback = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LEANBACK_LAUNCHER)
+                val intentStandard = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
 
-                for (info in appList) {
-                    val pkgName = info.activityInfo.packageName
-                    if (pkgName == context.packageName) continue
+                val seenPackages = mutableSetOf<String>()
+                seenPackages.add(context.packageName)
+                seenPackages.add("com.amazon.tv.leanbacklauncher")
+                seenPackages.add("com.spocky.projengmenu")
+                seenPackages.add("com.tcl.initsetup")
+                seenPackages.add("com.tcl.rc.ota")
+                seenPackages.add("com.tcl.tcl_bt_rcu_service")
+                seenPackages.add("com.tcl.framework.custom")
+                seenPackages.add("com.tcl.tv") // Sudah ada di Baris 1
 
-                    val appObj = JSONObject().apply {
-                        put("packageName", pkgName)
-                        put("name", info.loadLabel(pm).toString())
+                val allResolveInfos = mutableListOf<ResolveInfo>()
+                allResolveInfos.addAll(pm.queryIntentActivities(intentLeanback, 0))
+                allResolveInfos.addAll(pm.queryIntentActivities(intentStandard, 0))
+
+                for (info in allResolveInfos) {
+                    val pkg = info.activityInfo.packageName
+                    if (seenPackages.contains(pkg)) continue
+                    seenPackages.add(pkg)
+
+                    val label = info.loadLabel(pm).toString()
+                    val icon = info.loadIcon(pm)
+                    val base64Icon = drawableToBase64(icon)
+
+                    val obj = JSONObject().apply {
+                        put("packageName", pkg)
+                        put("name", label)
+                        put("icon", base64Icon)
                     }
-                    jsonArray.put(appObj)
+                    jsonArray.put(obj)
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Gagal membaca aplikasi terinstal", e)
             }
 
             return jsonArray.toString()
+        }
+
+        private fun drawableToBase64(drawable: Drawable): String {
+            return try {
+                val bitmap = if (drawable is BitmapDrawable && drawable.bitmap != null) {
+                    drawable.bitmap
+                } else {
+                    val w = if (drawable.intrinsicWidth > 0) Math.min(drawable.intrinsicWidth, 128) else 96
+                    val h = if (drawable.intrinsicHeight > 0) Math.min(drawable.intrinsicHeight, 128) else 96
+                    val bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+                    val canvas = Canvas(bmp)
+                    drawable.setBounds(0, 0, canvas.width, canvas.height)
+                    drawable.draw(canvas)
+                    bmp
+                }
+                val stream = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.PNG, 85, stream)
+                val byteArray = stream.toByteArray()
+                "data:image/png;base64," + Base64.encodeToString(byteArray, Base64.NO_WRAP)
+            } catch (e: Exception) {
+                ""
+            }
         }
     }
 }
