@@ -7,6 +7,9 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: Build Android TV APK
@@ -35,3 +38,19 @@ jobs:
           name: TiltboxLauncher-debug
           path: app/build/outputs/apk/debug/*.apk
           retention-days: 14
+
+      - name: Create or Update GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/main'
+        with:
+          tag_name: v1.63-debug
+          name: "Tiltbox Launcher v1.63 (Debug Build)"
+          body: |
+            ### 📺 Tiltbox Launcher APK
+            - Signature focus tilt: **-3.2°**
+            - Pure debloated build (zero Firebase/Google Services bloat)
+            - Indonesian translation included
+            - Ready for Android TV / TCL TV
+          files: app/build/outputs/apk/debug/*.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
