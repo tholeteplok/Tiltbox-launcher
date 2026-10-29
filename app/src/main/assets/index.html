@@ -78,6 +78,7 @@
   main{position:absolute;top:154px;bottom:64px;left:0;right:0;z-index:4;
     display:flex;flex-direction:column;gap:28px;
     overflow-y:auto;scroll-behavior:smooth;scrollbar-width:none;
+    scroll-padding-top:60px;
     padding-bottom:32px;}
   main::-webkit-scrollbar{display:none;}
   .lane{display:flex;flex-direction:column;gap:12px;flex-shrink:0;}
@@ -92,7 +93,7 @@
     align-items:center;scroll-snap-type:x proximity;scrollbar-width:none;
     margin-top:-14px;margin-bottom:-6px;}
   .row::-webkit-scrollbar{display:none;}
-  .item{position:relative;flex:0 0 auto;scroll-snap-align:center;
+  .item{position:relative;flex:0 0 auto;scroll-snap-align:center;scroll-margin-top:50px;
     transition:transform .4s cubic-bezier(.22,1,.36,1), background .4s, box-shadow .4s, border-color .4s;}
   .item:focus{outline:none;}
   .item.pulse{box-shadow:0 0 0 3px rgba(246,197,21,.9), 0 24px 60px rgba(0,0,0,.5) !important;}
@@ -329,6 +330,7 @@
   const lanes = [headerItems, ...laneRows];
   const cols = lanes.map(() => 0);
   let r = 1, toastTimer; // default pada Baris 1 (Live TV's)
+  const mainEl = document.querySelector('main');
 
   function focusItem(rI, cI, scroll = true){
     r = Math.max(0, Math.min(lanes.length - 1, rI));
@@ -338,7 +340,22 @@
     document.querySelectorAll('.item.focus').forEach(el => el.classList.remove('focus'));
     const el = lane[c];
     el.classList.add('focus');
-    if(scroll) el.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+
+    if (scroll) {
+      if (r <= 1) {
+        // Kembali ke atas: pastikan main selalu reset ke scrollTop 0 agar tidak terpotong header
+        if (mainEl) mainEl.scrollTo({ top: 0, behavior: 'smooth' });
+        // Scroll horizontal saja untuk kartu dalam row
+        el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      } else if (r === 2) {
+        // Baris 2 Aplikasi Terpasang
+        el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      } else if (r >= 3) {
+        // Baris 3 Pengaturan Cepat
+        if (mainEl) mainEl.scrollTo({ top: mainEl.scrollHeight, behavior: 'smooth' });
+        el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+    }
   }
 
   function select(el){
