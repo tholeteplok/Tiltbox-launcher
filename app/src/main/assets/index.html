@@ -36,57 +36,59 @@
   .vignette{position:absolute;inset:0;background:radial-gradient(120% 95% at 50% 40%, transparent 42%, rgba(0,0,0,.6) 100%);}
 
   /* ============ HEADER ============ */
-  header{position:absolute;top:0;left:0;right:0;z-index:6;padding:10px 40px 2px;
+  header{position:absolute;top:0;left:0;right:0;z-index:6;padding:22px 50px 8px;
     display:flex !important;flex-direction:row !important;justify-content:space-between !important;align-items:flex-start !important;}
   
-  .header-left{display:flex;flex-direction:column;gap:4px;align-items:flex-start;}
+  .header-left{display:flex;flex-direction:column;gap:8px;align-items:flex-start;}
 
-  /* Tiltbox rata kiri dengan text besar 2x (36px di 540p tvdpi) */
-  .logo{font-size:36px;font-weight:800;letter-spacing:-1px;line-height:1;color:var(--txt);user-select:none;text-align:left;}
+  /* Tiltbox rata kiri dengan text besar 2x (48px) */
+  .logo{font-size:48px;font-weight:800;letter-spacing:-1.2px;line-height:1;color:var(--txt);user-select:none;text-align:left;}
   .logo span{color:var(--yellow);} 
-  .logo sup{font-size:11px;color:var(--muted);vertical-align:super;margin-left:2px;}
+  .logo sup{font-size:15px;color:var(--muted);vertical-align:super;margin-left:2px;}
 
   /* Search bar manual & voice input dibawahnya */
-  .search-container{display:flex;align-items:center;gap:6px;margin-top:1px;}
+  .search-container{display:flex;align-items:center;gap:10px;margin-top:2px;}
   
-  .search-bar{display:flex;align-items:center;gap:6px;width:250px;height:28px;padding:0 10px;
-    border-radius:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  .search-bar{display:flex;align-items:center;gap:10px;width:320px;height:36px;padding:0 14px;
+    border-radius:18px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
     backdrop-filter:blur(14px);color:#fff;cursor:pointer;
     transition:all .3s cubic-bezier(.22,1,.36,1);}
   .search-bar:hover, .search-bar.focus{border-color:var(--yellow);background:rgba(255,255,255,.14);
     box-shadow:0 0 0 2px rgba(246,197,21,.5), 0 8px 24px rgba(0,0,0,.4);transform:scale(1.02);}
-  .search-bar svg{width:13px;height:13px;stroke:var(--muted);transition:.3s;flex-shrink:0;}
+  .search-bar svg{width:16px;height:16px;stroke:var(--muted);transition:.3s;flex-shrink:0;}
   .search-bar:hover svg, .search-bar.focus svg{stroke:var(--yellow);}
-  .search-input{background:none;border:none;outline:none;color:#fff;font-size:10px;width:100%;font-weight:500;}
+  .search-input{background:none;border:none;outline:none;color:#fff;font-size:11.5px;width:100%;font-weight:500;}
   .search-input::placeholder{color:var(--muted);opacity:.85;}
 
-  .voice-btn{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.07);
+  .voice-btn{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.07);
     border:1px solid rgba(255,255,255,.12);display:grid;place-items:center;cursor:pointer;
     backdrop-filter:blur(14px);transition:all .3s cubic-bezier(.22,1,.36,1);color:#fff;}
   .voice-btn:hover, .voice-btn.focus{background:var(--yellow);border-color:transparent;color:#151006;
     box-shadow:0 0 24px rgba(246,197,21,.65);transform:scale(1.08);}
-  .voice-btn svg{width:13px;height:13px;}
+  .voice-btn svg{width:17px;height:17px;}
 
-  .header-right{display:flex;align-items:center;gap:8px;padding-top:2px;}
-  .ctrl{width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.09);
+  .header-right{display:flex;align-items:center;gap:12px;padding-top:4px;}
+  .ctrl{width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.09);
     background:rgba(255,255,255,.07);display:grid;place-items:center;transition:.3s;color:#fff;}
   .ctrl:hover, .ctrl.focus{background:rgba(255,255,255,.18);transform:scale(1.05);border-color:rgba(255,255,255,.3);}
-  .ctrl svg{width:15px;height:15px;transition:.4s;}
+  .ctrl svg{width:20px;height:20px;transition:.4s;}
   .ctrl.gear:hover svg, .ctrl.gear.focus svg{transform:rotate(60deg);}
-  .avatar{background:radial-gradient(circle at 35% 28%, #ff6b5e, #a9241d 75%);overflow:hidden;}
-  .avatar svg{width:20px;height:20px;transform:translateY(2px);}
 
   /* ============ LANES (3 BARIS) ============ */
-  main{position:absolute;top:72px;bottom:42px;left:0;right:0;z-index:4;
-    display:flex;flex-direction:column;justify-content:space-evenly;
-    overflow-y:hidden;overflow-x:hidden;}
-  .lane{display:flex;flex-direction:column;gap:1px;}
-  .lane-head{padding:0 38px;display:flex;align-items:baseline;gap:6px;}
-  .lane-head h2{font-size:8.5px;font-weight:800;letter-spacing:.20em;text-transform:uppercase;color:rgba(255,255,255,.85);}
-  .lane-head h2::before{content:"";display:inline-block;width:8px;height:2.5px;border-radius:2px;
-    background:var(--yellow);margin-right:5px;vertical-align:middle;}
-  .lane-head em{font-style:normal;font-size:7.5px;color:var(--muted);letter-spacing:.05em;}
-  .row{display:flex;gap:10px;overflow-x:auto;padding:2px 38px;width:100%;
+  main{position:absolute;top:122px;bottom:64px;left:0;right:0;z-index:4;
+    display:flex;flex-direction:column;gap:26px;
+    overflow-y:auto;scroll-behavior:smooth;scrollbar-width:none;
+    padding-bottom:32px;}
+  main::-webkit-scrollbar{display:none;}
+  .lane{display:flex;flex-direction:column;gap:10px;flex-shrink:0;}
+  .lane-head{padding:0 50px;display:flex;align-items:baseline;gap:10px;}
+  .lane-head h2{font-size:12px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.85);}
+  .lane-head h2::before{content:"";display:inline-block;width:14px;height:3px;border-radius:2px;
+    background:var(--yellow);margin-right:8px;vertical-align:middle;}
+  .lane-head em{font-style:normal;font-size:10px;color:var(--muted);letter-spacing:.06em;}
+  
+  /* Baris container dengan ruang lega agar kartu miring (-4°) tidak terpotong */
+  .row{display:flex;gap:20px;overflow-x:auto;padding:16px 50px 16px;width:100%;
     align-items:center;scroll-snap-type:x proximity;scrollbar-width:none;}
   .row::-webkit-scrollbar{display:none;}
   .item{position:relative;flex:0 0 auto;scroll-snap-align:center;
@@ -94,75 +96,76 @@
   .item:focus{outline:none;}
   .item.pulse{box-shadow:0 0 0 3px rgba(246,197,21,.9), 0 24px 60px rgba(0,0,0,.5) !important;}
 
-  /* --- Baris 1 : Sumber / Input --- */
-  .src{width:165px;height:74px;border-radius:12px;padding:7px 10px;color:var(--txt);
+  /* --- Baris 1 : Sumber / Input (KARTU BESAR 16:9 & TIDAK TERPOTONG SAAT MIRING) --- */
+  .src{width:260px;height:142px;border-radius:18px;padding:16px 20px;color:var(--txt);
     display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;
     background:linear-gradient(150deg,var(--glass-1),var(--glass-2) 55%,rgba(255,255,255,.02));
     border:1px solid rgba(255,255,255,.13);
     backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-    box-shadow:0 10px 24px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.12);}
-  .src:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.25);}
-  .src h3{font-size:12px;font-weight:700;}
-  .src .count{font-size:8.5px;font-weight:600;opacity:.92;}
-  .src .stat{margin-top:1px;font-size:7px;color:var(--muted);display:flex;align-items:center;gap:3px;}
-  .dot{width:4px;height:4px;border-radius:50%;background:#42d77d;box-shadow:0 0 6px #42d77d;}
+    box-shadow:0 16px 36px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.12);}
+  .src:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.25);}
+  .src h3{font-size:18px;font-weight:700;}
+  .src .count{font-size:12px;font-weight:600;opacity:.92;}
+  .src .stat{margin-top:3px;font-size:9.5px;color:var(--muted);display:flex;align-items:center;gap:5px;}
+  .dot{width:6px;height:6px;border-radius:50%;background:#42d77d;box-shadow:0 0 8px #42d77d;}
   .dot.off{background:rgba(255,255,255,.25);box-shadow:none;}
-  .src-icon{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:32px;height:32px;
+  .src-icon{position:absolute;right:18px;top:50%;transform:translateY(-50%);width:58px;height:58px;
     filter:drop-shadow(0 6px 14px rgba(0,0,0,.35));}
   .src-icon svg{width:100%;height:100%;}
-  .tab{position:absolute;top:-6px;left:50%;transform:translateX(-50%) scale(.5);width:48px;height:10px;
-    border-radius:5px;background:var(--yellow);opacity:0;transition:.4s cubic-bezier(.22,1,.36,1);}
-  .src.focus{transform:rotate(-4deg) translateY(-3px) scale(1.05);z-index:2;
+  .tab{position:absolute;top:-11px;left:50%;transform:translateX(-50%) scale(.5);width:76px;height:16px;
+    border-radius:8px;background:var(--yellow);opacity:0;transition:.4s cubic-bezier(.22,1,.36,1);}
+  .src.focus{transform:rotate(-4deg) translateY(-8px) scale(1.05);z-index:2;
     background:linear-gradient(155deg,var(--teal-1),var(--teal-2) 45%,var(--teal-3));
     border-color:rgba(255,255,255,.28);
-    box-shadow:0 16px 36px rgba(0,0,0,.55), 0 0 30px rgba(64,190,185,.18), inset 0 1px 0 rgba(255,255,255,.3);}
+    box-shadow:0 28px 64px rgba(0,0,0,.55), 0 0 44px rgba(64,190,185,.18), inset 0 1px 0 rgba(255,255,255,.3);}
   .src.focus .tab{opacity:1;transform:translateX(-50%) scale(1);
-    box-shadow:0 0 22px rgba(246,197,21,.6);animation:glow 2.6s ease-in-out infinite;}
-  @keyframes glow{0%,100%{box-shadow:0 0 16px rgba(246,197,21,.45);}50%{box-shadow:0 0 32px rgba(246,197,21,.85);}}
+    box-shadow:0 0 28px rgba(246,197,21,.6);animation:glow 2.6s ease-in-out infinite;}
+  @keyframes glow{0%,100%{box-shadow:0 0 18px rgba(246,197,21,.45);}50%{box-shadow:0 0 38px rgba(246,197,21,.85);}}
 
-  /* --- Baris 2 : Aplikasi --- */
-  .app{display:flex;flex-direction:column;align-items:center;gap:3px;width:58px;}
-  .thumb{width:54px;height:54px;border-radius:13px;overflow:hidden;display:grid;place-items:center;
-    border:1px solid rgba(255,255,255,.1);box-shadow:0 6px 14px rgba(0,0,0,.5);transition:inherit;}
+  /* --- Baris 2 : Aplikasi (KARTU BESAR SQUIRCLE) --- */
+  .app{display:flex;flex-direction:column;align-items:center;gap:8px;width:96px;}
+  .thumb{width:96px;height:96px;border-radius:24px;overflow:hidden;display:grid;place-items:center;
+    border:1px solid rgba(255,255,255,.1);box-shadow:0 12px 28px rgba(0,0,0,.5);transition:inherit;}
   .thumb svg{width:100%;height:100%;display:block;}
-  .app-name{font-size:7.5px;font-weight:600;color:var(--muted);transition:.3s;white-space:nowrap;}
-  .app:hover .thumb{transform:translateY(-2px);}
-  .app.focus{transform:translateY(-2px) scale(1.08);z-index:2;}
-  .app.focus .thumb{box-shadow:0 0 0 2.5px var(--yellow), 0 0 20px rgba(246,197,21,.35), 0 12px 24px rgba(0,0,0,.6);}
+  .app-name{font-size:11px;font-weight:600;color:var(--muted);transition:.3s;white-space:nowrap;}
+  .app:hover .thumb{transform:translateY(-3px);}
+  .app.focus{transform:translateY(-6px) scale(1.10);z-index:2;}
+  .app.focus .thumb{box-shadow:0 0 0 3px var(--yellow), 0 0 36px rgba(246,197,21,.35), 0 20px 40px rgba(0,0,0,.6);}
   .app.focus .app-name{color:var(--yellow);}
 
-  /* --- Baris 3 : Pengaturan cepat --- */
-  .set{display:flex;align-items:center;gap:6px;width:160px;height:30px;padding:3px 6px;border-radius:8px;color:var(--txt);
+  /* --- Baris 3 : Pengaturan cepat (LEGA DI BAWAH) --- */
+  .set{display:flex;align-items:center;gap:12px;width:260px;padding:12px 15px;border-radius:16px;color:var(--txt);
     background:linear-gradient(150deg,rgba(255,255,255,.1),rgba(255,255,255,.03));
     border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(14px);
-    box-shadow:0 5px 12px rgba(0,0,0,.4);}
+    box-shadow:0 10px 24px rgba(0,0,0,.4);}
   .set:hover{transform:translateY(-2px);}
-  .s-ico{width:20px;height:20px;flex:0 0 auto;border-radius:5px;background:rgba(255,255,255,.08);
+  .s-ico{width:36px;height:36px;flex:0 0 auto;border-radius:10px;background:rgba(255,255,255,.08);
     border:1px solid rgba(255,255,255,.08);display:grid;place-items:center;transition:.35s;}
-  .s-ico svg{width:11px;height:11px;}
-  .s-txt b{display:block;font-size:8px;font-weight:700;}
-  .s-txt span{font-size:6.5px;color:var(--muted);}
+  .s-ico svg{width:18px;height:18px;}
+  .s-txt b{display:block;font-size:12px;font-weight:700;}
+  .s-txt span{font-size:9.5px;color:var(--muted);}
   .set.focus{transform:scale(1.04);border-color:rgba(246,197,21,.65);z-index:2;
     background:linear-gradient(150deg,rgba(246,197,21,.16),rgba(255,255,255,.04));
-    box-shadow:0 0 0 2px rgba(246,197,21,.55), 0 10px 20px rgba(0,0,0,.5);}
+    box-shadow:0 0 0 2px rgba(246,197,21,.55), 0 16px 36px rgba(0,0,0,.5);}
   .set.focus .s-ico{background:var(--yellow);color:#151006;border-color:transparent;}
 
   /* ============ FOOTER ============ */
-  footer{position:absolute;left:0;right:0;bottom:0;z-index:6;padding:6px 38px;
-    display:flex;justify-content:space-between;align-items:center;color:var(--txt);}
-  .shift{display:flex;align-items:center;gap:6px;font-size:9.5px;font-weight:600;}
-  .shift .ico{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.08);
+  footer{position:absolute;left:0;right:0;bottom:0;z-index:6;padding:12px 50px;
+    display:flex;justify-content:space-between;align-items:center;color:var(--txt);
+    background:linear-gradient(180deg,transparent,rgba(5,7,8,.85) 45%,#050708);}
+  .shift{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:600;}
+  .shift .ico{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.08);
     border:1px solid rgba(255,255,255,.1);display:grid;place-items:center;}
-  .shift .ico svg{width:12px;height:12px;}
-  .status{display:flex;align-items:center;gap:10px;}
-  .time{font-size:14px;font-weight:800;letter-spacing:.5px;}
-  .time small{font-size:8px;font-weight:600;opacity:.6;margin-left:2px;}
-  .divider{width:1px;height:22px;background:rgba(255,255,255,.16);}
-  .place b{display:block;font-size:11px;font-weight:700;}
-  .place span{font-size:7.5px;color:var(--muted);}
-  .weather{display:flex;align-items:center;gap:6px;}
-  .weather svg{width:26px;height:26px;}
-  .temp{font-size:11px;font-weight:600;opacity:.85;}
+  .shift .ico svg{width:16px;height:16px;}
+  .status{display:flex;align-items:center;gap:14px;}
+  .time{font-size:18px;font-weight:800;letter-spacing:.5px;}
+  .time small{font-size:10px;font-weight:600;opacity:.6;margin-left:3px;}
+  .divider{width:1px;height:30px;background:rgba(255,255,255,.16);}
+  .place b{display:block;font-size:13.5px;font-weight:700;}
+  .place span{font-size:9.5px;color:var(--muted);}
+  .weather{display:flex;align-items:center;gap:8px;}
+  .weather svg{width:32px;height:32px;}
+  .temp{font-size:13px;font-weight:600;opacity:.85;}
 
   /* ============ TOAST & HINT ============ */
   .toast{position:fixed;left:50%;bottom:104px;transform:translate(-50%,16px);z-index:9;
@@ -203,9 +206,6 @@
     <button class="ctrl gear item" tabindex="0" title="Settings" data-name="Pengaturan TV" data-action="settings" onclick="if(window.TiltboxBridge) window.TiltboxBridge.launchSettings();">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     </button>
-    <button class="ctrl avatar" title="Profile">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4" fill="#40100d"/><path d="M4 22c1.6-5.4 5-7.5 8-7.5s6.4 2.1 8 7.5z" fill="#40100d"/></svg>
-    </button>
   </div>
 </header>
 
@@ -217,7 +217,7 @@
       <button class="item src" data-name="Live TV's" data-action="livetv">
         <span class="tab"></span><h3>Live TV's</h3>
         <div class="src-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="20" width="50" height="36" rx="9"/><path d="M24 20 18 9M40 20 46 9"/><polyline points="22,40 29,33 35,41 43,31" stroke="#f6c515"/></svg></div>
-        <div><p class="count">+48 Saluran</p><p class="stat"><span class="dot"></span>Siaran TV TCL aktif</p></div>
+        <div><p class="count">+48 Saluran</p><p class="stat"><span class="dot"></span>Siaran TV Digital</p></div>
       </button>
       <button class="item src" data-name="Media Player" data-action="media">
         <span class="tab"></span><h3>Media</h3>
@@ -275,27 +275,27 @@
 
   <!-- ===== BARIS 3 : PENGATURAN CEPAT ===== -->
   <section class="lane">
-    <div class="lane-head"><h2>Pengaturan Cepat</h2><em>Setelan Sistem &amp; Utilitas Hardware</em></div>
+    <div class="lane-head"><h2>Pengaturan Cepat</h2><em>Setelan &amp; Utilitas TV</em></div>
     <div class="row">
-      <button class="item set" data-name="RAM Guard RT41" data-action="boost">
+      <button class="item set" data-name="RAM Booster" data-action="boost">
         <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
-        <span class="s-txt"><b>RAM Guard RT41</b><span>Bersihkan memori background</span></span>
+        <span class="s-txt"><b>RAM Booster</b><span>Percepat TV &amp; bersihkan memori</span></span>
       </button>
       <button class="item set" data-name="Pengaturan TV" data-action="settings">
         <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
-        <span class="s-txt"><b>Pengaturan TV</b><span>Setelan sistem Android &amp; TV</span></span>
+        <span class="s-txt"><b>Pengaturan TV</b><span>Setelan sistem Android</span></span>
       </button>
       <button class="item set" data-name="Jaringan & Wi-Fi" data-action="wifi">
         <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg></span>
-        <span class="s-txt"><b>Jaringan &amp; Wi-Fi</b><span>Setelan koneksi LAN/Wi-Fi</span></span>
+        <span class="s-txt"><b>Jaringan &amp; Wi-Fi</b><span>Koneksi internet &amp; Wi-Fi</span></span>
       </button>
       <button class="item set" data-name="Kelola Aplikasi" data-action="apps">
         <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg></span>
-        <span class="s-txt"><b>Kelola Aplikasi</b><span>Izin &amp; info memori aplikasi</span></span>
+        <span class="s-txt"><b>Kelola Aplikasi</b><span>Daftar aplikasi terpasang</span></span>
       </button>
       <button class="item set" data-name="Gambar & Suara TCL" data-action="tcl_settings">
         <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></span>
-        <span class="s-txt"><b>Gambar &amp; Suara TCL</b><span>Mode preset TV+ OS V5.2.0</span></span>
+        <span class="s-txt"><b>Gambar &amp; Suara TCL</b><span>Preset TV</span></span>
       </button>
     </div>
   </section>
@@ -304,17 +304,17 @@
 <p class="hint" id="hint">↑ ↓ ← → navigasi &nbsp;•&nbsp; Enter pilih</p>
 
 <footer>
-  <div class="shift" onclick="if(window.TiltboxBridge) window.TiltboxBridge.boostRam();" style="cursor:pointer;" title="Bersihkan RAM RT41">
+  <div class="shift" onclick="boostRamAction();" style="cursor:pointer;" title="Percepat TV &amp; bersihkan memori">
     <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
-    RAM Guard
+    <span>RAM Booster: <b id="ramBoosterText" style="color:var(--yellow);font-weight:700;">450 MB Bebas</b></span>
   </div>
   <div class="status">
     <div class="time" id="clock">12:51 <small>am</small></div>
     <div class="divider"></div>
     <div class="place"><b>Indonesia</b><span>Zona WIB</span></div>
-    <div class="weather">
-      <svg viewBox="0 0 64 64"><circle cx="24" cy="18" r="9" fill="#f6c515"/><path transform="translate(8,10) scale(2.2)" d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" fill="#fff" opacity=".92"/></svg>
-      <span class="temp">28°</span>
+    <div class="weather" id="weatherWidget">
+      <svg id="weatherIcon" viewBox="0 0 64 64"><circle cx="24" cy="18" r="9" fill="#f6c515"/><path transform="translate(8,10) scale(2.2)" d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" fill="#fff" opacity=".92"/></svg>
+      <span class="temp" id="weatherTemp">28°</span>
     </div>
   </div>
 </footer>
@@ -379,10 +379,60 @@
       } else if (action === 'tcl_settings') {
         window.TiltboxBridge.launchTclPictureAudioSettings();
       } else if (action === 'boost') {
-        window.TiltboxBridge.boostRam();
+        boostRamAction();
       }
     }
   }
+
+  function boostRamAction() {
+    if (window.TiltboxBridge) {
+      window.TiltboxBridge.boostRam();
+      setTimeout(updateRamStatus, 1200);
+    }
+  }
+
+  /* ===== RAM Booster Dinamis Realtime ===== */
+  function updateRamStatus() {
+    if (window.TiltboxBridge && window.TiltboxBridge.getAvailableRam) {
+      const ramText = window.TiltboxBridge.getAvailableRam();
+      const el = document.getElementById('ramBoosterText');
+      if (el && ramText) el.textContent = ramText;
+    }
+  }
+  setInterval(updateRamStatus, 4000);
+  setTimeout(updateRamStatus, 800);
+
+  /* ===== Cuaca Dinamis Berfungsi Nyata ===== */
+  async function updateRealWeather() {
+    try {
+      const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=-6.2088&longitude=106.8456&current_weather=true');
+      if (res.ok) {
+        const data = await res.json();
+        const cur = data.current_weather;
+        if (cur && typeof cur.temperature === 'number') {
+          const tempC = Math.round(cur.temperature);
+          const tEl = document.getElementById('weatherTemp');
+          if (tEl) tEl.textContent = `${tempC}°`;
+          
+          const code = cur.weathercode;
+          const wIcon = document.getElementById('weatherIcon');
+          if (wIcon) {
+            if (code === 0) {
+              wIcon.innerHTML = `<circle cx="32" cy="32" r="14" fill="#f6c515"/>`;
+            } else if (code >= 1 && code <= 3) {
+              wIcon.innerHTML = `<circle cx="24" cy="20" r="9" fill="#f6c515"/><path transform="translate(8,12) scale(2)" d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" fill="#fff" opacity=".92"/>`;
+            } else if (code >= 51 && code <= 67 || code >= 80 && code <= 82) {
+              wIcon.innerHTML = `<path transform="translate(8,8) scale(1.8)" d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" fill="#a0c4ff"/><line x1="20" y1="46" x2="16" y2="56" stroke="#4dabf7" stroke-width="3"/><line x1="32" y1="46" x2="28" y2="56" stroke="#4dabf7" stroke-width="3"/>`;
+            }
+          }
+        }
+      }
+    } catch(e) {
+      console.log('Cuaca offline', e);
+    }
+  }
+  updateRealWeather();
+  setInterval(updateRealWeather, 1800000); // refresh tiap 30 menit
 
   window.handleDpad = function(dir) {
     if (dir === 'right') focusItem(r, cols[r] + 1);

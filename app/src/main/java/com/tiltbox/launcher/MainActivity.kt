@@ -332,7 +332,7 @@ class MainActivity : AppCompatActivity() {
                 am?.getMemoryInfo(mi)
                 val availMb = mi.availMem / (1024 * 1024)
                 val totalMb = mi.totalMem / (1024 * 1024)
-                val msg = "RAM Guard: Tersedia ${availMb} MB / ${totalMb} MB"
+                val msg = "RAM Booster: Tersedia ${availMb} MB / ${totalMb} MB"
 
                 Handler(Looper.getMainLooper()).post {
                     Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
@@ -341,6 +341,40 @@ class MainActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 Log.e(TAG, "Gagal membersihkan RAM", e)
                 "Gagal membersihkan RAM"
+            }
+        }
+
+        @JavascriptInterface
+        fun getAvailableRam(): String {
+            return try {
+                val am = context.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
+                val mi = ActivityManager.MemoryInfo()
+                am?.getMemoryInfo(mi)
+                val availMb = mi.availMem / (1024 * 1024)
+                "${availMb} MB Bebas"
+            } catch (e: Exception) {
+                "450 MB Bebas"
+            }
+        }
+
+        @JavascriptInterface
+        fun getRamDetails(): String {
+            return try {
+                val am = context.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
+                val mi = ActivityManager.MemoryInfo()
+                am?.getMemoryInfo(mi)
+                val availMb = mi.availMem / (1024 * 1024)
+                val totalMb = mi.totalMem / (1024 * 1024)
+                val pct = if (totalMb > 0) ((totalMb - availMb).toFloat() / totalMb * 100).toInt() else 60
+                val json = JSONObject().apply {
+                    put("availableMb", availMb)
+                    put("totalMb", totalMb)
+                    put("usedPercent", pct)
+                    put("display", "${availMb} MB Bebas")
+                }
+                json.toString()
+            } catch (e: Exception) {
+                "{\"availableMb\":450,\"totalMb\":1500,\"usedPercent\":65,\"display\":\"450 MB Bebas\"}"
             }
         }
 
