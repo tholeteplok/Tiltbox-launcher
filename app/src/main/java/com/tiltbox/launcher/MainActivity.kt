@@ -1,17 +1,15 @@
 package com.tiltbox.launcher
 
 import android.annotation.SuppressLint
+import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
-import android.util.Base64
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
@@ -23,10 +21,10 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.ByteArrayOutputStream
 
 class MainActivity : AppCompatActivity() {
 
@@ -118,8 +116,11 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
             KeyEvent.KEYCODE_BACK -> {
-                // Jangan biarkan tombol Back menutup Home Launcher
                 webView.evaluateJavascript("window.handleDpad('back');", null)
+                return true
+            }
+            KeyEvent.KEYCODE_PROG_RED, KeyEvent.KEYCODE_MENU -> {
+                webView.evaluateJavascript("if(window.TiltboxBridge) window.TiltboxBridge.boostRam();", null)
                 return true
             }
         }
@@ -154,14 +155,12 @@ class MainActivity : AppCompatActivity() {
         @JavascriptInterface
         fun launchLiveTv(): Boolean {
             return try {
-                // Coba intent TV Digital resmi TCL terlebih dahulu
                 val tclIntent = context.packageManager.getLaunchIntentForPackage("com.tcl.tv")
                 if (tclIntent != null) {
                     tclIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     context.startActivity(tclIntent)
                     return true
                 }
-                // Fallback: AOSP TV input
                 val tvIntent = Intent(Intent.ACTION_VIEW).apply {
                     setClassName("com.tcl.tv", "com.tcl.tv.TVActivity")
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -169,25 +168,41 @@ class MainActivity : AppCompatActivity() {
                 context.startActivity(tvIntent)
                 true
             } catch (e: Exception) {
-                Log.w(TAG, "Gagal meluncurkan TVActivity TCL, mencoba intent LiveChannels", e)
-                try {
-                    val fallback = context.packageManager.getLaunchIntentForPackage("com.google.android.tv")
-                    if (fallback != null) {
-                        fallback.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        context.startActivity(fallback)
-                        true
-                    } else false
-                } catch (e2: Exception) {
-                    false
+                Log.w(TAG, "Gagal meluncurkan TVActivity TCL", e)
+                false
+            }
+        }
+
+        @JavascriptInterface
+        fun launchMedia(): Boolean {
+            val pm = context.packageManager
+            val mediaPkgs = arrayOf("com.lonelycatgames.Xplore", "com.tcl.ui_mediaCenter", "com.tcl.videoplayer")
+            for (pkg in mediaPkgs) {
+                val intent = pm.getLaunchIntentForPackage(pkg)
+                if (intent != null) {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(intent)
+                    return true
                 }
             }
+            return false
         }
 
         @JavascriptInterface
         fun launchHdmi(port: String): Boolean {
             return try {
-                // Jalankan TV activity untuk input port atau setelan display
-                val intent = Intent(Intent.ACTION_VIEW).apply {
+                val pm = context.packageManager
+                val tclSources = arrayOf("com.tcl.tvinput", "com.tcl.sourcemananger", "com.tcl.tv")
+                for (pkg in tclSources) {
+                    val intent = pm.getLaunchIntentForPackage(pkg)
+                    if (intent != null) {
+                        intent.putExtra("input_source", port)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        context.startActivity(intent)
+                        return true
+                    }
+                }
+                val intent = Intent("android.media.tv.action.VIEW_INPUTS").apply {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
                 context.startActivity(intent)
@@ -213,6 +228,80 @@ class MainActivity : AppCompatActivity() {
         }
 
         @JavascriptInterface
+        fun launchWifiSettings(): Boolean {
+            return try {
+                val intent = Intent(Settings.ACTION_WIFI_SETTINGS).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                context.startActivity(intent)
+                true
+            } catch (e: Exception) {
+                launchSettings()
+            }
+        }
+
+        @JavascriptInterface
+        fun launchAppsSettings(): Boolean {
+            return try {
+                val intent = Intent(Settings.ACTION_APPLICATION_SETTINGS).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                context.startActivity(intent)
+                true
+            } catch (e: Exception) {
+                launchSettings()
+            }
+        }
+
+        @JavascriptInterface
+        fun launchTclPictureAudioSettings(): Boolean {
+            return try {
+                val intent = context.packageManager.getLaunchIntentForPackage("com.tcl.settings")
+                if (intent != null) {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(intent)
+                    true
+                } else {
+                    launchSettings()
+                }
+            } catch (e: Exception) {
+                launchSettings()
+            }
+        }
+
+        @JavascriptInterface
+        fun boostRam(): String {
+            return try {
+                val am = context.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
+                val pm = context.packageManager
+                val myPkg = context.packageName
+
+                if (am != null) {
+                    for (app in pm.getInstalledApplications(0)) {
+                        if (app.packageName != myPkg && !app.packageName.startsWith("com.android.systemui")) {
+                            am.killBackgroundProcesses(app.packageName)
+                        }
+                    }
+                }
+                System.gc()
+
+                val mi = ActivityManager.MemoryInfo()
+                am?.getMemoryInfo(mi)
+                val availMb = mi.availMem / (1024 * 1024)
+                val totalMb = mi.totalMem / (1024 * 1024)
+                val msg = "RAM Guard: Tersedia ${availMb} MB / ${totalMb} MB"
+
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+                }
+                msg
+            } catch (e: Exception) {
+                Log.e(TAG, "Gagal membersihkan RAM", e)
+                "Gagal membersihkan RAM"
+            }
+        }
+
+        @JavascriptInterface
         fun getInstalledApps(): String {
             val jsonArray = JSONArray()
             val pm = context.packageManager
@@ -223,7 +312,7 @@ class MainActivity : AppCompatActivity() {
 
                 for (info in appList) {
                     val pkgName = info.activityInfo.packageName
-                    if (pkgName == context.packageName) continue // Jangan tampilkan launcher itu sendiri
+                    if (pkgName == context.packageName) continue
 
                     val appObj = JSONObject().apply {
                         put("packageName", pkgName)

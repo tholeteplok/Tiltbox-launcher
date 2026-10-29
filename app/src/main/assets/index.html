@@ -186,27 +186,22 @@
         <div class="src-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="20" width="50" height="36" rx="9"/><path d="M24 20 18 9M40 20 46 9"/><polyline points="22,40 29,33 35,41 43,31" stroke="#f6c515"/></svg></div>
         <div><p class="count">+48 Saluran</p><p class="stat"><span class="dot"></span>Siaran TV TCL aktif</p></div>
       </button>
-      <button class="item src" data-name="Media Player" data-action="app" data-pkg="com.lonelycatgames.Xplore">
+      <button class="item src" data-name="Media Player" data-action="media">
         <span class="tab"></span><h3>Media</h3>
         <div class="src-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20a6 6 0 0 1 6-6h10l6 6h18a6 6 0 0 1 6 6v20a6 6 0 0 1-6 6H14a6 6 0 0 1-6-6z"/><path d="M28 30l12 7-12 7z" stroke="#f6c515"/></svg></div>
         <div><p class="count">USB &amp; File Lokal</p><p class="stat"><span class="dot"></span>Penyimpanan lokal</p></div>
       </button>
-      <button class="item src" data-name="HDMI 1" data-action="hdmi">
+      <button class="item src" data-name="HDMI 1" data-action="hdmi" data-port="HDMI1">
         <span class="tab"></span><h3>HDMI 1</h3>
         <div class="src-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 22h44v12l-6 6H16l-6-6z"/><path d="M20 28v6M28 28v6M36 28v6M44 28v6" stroke="#f6c515"/><path d="M32 40v10"/></svg></div>
         <div><p class="count">Input HDMI 1</p><p class="stat"><span class="dot"></span>Terhubung</p></div>
       </button>
-      <button class="item src" data-name="HDMI 2" data-action="hdmi">
+      <button class="item src" data-name="HDMI 2" data-action="hdmi" data-port="HDMI2">
         <span class="tab"></span><h3>HDMI 2</h3>
         <div class="src-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 22h44v12l-6 6H16l-6-6z"/><path d="M20 28v6M28 28v6M36 28v6M44 28v6" stroke="#f6c515"/><path d="M32 40v10"/></svg></div>
         <div><p class="count">Input HDMI 2</p><p class="stat"><span class="dot off"></span>Standby</p></div>
       </button>
-      <button class="item src" data-name="HDMI 3" data-action="hdmi">
-        <span class="tab"></span><h3>HDMI 3</h3>
-        <div class="src-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 22h44v12l-6 6H16l-6-6z"/><path d="M20 28v6M28 28v6M36 28v6M44 28v6"/><path d="M32 40v10"/></svg></div>
-        <div><p class="count">Input HDMI 3</p><p class="stat"><span class="dot off"></span>Port kosong</p></div>
-      </button>
-      <button class="item src" data-name="Screen Cast" data-action="app" data-pkg="com.google.android.apps.mediashell">
+      <button class="item src" data-name="Screen Cast" data-action="cast">
         <span class="tab"></span><h3>Cast</h3>
         <div class="src-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="14" width="48" height="34" rx="6"/><path d="M14 42a10 10 0 0 1 10 10M14 34a18 18 0 0 1 18 18" stroke="#f6c515"/><circle cx="15" cy="47" r="2.5" fill="#f6c515" stroke="none"/></svg></div>
         <div><p class="count">Google Cast</p><p class="stat"><span class="dot"></span>Siap menerima</p></div>
@@ -222,17 +217,13 @@
         <span class="thumb"><svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#f00"/><path d="M19 15v18l16-9z" fill="#fff"/></svg></span>
         <span class="app-name">YouTube</span>
       </button>
-      <button class="item app" data-name="Netflix" data-action="app" data-pkg="com.netflix.ninja">
-        <span class="thumb"><svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#0b0b0b"/><text x="24" y="34" text-anchor="middle" font-family="Manrope,sans-serif" font-size="27" font-weight="800" fill="#e50914">N</text></svg></span>
-        <span class="app-name">Netflix</span>
-      </button>
       <button class="item app" data-name="Spotify" data-action="app" data-pkg="com.spotify.tv.android">
         <span class="thumb"><svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#1db954"/><g fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round"><path d="M13 18c8-2.2 16-1.6 22 1.4"/><path d="M14.5 24.5c6.6-1.8 12.6-1.3 17.6 1.1"/><path d="M16 30.5c5-1.3 9.4-.9 13.2 1"/></g></svg></span>
         <span class="app-name">Spotify</span>
       </button>
-      <button class="item app" data-name="Vidio" data-action="app" data-pkg="com.kmk.video.tcl">
-        <span class="thumb"><svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#e52d27"/><path d="M17 14l16 10-16 10V14z" fill="#fff"/></svg></span>
-        <span class="app-name">Vidio</span>
+      <button class="item app" data-name="Vision+" data-action="app" data-pkg="id.visionplus.android.atv">
+        <span class="thumb"><svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#002b49"/><text x="24" y="32" text-anchor="middle" font-family="Manrope,sans-serif" font-size="20" font-weight="900" fill="#00d6ff">V+</text></svg></span>
+        <span class="app-name">Vision+</span>
       </button>
       <button class="item app" data-name="MX Player" data-action="app" data-pkg="com.mxtech.videoplayer.ad">
         <span class="thumb"><svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#0078d7"/><text x="24" y="30" text-anchor="middle" font-family="Manrope,sans-serif" font-size="16" font-weight="800" fill="#fff">MX</text></svg></span>
@@ -242,7 +233,7 @@
         <span class="thumb"><svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#f59e0b"/><path d="M12 16h8l4 4h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V18a2 2 0 0 1 2-2z" fill="#fff"/></svg></span>
         <span class="app-name">X-plore</span>
       </button>
-      <button class="item app" data-name="Toko Aplikasi" data-action="app" data-pkg="com.android.vending">
+      <button class="item app" data-name="Play Store" data-action="app" data-pkg="com.android.vending">
         <span class="thumb"><svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#141a21"/><path d="M13 11v26l14-13z" fill="#00d6ff"/><path d="M27 24L33.5 30.2 13 11z" fill="#00f076"/><path d="M27 24l4.2-2.7 5.2 3c1 .6 1 1.7 0 2.2l-5.2 3.1L27 24z" fill="#ffc107"/><path d="M13 37l14-13 6.5 6.2L14.8 38.6c-.9.5-1.8.1-1.8-1.6z" fill="#ff3d00"/></svg></span>
         <span class="app-name">Play Store</span>
       </button>
@@ -251,31 +242,27 @@
 
   <!-- ===== BARIS 3 : PENGATURAN CEPAT ===== -->
   <section class="lane">
-    <div class="lane-head"><h2>Pengaturan Cepat</h2><em>Setelan &amp; Utilitas</em></div>
+    <div class="lane-head"><h2>Pengaturan Cepat</h2><em>Setelan Sistem &amp; Utilitas Hardware</em></div>
     <div class="row">
+      <button class="item set" data-name="RAM Guard RT41" data-action="boost">
+        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
+        <span class="s-txt"><b>RAM Guard RT41</b><span>Bersihkan memori background</span></span>
+      </button>
       <button class="item set" data-name="Pengaturan TV" data-action="settings">
-        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
-        <span class="s-txt"><b>Pengaturan TV</b><span>Setelan sistem TCL &amp; Display</span></span>
+        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
+        <span class="s-txt"><b>Pengaturan TV</b><span>Setelan sistem Android &amp; TV</span></span>
       </button>
-      <button class="item set" data-name="Jaringan & Wi-Fi" data-action="settings">
+      <button class="item set" data-name="Jaringan & Wi-Fi" data-action="wifi">
         <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg></span>
-        <span class="s-txt"><b>Jaringan &amp; Wi-Fi</b><span>Ethernet LAN Terhubung</span></span>
+        <span class="s-txt"><b>Jaringan &amp; Wi-Fi</b><span>Setelan koneksi LAN/Wi-Fi</span></span>
       </button>
-      <button class="item set" data-name="Kategori Kustom" data-action="settings">
-        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg></span>
-        <span class="s-txt"><b>Kategori Kustom</b><span>Kelola grup &amp; genre konten</span></span>
+      <button class="item set" data-name="Kelola Aplikasi" data-action="apps">
+        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg></span>
+        <span class="s-txt"><b>Kelola Aplikasi</b><span>Izin &amp; info memori aplikasi</span></span>
       </button>
-      <button class="item set" data-name="Urutan Launcher" data-action="settings">
-        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16m0 0l-3-3m3 3l3-3M17 20V4m0 0l-3 3m3-3l3 3"/></svg></span>
-        <span class="s-txt"><b>Urutan Launcher</b><span>Atur posisi baris &amp; aplikasi</span></span>
-      </button>
-      <button class="item set" data-name="Channel Favorit" data-action="settings">
-        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l2.7 5.8 6.3.8-4.6 4.3 1.2 6.1-5.6-3-5.6 3 1.2-6.1L3 9.6l6.3-.8z"/></svg></span>
-        <span class="s-txt"><b>Channel Favorit</b><span>12 channel tersimpan</span></span>
-      </button>
-      <button class="item set" data-name="Tema & Wallpaper" data-action="settings">
-        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></svg></span>
-        <span class="s-txt"><b>Tema &amp; Wallpaper</b><span>Glass Dark (bawaan)</span></span>
+      <button class="item set" data-name="Gambar & Suara TCL" data-action="tcl_settings">
+        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></span>
+        <span class="s-txt"><b>Gambar &amp; Suara TCL</b><span>Mode preset TV+ OS V5.2.0</span></span>
       </button>
     </div>
   </section>
@@ -284,9 +271,9 @@
 <p class="hint" id="hint">↑ ↓ ← → navigasi &nbsp;•&nbsp; Enter pilih</p>
 
 <footer>
-  <div class="shift">
-    <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg></span>
-    Timeshift
+  <div class="shift" onclick="if(window.TiltboxBridge) window.TiltboxBridge.boostRam();" style="cursor:pointer;" title="Bersihkan RAM RT41">
+    <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
+    RAM Guard
   </div>
   <div class="status">
     <div class="time" id="clock">12:51 <small>am</small></div>
@@ -331,14 +318,27 @@
     if (window.TiltboxBridge) {
       const action = el.dataset.action;
       const pkg = el.dataset.pkg;
+      const port = el.dataset.port || el.dataset.name;
       if (action === 'livetv') {
         window.TiltboxBridge.launchLiveTv();
+      } else if (action === 'media') {
+        window.TiltboxBridge.launchMedia();
+      } else if (action === 'hdmi') {
+        window.TiltboxBridge.launchHdmi(port);
+      } else if (action === 'cast') {
+        window.TiltboxBridge.launchApp('com.google.android.apps.mediashell');
       } else if (action === 'app' && pkg) {
         window.TiltboxBridge.launchApp(pkg);
       } else if (action === 'settings') {
         window.TiltboxBridge.launchSettings();
-      } else if (action === 'hdmi') {
-        window.TiltboxBridge.launchHdmi(el.dataset.name || 'HDMI');
+      } else if (action === 'wifi') {
+        window.TiltboxBridge.launchWifiSettings();
+      } else if (action === 'apps') {
+        window.TiltboxBridge.launchAppsSettings();
+      } else if (action === 'tcl_settings') {
+        window.TiltboxBridge.launchTclPictureAudioSettings();
+      } else if (action === 'boost') {
+        window.TiltboxBridge.boostRam();
       }
     }
   }
