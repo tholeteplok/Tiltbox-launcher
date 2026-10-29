@@ -53,9 +53,10 @@ class MainActivity : AppCompatActivity() {
                 allowContentAccess = true
                 loadWithOverviewMode = true
                 useWideViewPort = true
-                cacheMode = WebSettings.LOAD_DEFAULT
+                cacheMode = WebSettings.LOAD_NO_CACHE
                 mediaPlaybackRequiresUserGesture = false
             }
+            clearCache(true)
 
             webChromeClient = WebChromeClient()
             webViewClient = object : WebViewClient() {
