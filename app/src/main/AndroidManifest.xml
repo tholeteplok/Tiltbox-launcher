@@ -1,196 +1,40 @@
-<?xml version="1.0" encoding="utf-8" standalone="no"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-feature
-        android:name="android.software.leanback"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.touchscreen"
-        android:required="false" />
+    <uses-feature android:name="android.software.leanback" android:required="false" />
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission
-        android:name="android.permission.ACCESS_NOTIFICATIONS"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission
-        android:name="android.permission.BIND_APPWIDGET"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
-    <uses-permission
-        android:name="android.permission.CHANGE_COMPONENT_ENABLED_STATE"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.GET_PACKAGE_SIZE" />
-    <uses-permission
-        android:name="android.permission.INTERACT_ACROSS_USERS"
-        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission
-        android:name="android.permission.MEDIA_CONTENT_CONTROL"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission
-        android:name="android.permission.PACKAGE_USAGE_STATS"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-    <uses-permission android:name="android.permission.SET_WALLPAPER_HINTS" />
-    <uses-permission android:name="android.permission.SET_WALLPAPER" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission
-        android:name="android.permission.WRITE_SECURE_SETTINGS"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission
-        android:name="android.permission.WRITE_SETTINGS"
-        tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="com.amazon.tv.leanbacklauncher.recommendations.permission.RECOMMENDATIONS" />
-    <uses-permission android:name="com.android.providers.tv.permission.READ_EPG_DATA" />
-    <uses-permission android:name="com.android.providers.tv.permission.WRITE_EPG_DATA" />
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-
-    <permission android:name="com.amazon.tv.leanbacklauncher.permission.MIGRATE_RECOMMENDATIONS_DATA" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
 
     <application
-        android:name="com.amazon.tv.leanbacklauncher.LauncherApp"
         android:allowBackup="true"
-        android:banner="@drawable/banner_leanback"
-        android:hardwareAccelerated="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:networkSecurityConfig="@xml/net_security"
-        android:requestLegacyExternalStorage="true"
-        android:requiredForAllUsers="true"
+        android:banner="@drawable/banner"
         android:supportsRtl="true"
-        android:theme="@style/LeanbackLauncherTheme"
-        tools:targetApi="n">
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-        <meta-data
-            android:name="com.amazon.tv.leanbacklauncher.LauncherGlideModule"
-            android:value="GlideModule" />
+        android:theme="@style/Theme.Tiltbox"
+        android:hardwareAccelerated="true">
 
         <activity
-            android:name="com.amazon.tv.leanbacklauncher.MainActivity"
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
             android:clearTaskOnLaunch="true"
-            android:configChanges="keyboard|keyboardHidden|navigation|orientation"
-            android:excludeFromRecents="true"
-            android:label="@string/app_label"
-            android:launchMode="singleInstance"
             android:stateNotNeeded="true"
-            android:theme="@style/AppCompatFullScreenTheme"
-            android:exported="true">
-            <intent-filter android:priority="999">
-                <action android:name="android.intent.action.MAIN" />
+            android:screenOrientation="landscape"
+            android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|screenLayout|smallestScreenSize|uiMode">
 
+            <!-- Official Android TV Leanback Launcher Categories -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="fireos.intent.category.MAIN_HOME" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name="com.amazon.tv.leanbacklauncher.settings.LegacyHomeScreenSettingsActivity"
-            android:configChanges="keyboard|keyboardHidden|navigation"
-            android:enabled="@bool/full_screen_settings_enabled"
-            android:excludeFromRecents="true"
-            android:theme="@style/Theme.Settings.Legacy"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.amazon.tv.leanbacklauncher.SETTINGS" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name="com.amazon.tv.leanbacklauncher.settings.SettingsActivity"
-            android:enabled="@bool/side_panel_settings_enabled"
-            android:excludeFromRecents="true"
-            android:icon="@drawable/ic_settings_launcher"
-            android:label="@string/launcher_settings"
-            android:theme="@style/Theme.Settings.SidePanel"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.amazon.tv.leanbacklauncher.SETTINGS" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".UpdateActivity"
-            android:excludeFromRecents="true"
-            android:launchMode="singleInstance"
-            android:screenOrientation="sensorLandscape"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-
-        <service
-            android:name="com.amazon.tv.leanbacklauncher.recommendations.NotificationsServiceV4"
-            android:label="@string/notif_service_name"
-            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.service.notification.NotificationListenerService" />
-            </intent-filter>
-        </service>
-
-        <service
-            android:name="com.amazon.tv.leanbacklauncher.recommendations.RecommendationsService"
-            android:label="@string/recm_service_name" />
-
-        <service android:name="com.amazon.tv.firetv.tvrecommendations.NotificationListenerMonitor" />
-
-        <receiver android:name="com.amazon.tv.leanbacklauncher.MediaButtonBroadcastReceiver"
-            android:exported="true">
-            <intent-filter android:priority="2">
-                <action android:name="android.intent.action.MEDIA_BUTTON" />
-            </intent-filter>
-        </receiver>
-
-        <activity
-            android:name="com.amazon.tv.leanbacklauncher.DummyActivity"
-            android:enabled="false"
-            android:excludeFromRecents="true"
-            android:label="@string/app_label"
-            android:stateNotNeeded="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
+
         </activity>
-
-        <activity
-            android:name="com.amazon.tv.firetv.leanbacklauncher.apps.AppInfoActivity"
-            android:excludeFromRecents="true"
-            android:exported="false"
-            android:theme="@style/Theme.Leanback.GuidedStep" />
-
-        <provider
-            android:name="com.amazon.tv.leanbacklauncher.migration.DbMigrationContentProvider"
-            android:authorities="com.amazon.tv.tvrecommendations.migration"
-            android:exported="true"
-            android:permission="com.amazon.tv.leanbacklauncher.permission.MIGRATE_RECOMMENDATIONS_DATA" />
-
-        <receiver android:name="com.amazon.tv.leanbacklauncher.wallpaper.WallpaperInstaller$WallpaperChangedReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.WALLPAPER_CHANGED" />
-            </intent-filter>
-        </receiver>
-
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.fileProvider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
-        </provider>
     </application>
+
 </manifest>
