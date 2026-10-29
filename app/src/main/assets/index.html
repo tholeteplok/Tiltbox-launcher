@@ -152,9 +152,16 @@
   .set.focus .s-ico{background:var(--yellow);color:#151006;border-color:transparent;}
 
   /* ============ FOOTER ============ */
-  footer{position:absolute;left:0;right:0;bottom:0;z-index:6;padding:12px 50px;
+  footer{position:absolute;left:30px;right:30px;bottom:12px;z-index:6;padding:10px 32px;
+    border-radius:24px;
+    background:rgba(12,18,20,.52);
+    border:1px solid rgba(255,255,255,.1);
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    box-shadow:0 8px 32px rgba(0,0,0,.5);
     display:flex;justify-content:space-between;align-items:center;color:var(--txt);
-    background:linear-gradient(180deg,transparent,rgba(5,7,8,.85) 45%,#050708);}
+    transition:transform .4s cubic-bezier(.22,1,.36,1), opacity .35s ease;
+    will-change:transform, opacity;}
+  footer.hide{transform:translateY(120%);opacity:0;pointer-events:none;}
   .shift{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:600;}
   .shift .ico{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.08);
     border:1px solid rgba(255,255,255,.1);display:grid;place-items:center;}
@@ -168,6 +175,35 @@
   .weather{display:flex;align-items:center;gap:8px;}
   .weather svg{width:32px;height:32px;}
   .temp{font-size:13px;font-weight:600;opacity:.85;}
+
+  /* ============ MODAL KUSTOMISASI & ALL APPS ============ */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+    z-index:20;display:flex;justify-content:center;align-items:center;opacity:0;pointer-events:none;transition:opacity .3s ease;}
+  .modal-overlay.open{opacity:1;pointer-events:auto;}
+  .modal-card{width:860px;max-height:85vh;border-radius:24px;background:linear-gradient(160deg,rgba(25,32,36,.92),rgba(14,19,22,.95));
+    border:1px solid rgba(255,255,255,.14);box-shadow:0 24px 60px rgba(0,0,0,.8);padding:30px 40px;display:flex;flex-direction:column;gap:20px;color:#fff;}
+  .modal-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:14px;}
+  .modal-head h3{font-size:20px;font-weight:800;letter-spacing:-.5px;}
+  .modal-head h3 span{color:var(--yellow);}
+  .modal-head .close-hint{font-size:11px;color:var(--muted);}
+  .modal-body{overflow-y:auto;display:flex;flex-direction:column;gap:18px;max-height:60vh;padding:4px;}
+  .modal-body::-webkit-scrollbar{display:none;}
+
+  /* Setting row item inside modal */
+  .set-opt{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-radius:14px;
+    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);cursor:pointer;transition:.25s;}
+  .set-opt:hover, .set-opt.focus{background:rgba(255,255,255,.12);border-color:var(--yellow);transform:scale(1.01);box-shadow:0 0 16px rgba(246,197,21,.3);}
+  .set-opt b{font-size:13.5px;display:block;}
+  .set-opt span{font-size:10.5px;color:var(--muted);}
+  .set-val{font-size:12px;font-weight:700;color:var(--yellow);background:rgba(246,197,21,.15);padding:4px 10px;border-radius:8px;}
+
+  /* Grid Semua Aplikasi Modal */
+  .grid-apps{display:grid;grid-template-columns:repeat(5, 1fr);gap:18px;padding:10px 4px;}
+  .grid-app-item{display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px;border-radius:16px;cursor:pointer;transition:.25s;}
+  .grid-app-item:hover, .grid-app-item.focus{background:rgba(255,255,255,.1);transform:scale(1.08);}
+  .grid-app-item.focus .thumb{box-shadow:0 0 0 3px var(--yellow), 0 0 24px rgba(246,197,21,.4);}
+  .grid-app-item .thumb{width:68px;height:68px;border-radius:18px;}
+  .grid-app-item span{font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80px;text-align:center;}
 
   /* ============ TOAST & HINT ============ */
   .toast{position:fixed;left:50%;bottom:104px;transform:translate(-50%,16px);z-index:9;
@@ -205,7 +241,7 @@
   </div>
 
   <div class="header-right">
-    <button class="ctrl gear item" tabindex="0" title="Settings" data-name="Pengaturan TV" data-action="settings" onclick="if(window.TiltboxBridge) window.TiltboxBridge.launchSettings();">
+    <button class="ctrl gear item" tabindex="0" title="Kustomisasi &amp; Pengaturan" data-name="Kustomisasi" data-action="customizer">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     </button>
   </div>
@@ -318,6 +354,10 @@
         <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></span>
         <span class="s-txt"><b>Gambar &amp; Suara TCL</b><span>Preset TV</span></span>
       </button>
+      <button class="item set" data-name="Kustomisasi Launcher" data-action="customizer">
+        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>
+        <span class="s-txt"><b>Kustomisasi Launcher</b><span>Tema, wallpaper &amp; susunan baris</span></span>
+      </button>
     </div>
   </section>
 </main>
@@ -339,6 +379,61 @@
     </div>
   </div>
 </footer>
+
+<!-- MODAL KUSTOMISASI -->
+<div class="modal-overlay" id="customizerModal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3>Kustomisasi <span>Tiltbox</span></h3>
+      <span class="close-hint">Tekan BACK untuk kembali</span>
+    </div>
+    <div class="modal-body" id="customizerOptions">
+      <div class="set-opt modal-item" tabindex="0" data-opt="wallpaper">
+        <div>
+          <b>Tema &amp; Wallpaper</b>
+          <span>Pilih latar belakang sinematik</span>
+        </div>
+        <span class="set-val" id="valWallpaper">Obsidian Dark</span>
+      </div>
+      <div class="set-opt modal-item" tabindex="0" data-opt="order">
+        <div>
+          <b>Urutan Baris Utama</b>
+          <span>Tukar urutan Sumber vs Aplikasi</span>
+        </div>
+        <span class="set-val" id="valRowOrder">Sumber &rarr; Aplikasi</span>
+      </div>
+      <div class="set-opt modal-item" tabindex="0" data-opt="beam">
+        <div>
+          <b>Animasi Cahaya Beam</b>
+          <span>Efek sorotan miring dinamis</span>
+        </div>
+        <span class="set-val" id="valBeam">Aktif</span>
+      </div>
+      <div class="set-opt modal-item" tabindex="0" data-opt="system">
+        <div>
+          <b>Pengaturan TV Android</b>
+          <span>Buka setelan bawaan sistem</span>
+        </div>
+        <span class="set-val">&rarr;</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL SEMUA APLIKASI (GRID VIEW) -->
+<div class="modal-overlay" id="allAppsModal">
+  <div class="modal-card" style="width:920px;">
+    <div class="modal-head">
+      <h3>Semua <span>Aplikasi</span></h3>
+      <span class="close-hint">Tekan BACK untuk kembali</span>
+    </div>
+    <div class="modal-body">
+      <div class="grid-apps" id="allAppsGridContainer">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="toast" id="toast"><span class="t-dot"></span><span id="toastMsg"></span></div>
 
@@ -404,11 +499,19 @@
         // Reset penuh ke scrollTop 0 agar kartu Sumber & Input tidak pernah terpotong header
         if (mainEl) mainEl.scrollTo({ top: 0, behavior: 'smooth' });
         el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        // Tampilkan bottom bar saat kembali ke atas (Baris 1 atau Header)
+        const footer = document.querySelector('footer');
+        if (footer) footer.classList.remove('hide');
       } else if (r === 2) {
         el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        // Sembunyikan bottom bar saat scroll ke bawah agar ruang aplikasi & settings maksimal
+        const footer = document.querySelector('footer');
+        if (footer) footer.classList.add('hide');
       } else if (r >= 3) {
         if (mainEl) mainEl.scrollTo({ top: mainEl.scrollHeight, behavior: 'smooth' });
         el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        const footer = document.querySelector('footer');
+        if (footer) footer.classList.add('hide');
       }
     }
   }
@@ -464,7 +567,7 @@
 
     // 1 tombol "Semua Aplikasi" di ujung dengan ikon 9-dot grid
     html += `
-      <button class="item app" data-name="Semua Aplikasi" data-action="apps">
+      <button class="item app" data-name="Semua Aplikasi" data-action="all_apps">
         <span class="thumb" style="border-color:rgba(246,197,21,.35);background:rgba(255,255,255,.05);">
           <svg viewBox="0 0 48 48">${ALL_APPS_GRID_SVG}</svg>
         </span>
@@ -516,6 +619,10 @@
         window.TiltboxBridge.launchTclPictureAudioSettings();
       } else if (action === 'boost') {
         boostRamAction();
+      } else if (action === 'customizer') {
+        openCustomizer();
+      } else if (action === 'all_apps') {
+        openAllAppsModal();
       }
     }
   }
@@ -570,7 +677,211 @@
   updateRealWeather();
   setInterval(updateRealWeather, 1800000); // refresh tiap 30 menit
 
+  /* ============ LOGIKA MODAL KUSTOMISASI & ALL APPS ============ */
+  let activeModal = null; // 'customizer' | 'allApps' | null
+  let modalIndex = 0;
+  let modalItems = [];
+
+  const WALLPAPERS = [
+    { id: 'obsidian', name: 'Obsidian Dark', bg: 'linear-gradient(180deg,#0c1112,#080b0c 55%,#050708)' },
+    { id: 'oled', name: 'Midnight OLED', bg: '#000000' },
+    { id: 'teal', name: 'Cyberpunk Teal', bg: 'linear-gradient(160deg,#041f22,#031214 60%,#00080a)' },
+    { id: 'amber', name: 'Warm Amber', bg: 'linear-gradient(160deg,#221a08,#130e03 60%,#080601)' }
+  ];
+  let curWpIdx = 0;
+  let curRowOrder = 'normal'; // 'normal' (Sumber lalu Apps) | 'reversed' (Apps lalu Sumber)
+  let beamEnabled = true;
+
+  function loadSettings() {
+    try {
+      const saved = localStorage.getItem('tiltbox_custom_cfg');
+      if (saved) {
+        const cfg = JSON.parse(saved);
+        if (typeof cfg.wpIdx === 'number') curWpIdx = cfg.wpIdx % WALLPAPERS.length;
+        if (cfg.rowOrder) curRowOrder = cfg.rowOrder;
+        if (typeof cfg.beam === 'boolean') beamEnabled = cfg.beam;
+      }
+    } catch(e) {}
+    applyVisualSettings();
+  }
+
+  function saveSettings() {
+    try {
+      localStorage.setItem('tiltbox_custom_cfg', JSON.stringify({
+        wpIdx: curWpIdx,
+        rowOrder: curRowOrder,
+        beam: beamEnabled
+      }));
+    } catch(e) {}
+  }
+
+  function applyVisualSettings() {
+    // Wallpaper
+    const wp = WALLPAPERS[curWpIdx];
+    const bgEl = document.querySelector('.bg');
+    if (bgEl && wp) bgEl.style.background = wp.bg;
+    const valWp = document.getElementById('valWallpaper');
+    if (valWp) valWp.textContent = wp.name;
+
+    // Beams
+    document.querySelectorAll('.beam').forEach(b => {
+      b.style.display = beamEnabled ? 'block' : 'none';
+    });
+    const valBeam = document.getElementById('valBeam');
+    if (valBeam) valBeam.textContent = beamEnabled ? 'Aktif' : 'Nonaktif';
+
+    // Row order
+    const laneSources = document.querySelector('main .lane:nth-of-type(1)');
+    const laneApps = document.getElementById('appsLane');
+    const valOrder = document.getElementById('valRowOrder');
+    if (laneSources && laneApps) {
+      if (curRowOrder === 'reversed') {
+        laneApps.style.order = '1';
+        laneSources.style.order = '2';
+        if (valOrder) valOrder.textContent = 'Aplikasi → Sumber';
+      } else {
+        laneSources.style.order = '1';
+        laneApps.style.order = '2';
+        if (valOrder) valOrder.textContent = 'Sumber → Aplikasi';
+      }
+    }
+  }
+
+  function openCustomizer() {
+    activeModal = 'customizer';
+    const modal = document.getElementById('customizerModal');
+    if (modal) modal.classList.add('open');
+    modalItems = [...document.querySelectorAll('#customizerOptions .modal-item')];
+    modalIndex = 0;
+    updateModalFocus();
+  }
+
+  function openAllAppsModal() {
+    activeModal = 'allApps';
+    const modal = document.getElementById('allAppsModal');
+    if (modal) modal.classList.add('open');
+
+    // Render full grid
+    let appList = [];
+    if (window.TiltboxBridge && window.TiltboxBridge.getInstalledApps) {
+      try {
+        const raw = window.TiltboxBridge.getInstalledApps();
+        if (raw) appList = JSON.parse(raw);
+      } catch(e) {}
+    }
+    if (!appList || appList.length === 0) {
+      appList = [
+        { packageName: 'com.google.android.youtube.tv', name: 'YouTube' },
+        { packageName: 'com.spotify.tv.android', name: 'Spotify' },
+        { packageName: 'id.visionplus.android.atv', name: 'Vision+' },
+        { packageName: 'com.mxtech.videoplayer.ad', name: 'MX Player' },
+        { packageName: 'com.lonelycatgames.Xplore', name: 'X-plore' },
+        { packageName: 'com.android.vending', name: 'Play Store' }
+      ];
+    }
+
+    const container = document.getElementById('allAppsGridContainer');
+    if (container) {
+      let html = '';
+      appList.forEach(app => {
+        let iconSvg = KNOWN_APP_ICONS[app.packageName];
+        let innerContent = '';
+        if (iconSvg) {
+          innerContent = `<svg viewBox="0 0 48 48">${iconSvg}</svg>`;
+        } else if (app.icon && app.icon.startsWith('data:image')) {
+          innerContent = `<img src="${app.icon}" style="width:100%;height:100%;object-fit:cover;border-radius:18px;" />`;
+        } else {
+          const initial = (app.name || 'A').charAt(0).toUpperCase();
+          innerContent = `<svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#1e293b"/><text x="24" y="32" text-anchor="middle" font-family="Manrope,sans-serif" font-size="20" font-weight="800" fill="#f6c515">${initial}</text></svg>`;
+        }
+
+        html += `
+          <div class="grid-app-item modal-item" tabindex="0" data-pkg="${app.packageName}" data-name="${app.name}">
+            <div class="thumb">${innerContent}</div>
+            <span>${app.name}</span>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    modalItems = [...document.querySelectorAll('#allAppsGridContainer .modal-item')];
+    modalIndex = 0;
+    updateModalFocus();
+  }
+
+  function closeModal() {
+    if (activeModal === 'customizer') {
+      const m = document.getElementById('customizerModal');
+      if (m) m.classList.remove('open');
+    } else if (activeModal === 'allApps') {
+      const m = document.getElementById('allAppsModal');
+      if (m) m.classList.remove('open');
+    }
+    activeModal = null;
+    modalItems = [];
+    rebindNav();
+  }
+
+  function updateModalFocus() {
+    modalItems.forEach(el => el.classList.remove('focus'));
+    const target = modalItems[modalIndex];
+    if (target) {
+      target.classList.add('focus');
+      target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+
+  function handleModalAction() {
+    if (activeModal === 'customizer') {
+      const item = modalItems[modalIndex];
+      if (!item) return;
+      const opt = item.dataset.opt;
+      if (opt === 'wallpaper') {
+        curWpIdx = (curWpIdx + 1) % WALLPAPERS.length;
+        applyVisualSettings();
+        saveSettings();
+      } else if (opt === 'order') {
+        curRowOrder = (curRowOrder === 'normal') ? 'reversed' : 'normal';
+        applyVisualSettings();
+        saveSettings();
+        rebindNav();
+      } else if (opt === 'beam') {
+        beamEnabled = !beamEnabled;
+        applyVisualSettings();
+        saveSettings();
+      } else if (opt === 'system') {
+        closeModal();
+        if (window.TiltboxBridge) window.TiltboxBridge.launchSettings();
+      }
+    } else if (activeModal === 'allApps') {
+      const item = modalItems[modalIndex];
+      if (item && item.dataset.pkg && window.TiltboxBridge) {
+        closeModal();
+        window.TiltboxBridge.launchApp(item.dataset.pkg);
+      }
+    }
+  }
+
   window.handleDpad = function(dir) {
+    if (activeModal) {
+      const colsPerRow = (activeModal === 'allApps') ? 5 : 1;
+      if (dir === 'right') {
+        if (modalIndex + 1 < modalItems.length) modalIndex++;
+      } else if (dir === 'left') {
+        if (modalIndex - 1 >= 0) modalIndex--;
+      } else if (dir === 'down') {
+        if (modalIndex + colsPerRow < modalItems.length) modalIndex += colsPerRow;
+      } else if (dir === 'up') {
+        if (modalIndex - colsPerRow >= 0) modalIndex -= colsPerRow;
+      } else if (dir === 'enter') {
+        handleModalAction();
+        return;
+      }
+      updateModalFocus();
+      return;
+    }
+
     if (dir === 'right') focusItem(r, cols[r] + 1);
     else if (dir === 'left') focusItem(r, cols[r] - 1);
     else if (dir === 'down') focusItem(r + 1, cols[r + 1] ?? 0);
@@ -579,6 +890,23 @@
   };
 
   document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' || e.key === 'Backspace' || e.key === 'GoBack') {
+      if (activeModal) {
+        closeModal();
+        e.preventDefault();
+        return;
+      }
+    }
+
+    if (activeModal) {
+      if (e.key === 'ArrowRight') { window.handleDpad('right'); e.preventDefault(); }
+      else if (e.key === 'ArrowLeft') { window.handleDpad('left'); e.preventDefault(); }
+      else if (e.key === 'ArrowDown') { window.handleDpad('down'); e.preventDefault(); }
+      else if (e.key === 'ArrowUp') { window.handleDpad('up'); e.preventDefault(); }
+      else if (e.key === 'Enter' || e.key === ' ') { handleModalAction(); e.preventDefault(); }
+      return;
+    }
+
     if(e.key === 'ArrowRight'){ focusItem(r, cols[r] + 1); e.preventDefault(); }
     else if(e.key === 'ArrowLeft'){ focusItem(r, cols[r] - 1); e.preventDefault(); }
     else if(e.key === 'ArrowDown'){ focusItem(r + 1, cols[r + 1] ?? 0); e.preventDefault(); }
@@ -588,6 +916,7 @@
 
   rebindNav();
   renderInstalledApps();
+  loadSettings();
 
   /* ===== Jam real-time ===== */
   function tick(){
