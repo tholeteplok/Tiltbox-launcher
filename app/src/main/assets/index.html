@@ -36,21 +36,48 @@
   .vignette{position:absolute;inset:0;background:radial-gradient(120% 95% at 50% 40%, transparent 42%, rgba(0,0,0,.6) 100%);}
 
   /* ============ HEADER ============ */
-  header{position:absolute;top:0;left:0;right:0;z-index:6;padding:22px 42px;
-    display:flex;justify-content:flex-end;align-items:center;gap:12px;}
-  .logo{position:absolute;left:50%;transform:translateX(-50%);font-size:25px;font-weight:800;
-    letter-spacing:-.5px;color:var(--txt);user-select:none;}
-  .logo span{color:var(--yellow);} .logo sup{font-size:9px;color:var(--muted);}
-  .ctrl{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.09);
+  header{position:absolute;top:0;left:0;right:0;z-index:6;padding:22px 60px 8px;
+    display:flex !important;flex-direction:row !important;justify-content:space-between !important;align-items:flex-start !important;}
+  
+  .header-left{display:flex;flex-direction:column;gap:8px;align-items:flex-start;}
+
+  /* Tiltbox rata kiri dengan text besar 2x (50px) */
+  .logo{font-size:50px;font-weight:800;letter-spacing:-1.2px;line-height:1;color:var(--txt);user-select:none;text-align:left;}
+  .logo span{color:var(--yellow);} 
+  .logo sup{font-size:16px;color:var(--muted);vertical-align:super;margin-left:2px;}
+
+  /* Search bar manual & voice input dibawahnya */
+  .search-container{display:flex;align-items:center;gap:10px;margin-top:2px;}
+  
+  .search-bar{display:flex;align-items:center;gap:10px;width:320px;height:36px;padding:0 14px;
+    border-radius:18px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+    backdrop-filter:blur(14px);color:#fff;cursor:pointer;
+    transition:all .3s cubic-bezier(.22,1,.36,1);}
+  .search-bar:hover, .search-bar.focus{border-color:var(--yellow);background:rgba(255,255,255,.14);
+    box-shadow:0 0 0 2px rgba(246,197,21,.5), 0 8px 24px rgba(0,0,0,.4);transform:scale(1.02);}
+  .search-bar svg{width:16px;height:16px;stroke:var(--muted);transition:.3s;flex-shrink:0;}
+  .search-bar:hover svg, .search-bar.focus svg{stroke:var(--yellow);}
+  .search-input{background:none;border:none;outline:none;color:#fff;font-size:11.5px;width:100%;font-weight:500;}
+  .search-input::placeholder{color:var(--muted);opacity:.85;}
+
+  .voice-btn{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.12);display:grid;place-items:center;cursor:pointer;
+    backdrop-filter:blur(14px);transition:all .3s cubic-bezier(.22,1,.36,1);color:#fff;}
+  .voice-btn:hover, .voice-btn.focus{background:var(--yellow);border-color:transparent;color:#151006;
+    box-shadow:0 0 24px rgba(246,197,21,.65);transform:scale(1.08);}
+  .voice-btn svg{width:17px;height:17px;}
+
+  .header-right{display:flex;align-items:center;gap:12px;padding-top:4px;}
+  .ctrl{width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.09);
     background:rgba(255,255,255,.07);display:grid;place-items:center;transition:.3s;color:#fff;}
-  .ctrl:hover{background:rgba(255,255,255,.15);transform:translateY(-2px);}
+  .ctrl:hover, .ctrl.focus{background:rgba(255,255,255,.18);transform:scale(1.05);border-color:rgba(255,255,255,.3);}
   .ctrl svg{width:19px;height:19px;transition:.4s;}
-  .ctrl.gear:hover svg{transform:rotate(60deg);}
+  .ctrl.gear:hover svg, .ctrl.gear.focus svg{transform:rotate(60deg);}
   .avatar{background:radial-gradient(circle at 35% 28%, #ff6b5e, #a9241d 75%);overflow:hidden;}
-  .avatar svg{width:29px;height:29px;transform:translateY(4px);}
+  .avatar svg{width:27px;height:27px;transform:translateY(3px);}
 
   /* ============ LANES (3 BARIS) ============ */
-  main{position:absolute;top:44px;bottom:80px;left:0;right:0;z-index:4;
+  main{position:absolute;top:132px;bottom:70px;left:0;right:0;z-index:4;
     display:flex;flex-direction:column;justify-content:space-between;
     overflow-y:hidden;overflow-x:hidden;}
   .lane{display:flex;flex-direction:column;gap:1px;}
@@ -167,13 +194,31 @@
 </div>
 
 <header>
-  <div class="logo">tilt<span>box</span><sup>™</sup></div>
-  <button class="ctrl gear" title="Settings" onclick="if(window.TiltboxBridge) window.TiltboxBridge.launchSettings();">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-  </button>
-  <button class="ctrl avatar" title="Profile">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4" fill="#40100d"/><path d="M4 22c1.6-5.4 5-7.5 8-7.5s6.4 2.1 8 7.5z" fill="#40100d"/></svg>
-  </button>
+  <div class="header-left">
+    <div class="logo">tilt<span>box</span><sup>™</sup></div>
+    <div class="search-container">
+      <div class="search-bar item" tabindex="0" data-name="Pencarian" data-action="search" onclick="document.getElementById('manualSearchInput').focus();">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" class="search-input" id="manualSearchInput" placeholder="Cari film, acara TV, aplikasi…" onkeydown="if(event.key==='Enter'&&window.TiltboxBridge){window.TiltboxBridge.launchSearch(this.value);event.stopPropagation();}" />
+      </div>
+      <button class="voice-btn item" tabindex="0" title="Voice Search" data-name="Pencarian Suara" data-action="voice" onclick="if(window.TiltboxBridge) window.TiltboxBridge.launchVoiceSearch();">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <button class="ctrl gear item" tabindex="0" title="Settings" data-name="Pengaturan TV" data-action="settings" onclick="if(window.TiltboxBridge) window.TiltboxBridge.launchSettings();">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+    <button class="ctrl avatar" title="Profile">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4" fill="#40100d"/><path d="M4 22c1.6-5.4 5-7.5 8-7.5s6.4 2.1 8 7.5z" fill="#40100d"/></svg>
+    </button>
+  </div>
 </header>
 
 <main>
@@ -290,9 +335,11 @@
 
 <script>
   /* ===== Navigasi 2D ala remote TV ===== */
-  const lanes = [...document.querySelectorAll('.lane')].map(l => [...l.querySelectorAll('.item')]);
+  const headerItems = [...document.querySelectorAll('header .item')];
+  const laneRows = [...document.querySelectorAll('main .lane')].map(l => [...l.querySelectorAll('.item')]);
+  const lanes = [headerItems, ...laneRows];
   const cols = lanes.map(() => 0);
-  let r = 0, toastTimer;
+  let r = 1, toastTimer; // default pada Baris 1 (Live TV's)
 
   function focusItem(rI, cI, scroll = true){
     r = Math.max(0, Math.min(lanes.length - 1, rI));
@@ -319,7 +366,13 @@
       const action = el.dataset.action;
       const pkg = el.dataset.pkg;
       const port = el.dataset.port || el.dataset.name;
-      if (action === 'livetv') {
+      if (action === 'search') {
+        const inp = document.getElementById('manualSearchInput');
+        if (inp) inp.focus();
+        if (window.TiltboxBridge) window.TiltboxBridge.launchSearch(inp ? inp.value : "");
+      } else if (action === 'voice') {
+        if (window.TiltboxBridge) window.TiltboxBridge.launchVoiceSearch();
+      } else if (action === 'livetv') {
         window.TiltboxBridge.launchLiveTv();
       } else if (action === 'media') {
         window.TiltboxBridge.launchMedia();
@@ -364,7 +417,7 @@
     el.addEventListener('mouseenter', () => focusItem(rI, cI, false));
   }));
 
-  focusItem(0, 0, false);
+  focusItem(1, 0, false);
 
   /* ===== Jam real-time ===== */
   function tick(){

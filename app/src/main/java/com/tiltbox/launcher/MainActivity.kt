@@ -2,6 +2,7 @@ package com.tiltbox.launcher
 
 import android.annotation.SuppressLint
 import android.app.ActivityManager
+import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -10,6 +11,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
+import android.speech.RecognizerIntent
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
@@ -224,6 +226,46 @@ class MainActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 Log.e(TAG, "Gagal membuka setelan TV", e)
                 false
+            }
+        }
+
+        @JavascriptInterface
+        fun launchVoiceSearch(): Boolean {
+            return try {
+                val intent = Intent(RecognizerIntent.ACTION_WEB_SEARCH).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                context.startActivity(intent)
+                true
+            } catch (e: Exception) {
+                try {
+                    val intent2 = Intent(Intent.ACTION_VOICE_COMMAND).apply {
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }
+                    context.startActivity(intent2)
+                    true
+                } catch (e2: Exception) {
+                    val katniss = context.packageManager.getLaunchIntentForPackage("com.google.android.katniss")
+                    if (katniss != null) {
+                        katniss.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        context.startActivity(katniss)
+                        true
+                    } else false
+                }
+            }
+        }
+
+        @JavascriptInterface
+        fun launchSearch(query: String): Boolean {
+            return try {
+                val intent = Intent(Intent.ACTION_SEARCH).apply {
+                    putExtra(SearchManager.QUERY, query)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                context.startActivity(intent)
+                true
+            } catch (e: Exception) {
+                launchVoiceSearch()
             }
         }
 
