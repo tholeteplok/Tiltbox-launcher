@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Playbox — Smart TV Launcher</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --yellow:#f6c515;
+    --teal-1:rgba(133,222,214,.75); --teal-2:rgba(38,128,132,.55); --teal-3:rgba(12,74,80,.70);
+    --glass-1:rgba(255,255,255,.16); --glass-2:rgba(255,255,255,.04);
+    --txt:#fff; --muted:rgba(255,255,255,.55);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Manrope',system-ui,sans-serif;}
+  html,body{height:100%;overflow:hidden;background:#07090a;}
+  button{background:none;border:none;color:inherit;cursor:pointer;text-align:left;}
+
+  /* ============ BACKGROUND ============ */
+  .bg{position:fixed;inset:0;background:
+      radial-gradient(500px 400px at 85% 55%, rgba(0,0,0,.55), transparent 70%),
+      radial-gradient(900px 500px at 70% 15%, #17211f 0%, transparent 60%),
+      linear-gradient(180deg,#0c1112,#080b0c 55%,#050708);}
+  .collage{position:absolute;left:7%;top:9%;width:34%;height:48%;display:grid;
+    grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:8px;
+    filter:blur(16px) saturate(.75);opacity:.45;transform:rotate(-2deg);}
+  .collage div:nth-child(1){background:linear-gradient(140deg,#3a403d,#232827);}
+  .collage div:nth-child(2){background:linear-gradient(140deg,#2c3230,#434a46);}
+  .collage div:nth-child(3){background:linear-gradient(140deg,#242928,#313735);}
+  .collage div:nth-child(4){background:linear-gradient(140deg,#3d4340,#202524);}
+  .beam{position:absolute;height:170px;width:65%;filter:blur(26px);
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.075),transparent);
+    transform:rotate(-16deg);animation:drift 14s ease-in-out infinite alternate;}
+  .beam.b1{top:5%;left:25%;} .beam.b2{top:24%;left:45%;opacity:.6;animation-delay:-6s;}
+  @keyframes drift{from{transform:rotate(-16deg) translateX(-40px);}to{transform:rotate(-16deg) translateX(60px);}}
+  .vignette{position:absolute;inset:0;background:radial-gradient(120% 95% at 50% 40%, transparent 42%, rgba(0,0,0,.6) 100%);}
+
+  /* ============ HEADER ============ */
+  header{position:absolute;top:0;left:0;right:0;z-index:6;padding:22px 42px;
+    display:flex;justify-content:flex-end;align-items:center;gap:12px;}
+  .logo{position:absolute;left:50%;transform:translateX(-50%);font-size:25px;font-weight:800;
+    letter-spacing:-.5px;color:var(--txt);user-select:none;}
+  .logo span{color:var(--yellow);} .logo sup{font-size:9px;color:var(--muted);}
+  .ctrl{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.09);
+    background:rgba(255,255,255,.07);display:grid;place-items:center;transition:.3s;color:#fff;}
+  .ctrl:hover{background:rgba(255,255,255,.15);transform:translateY(-2px);}
+  .ctrl svg{width:19px;height:19px;transition:.4s;}
+  .ctrl.gear:hover svg{transform:rotate(60deg);}
+  .avatar{background:radial-gradient(circle at 35% 28%, #ff6b5e, #a9241d 75%);overflow:hidden;}
+  .avatar svg{width:29px;height:29px;transform:translateY(4px);}
+
+  /* ============ LANES (3 BARIS) ============ */
+  main{position:absolute;top:76px;bottom:88px;left:0;right:0;z-index:4;
+    display:flex;flex-direction:column;justify-content:space-evenly;gap:6px;
+    overflow-y:auto;scrollbar-width:none;}
+  main::-webkit-scrollbar{display:none;}
+  .lane{display:flex;flex-direction:column;gap:6px;}
+  .lane-head{padding:0 70px;display:flex;align-items:baseline;gap:12px;}
+  .lane-head h2{font-size:12px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.85);}
+  .lane-head h2::before{content:"";display:inline-block;width:16px;height:3px;border-radius:2px;
+    background:var(--yellow);margin-right:10px;vertical-align:middle;}
+  .lane-head em{font-style:normal;font-size:10px;color:var(--muted);letter-spacing:.06em;}
+  .row{display:flex;gap:22px;overflow-x:auto;padding:24px 70px;width:100%;
+    align-items:center;scroll-snap-type:x proximity;scrollbar-width:none;}
+  .row::-webkit-scrollbar{display:none;}
+  .item{position:relative;flex:0 0 auto;scroll-snap-align:center;
+    transition:transform .4s cubic-bezier(.22,1,.36,1), background .4s, box-shadow .4s, border-color .4s;}
+  .item:focus{outline:none;}
+  .item.pulse{box-shadow:0 0 0 3px rgba(246,197,21,.9), 0 24px 60px rgba(0,0,0,.5) !important;}
+
+  /* --- Baris 1 : Sumber / Input --- */
+  .src{width:272px;height:148px;border-radius:20px;padding:18px 22px;color:var(--txt);
+    display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;
+    background:linear-gradient(150deg,var(--glass-1),var(--glass-2) 55%,rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.13);
+    backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+    box-shadow:0 16px 38px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.12);}
+  .src:hover{transform:translateY(-6px);border-color:rgba(255,255,255,.25);}
+  .src h3{font-size:19px;font-weight:700;}
+  .src .count{font-size:12.5px;font-weight:600;opacity:.92;}
+  .src .stat{margin-top:4px;font-size:10px;color:var(--muted);display:flex;align-items:center;gap:6px;}
+  .dot{width:6px;height:6px;border-radius:50%;background:#42d77d;box-shadow:0 0 8px #42d77d;}
+  .dot.off{background:rgba(255,255,255,.25);box-shadow:none;}
+  .src-icon{position:absolute;right:22px;top:50%;transform:translateY(-50%);width:66px;height:66px;
+    filter:drop-shadow(0 6px 14px rgba(0,0,0,.35));}
+  .src-icon svg{width:100%;height:100%;}
+  .tab{position:absolute;top:-12px;left:50%;transform:translateX(-50%) scale(.5);width:80px;height:18px;
+    border-radius:8px;background:var(--yellow);opacity:0;transition:.4s cubic-bezier(.22,1,.36,1);}
+  .src.focus{transform:rotate(-4deg) translateY(-10px) scale(1.05);z-index:2;
+    background:linear-gradient(155deg,var(--teal-1),var(--teal-2) 45%,var(--teal-3));
+    border-color:rgba(255,255,255,.28);
+    box-shadow:0 28px 66px rgba(0,0,0,.55), 0 0 46px rgba(64,190,185,.18), inset 0 1px 0 rgba(255,255,255,.3);}
+  .src.focus .tab{opacity:1;transform:translateX(-50%) scale(1);
+    box-shadow:0 0 34px rgba(246,197,21,.6);animation:glow 2.6s ease-in-out infinite;}
+  @keyframes glow{0%,100%{box-shadow:0 0 22px rgba(246,197,21,.45);}50%{box-shadow:0 0 44px rgba(246,197,21,.85);}}
+
+  /* --- Baris 2 : Aplikasi --- */
+  .app{display:flex;flex-direction:column;align-items:center;gap:9px;width:104px;}
+  .thumb{width:104px;height:104px;border-radius:26px;overflow:hidden;display:grid;place-items:center;
+    border:1px solid rgba(255,255,255,.1);box-shadow:0 14px 30px rgba(0,0,0,.5);transition:inherit;}
+  .thumb svg{width:100%;height:100%;display:block;}
+  .app-name{font-size:11px;font-weight:600;color:var(--muted);transition:.3s;white-space:nowrap;}
+  .app:hover .thumb{transform:translateY(-5px);}
+  .app.focus{transform:translateY(-8px) scale(1.12);z-index:2;}
+  .app.focus .thumb{box-shadow:0 0 0 3px var(--yellow), 0 0 40px rgba(246,197,21,.35), 0 22px 44px rgba(0,0,0,.6);}
+  .app.focus .app-name{color:var(--yellow);}
+  .thumb.add{background:rgba(255,255,255,.05);border:1.5px dashed rgba(255,255,255,.28);
+    backdrop-filter:blur(12px);color:rgba(255,255,255,.6);font-size:34px;font-weight:300;}
+
+  /* --- Baris 3 : Pengaturan cepat --- */
+  .set{display:flex;align-items:center;gap:14px;width:288px;padding:14px 16px;border-radius:18px;color:var(--txt);
+    background:linear-gradient(150deg,rgba(255,255,255,.1),rgba(255,255,255,.03));
+    border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(14px);
+    box-shadow:0 12px 28px rgba(0,0,0,.4);}
+  .set:hover{transform:translateY(-4px);}
+  .s-ico{width:42px;height:42px;flex:0 0 auto;border-radius:12px;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.08);display:grid;place-items:center;transition:.35s;}
+  .s-ico svg{width:20px;height:20px;}
+  .s-txt b{display:block;font-size:13.5px;font-weight:700;}
+  .s-txt span{font-size:10.5px;color:var(--muted);}
+  .set.focus{transform:scale(1.04);border-color:rgba(246,197,21,.65);z-index:2;
+    background:linear-gradient(150deg,rgba(246,197,21,.16),rgba(255,255,255,.04));
+    box-shadow:0 0 0 2px rgba(246,197,21,.55), 0 18px 40px rgba(0,0,0,.5);}
+  .set.focus .s-ico{background:var(--yellow);color:#151006;border-color:transparent;}
+
+  /* ============ FOOTER ============ */
+  footer{position:absolute;left:0;right:0;bottom:0;z-index:6;padding:20px 48px;
+    display:flex;justify-content:space-between;align-items:center;color:var(--txt);}
+  .shift{display:flex;align-items:center;gap:14px;font-size:13px;font-weight:600;}
+  .shift .ico{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.1);display:grid;place-items:center;}
+  .shift .ico svg{width:19px;height:19px;}
+  .status{display:flex;align-items:center;gap:18px;}
+  .time{font-size:21px;font-weight:800;letter-spacing:.5px;}
+  .time small{font-size:11px;font-weight:600;opacity:.6;margin-left:4px;}
+  .divider{width:1px;height:34px;background:rgba(255,255,255,.16);}
+  .place b{display:block;font-size:15px;font-weight:700;}
+  .place span{font-size:10px;color:var(--muted);}
+  .weather{display:flex;align-items:center;gap:8px;}
+  .weather svg{width:36px;height:36px;}
+  .temp{font-size:13px;font-weight:600;opacity:.85;}
+
+  /* ============ TOAST & HINT ============ */
+  .toast{position:fixed;left:50%;bottom:104px;transform:translate(-50%,16px);z-index:9;
+    display:flex;align-items:center;gap:10px;padding:11px 20px;border-radius:999px;
+    background:rgba(20,26,27,.85);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(14px);
+    font-size:12.5px;font-weight:600;color:#fff;opacity:0;pointer-events:none;transition:.35s;}
+  .toast.show{opacity:1;transform:translate(-50%,0);}
+  .t-dot{width:8px;height:8px;border-radius:50%;background:var(--yellow);box-shadow:0 0 10px var(--yellow);}
+  .hint{position:absolute;bottom:88px;left:50%;transform:translateX(-50%);z-index:5;
+    font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);opacity:.5;transition:opacity 1s;}
+  .hint.hide{opacity:0;}
+
+  @media (max-height:800px){
+    .src{width:240px;height:126px;padding:14px 18px;} .src-icon{width:54px;height:54px;right:16px;}
+    .thumb,.app{width:88px;} .thumb{height:88px;border-radius:22px;}
+    .set{width:250px;padding:11px 13px;} .row{padding:18px 70px;gap:16px;}
+  }
+  @media (max-width:900px){ .row,.lane-head{padding-left:28px;padding-right:28px;} }
+</style>
+</head>
+<body>
+
+<div class="bg">
+  <div class="collage"><div></div><div></div><div></div><div></div></div>
+  <div class="beam b1"></div><div class="beam b2"></div><div class="vignette"></div>
+</div>
+
+<header>
+  <div class="logo">play<span>box</span><sup>™</sup></div>
+  <button class="ctrl gear" title="Settings">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+  </button>
+  <button class="ctrl avatar" title="Profile">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4" fill="#40100d"/><path d="M4 22c1.6-5.4 5-7.5 8-7.5s6.4 2.1 8 7.5z" fill="#40100d"/></svg>
+  </button>
+</header>
+
+<main>
+  <!-- ===== BARIS 1 : SUMBER & INPUT ===== -->
+  <section class="lane">
+    <div class="lane-head"><h2>Sumber &amp; Input</h2><em>Live TV, Media, HDMI</em></div>
+    <div class="row">
+      <button class="item src" data-name="Live TV's">
+        <span class="tab"></span><h3>Live TV's</h3>
+        <div class="src-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="20" width="50" height="36" rx="9"/><path d="M24 20 18 9M40 20 46 9"/><polyline points="22,40 29,33 35,41 43,31" stroke="#f6c515"/></svg></div>
+        <div><p class="count">+5000 Channels</p><p class="stat"><span class="dot"></span>Siaran aktif</p></div>
+      </button>
+      <button class="item src" data-name="Media Player">
+        <span class="tab"></span><h3>Media</h3>
+        <div class="src-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20a6 6 0 0 1 6-6h10l6 6h18a6 6 0 0 1 6 6v20a6 6 0 0 1-6 6H14a6 6 0 0 1-6-6z"/><path d="M28 30l12 7-12 7z" stroke="#f6c515"/></svg></div>
+        <div><p class="count">USB &amp; File Lokal</p><p class="stat"><span class="dot"></span>USB-1 terbaca</p></div>
+      </button>
+      <button class="item src" data-name="HDMI 1">
+        <span class="tab"></span><h3>HDMI 1</h3>
+        <div class="src-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 22h44v12l-6 6H16l-6-6z"/><path d="M20 28v6M28 28v6M36 28v6M44 28v6" stroke="#f6c515"/><path d="M32 40v10"/></svg></div>
+        <div><p class="count">PlayStation 5</p><p class="stat"><span class="dot"></span>Terhubung • 4K 120Hz</p></div>
+      </button>
+      <button class="item src" data-name="HDMI 2">
+        <span class="tab"></span><h3>HDMI 2</h3>
+        <div class="src-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 22h44v12l-6 6H16l-6-6z"/><path d="M20 28v6M28 28v6M36 28v6M44 28v6" stroke="#f6c515"/><path d="M32 40v10"/></svg></div>
+        <div><p class="count">PC Desktop</p><p class="stat"><span class="dot off"></span>Standby</p></div>
+      </button>
+      <button class="item src" data-name="HDMI 3">
+        <span class="tab"></span><h3>HDMI 3</h3>
+        <div class="src-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 22h44v12l-6 6H16l-6-6z"/><path d="M20 28v6M28 28v6M36 28v6M44 28v6"/><path d="M32 40v10"/></svg></div>
+        <div><p class="count">Tidak terhubung</p><p class="stat"><span class="dot off"></span>Port kosong</p></div>
+      </button>
+      <button class="item src" data-name="Screen Cast">
+        <span class="tab"></span><h3>Cast</h3>
+        <div class="src-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="14" width="48" height="34" rx="6"/><path d="M14 42a10 10 0 0 1 10 10M14 34a18 18 0 0 1 18 18" stroke="#f6c515"/><circle cx="15" cy="47" r="2.5" fill="#f6c515" stroke="none"/></svg></div>
+        <div><p class="count">Miracast / AirPlay</p><p class="stat"><span class="dot"></span>Siap menerima</p></div>
+      </button>
+    </div>
+  </section>
+
+  <!-- ===== BARIS 2 : APLIKASI TERPASANG ===== -->
+  <section class="lane">
+    <div class="lane-head"><h2>Aplikasi Terpasang</h2><em>6 aplikasi + toko</em></div>
+    <div class="row">
+      <button class="item app" data-name="YouTube">
+        <span class="thumb"><svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#f00"/><path d="M19 15v18l16-9z" fill="#fff"/></svg></span>
+        <span class="app-name">YouTube</span>
+      </button>
+      <button class="item app" data-name="Netflix">
+        <span class="thumb"><svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#0b0b0b"/><text x="24" y="34" text-anchor="middle" font-family="Manrope,sans-serif" font-size="27" font-weight="800" fill="#e50914">N</text></svg></span>
+        <span class="app-name">Netflix</span>
+      </button>
+      <button class="item app" data-name="Spotify">
+        <span class="thumb"><svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#1db954"/><g fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round"><path d="M13 18c8-2.2 16-1.6 22 1.4"/><path d="M14.5 24.5c6.6-1.8 12.6-1.3 17.6 1.1"/><path d="M16 30.5c5-1.3 9.4-.9 13.2 1"/></g></svg></span>
+        <span class="app-name">Spotify</span>
+      </button>
+      <button class="item app" data-name="Prime Video">
+        <span class="thumb"><svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#1399ff"/><text x="24" y="24" text-anchor="middle" font-family="Manrope,sans-serif" font-size="11" font-weight="800" fill="#fff">prime</text><path d="M12 30c7 5 17 5 24 0l-3-1" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></span>
+        <span class="app-name">Prime Video</span>
+      </button>
+      <button class="item app" data-name="Disney+">
+        <span class="thumb"><svg viewBox="0 0 48 48"><defs><linearGradient id="dg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#14306b"/><stop offset="1" stop-color="#060f2b"/></linearGradient></defs><rect width="48" height="48" fill="url(#dg)"/><text x="24" y="30" text-anchor="middle" font-family="Manrope,sans-serif" font-size="15" font-weight="800" fill="#fff">D+</text></svg></span>
+        <span class="app-name">Disney+</span>
+      </button>
+      <button class="item app" data-name="VLC">
+        <span class="thumb"><svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#2b2b2b"/><clipPath id="cone"><path d="M24 9l10 28H14z"/></clipPath><path d="M24 9l10 28H14z" fill="#ff8800"/><g clip-path="url(#cone)" fill="#fff"><rect x="12" y="20" width="24" height="4"/><rect x="12" y="28" width="24" height="4"/></g><rect x="10" y="37" width="28" height="4" rx="2" fill="#ff8800"/></svg></span>
+        <span class="app-name">VLC</span>
+      </button>
+      <button class="item app" data-name="Toko Aplikasi">
+        <span class="thumb add">+</span>
+        <span class="app-name">Toko Aplikasi</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ===== BARIS 3 : PENGATURAN CEPAT ===== -->
+  <section class="lane">
+    <div class="lane-head"><h2>Pengaturan Cepat</h2><em>kategori, urutan, favorit</em></div>
+    <div class="row">
+      <button class="item set" data-name="Kategori Kustom">
+        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg></span>
+        <span class="s-txt"><b>Kategori Kustom</b><span>Kelola grup &amp; genre konten</span></span>
+      </button>
+      <button class="item set" data-name="Urutan Launcher">
+        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16m0 0l-3-3m3 3l3-3M17 20V4m0 0l-3 3m3-3l3 3"/></svg></span>
+        <span class="s-txt"><b>Urutan Launcher</b><span>Atur posisi baris &amp; aplikasi</span></span>
+      </button>
+      <button class="item set" data-name="Channel Favorit">
+        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l2.7 5.8 6.3.8-4.6 4.3 1.2 6.1-5.6-3-5.6 3 1.2-6.1L3 9.6l6.3-.8z"/></svg></span>
+        <span class="s-txt"><b>Channel Favorit</b><span>12 channel tersimpan</span></span>
+      </button>
+      <button class="item set" data-name="Tema & Wallpaper">
+        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></svg></span>
+        <span class="s-txt"><b>Tema &amp; Wallpaper</b><span>Glass Dark (bawaan)</span></span>
+      </button>
+      <button class="item set" data-name="Bahasa & Region">
+        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg></span>
+        <span class="s-txt"><b>Bahasa &amp; Region</b><span>Indonesia (ID) • WIB</span></span>
+      </button>
+      <button class="item set" data-name="Parental Control">
+        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="3"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+        <span class="s-txt"><b>Parental Control</b><span>Kunci konten dewasa</span></span>
+      </button>
+    </div>
+  </section>
+</main>
+
+<p class="hint" id="hint">↑ ↓ ← → navigasi &nbsp;•&nbsp; Enter pilih</p>
+
+<footer>
+  <div class="shift">
+    <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg></span>
+    Timeshift
+  </div>
+  <div class="status">
+    <div class="time" id="clock">12:51 <small>am</small></div>
+    <div class="divider"></div>
+    <div class="place"><b>Los Angeles</b><span>Humidity: 87%</span></div>
+    <div class="weather">
+      <svg viewBox="0 0 64 64"><circle cx="24" cy="18" r="9" fill="#f6c515"/><path transform="translate(8,10) scale(2.2)" d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" fill="#fff" opacity=".92"/></svg>
+      <span class="temp">24°</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"><span class="t-dot"></span><span id="toastMsg"></span></div>
+
+<script>
+  /* ===== Navigasi 2D ala remote TV ===== */
+  const lanes = [...document.querySelectorAll('.lane')].map(l => [...l.querySelectorAll('.item')]);
+  const cols = lanes.map(() => 0);
+  let r = 0, toastTimer;
+
+  function focusItem(rI, cI, scroll = true){
+    r = Math.max(0, Math.min(lanes.length - 1, rI));
+    const lane = lanes[r];
+    const c = Math.max(0, Math.min(lane.length - 1, cI));
+    cols[r] = c;
+    document.querySelectorAll('.item.focus').forEach(el => el.classList.remove('focus'));
+    const el = lane[c];
+    el.classList.add('focus');
+    if(scroll) el.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+  }
+
+  function select(el){
+    el.classList.add('pulse');
+    setTimeout(() => el.classList.remove('pulse'), 380);
+    const toast = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = `Membuka ${el.dataset.name}…`;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+  }
+
+  document.addEventListener('keydown', e => {
+    if(e.key === 'ArrowRight'){ focusItem(r, cols[r] + 1); e.preventDefault(); }
+    else if(e.key === 'ArrowLeft'){ focusItem(r, cols[r] - 1); e.preventDefault(); }
+    else if(e.key === 'ArrowDown'){ focusItem(r + 1, cols[r + 1] ?? 0); e.preventDefault(); }
+    else if(e.key === 'ArrowUp'){ focusItem(r - 1, cols[r - 1] ?? 0); e.preventDefault(); }
+    else if(e.key === 'Enter' || e.key === ' '){ select(lanes[r][cols[r]]); e.preventDefault(); }
+  });
+
+  lanes.forEach((lane, rI) => lane.forEach((el, cI) => {
+    el.addEventListener('click', () => { focusItem(rI, cI); select(el); });
+    el.addEventListener('mouseenter', () => focusItem(rI, cI, false));
+  }));
+
+  focusItem(0, 0, false);
+
+  /* ===== Jam real-time ===== */
+  function tick(){
+    const d = new Date(); let h = d.getHours();
+    const ap = h < 12 ? 'am' : 'pm'; h = h % 12 || 12;
+    document.getElementById('clock').innerHTML =
+      `${h}:${String(d.getMinutes()).padStart(2,'0')} <small>${ap}</small>`;
+  }
+  tick(); setInterval(tick, 1000);
+  setTimeout(() => document.getElementById('hint').classList.add('hide'), 6000);
+</script>
+</body>
+</html>

@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MEKAAR Playbox TV Launcher V4 - Cinematic Wallpaper & Custom Duotone Icons</title>
+  <style>
+    :root {
+      --bg-dark: #05070d;
+      --accent-cyan: #38bdf8;
+      --accent-blue: #136cfc;
+      --accent-lime: #c3f84a;
+      --accent-purple: #c084fc;
+      --accent-coral: #ff5d5d;
+      --accent-amber: #fbbf24;
+      --text-white: #ffffff;
+      --text-muted: #94a3b8;
+      --text-subtle: #64748b;
+      --radius-tv: 22px;
+      --radius-pill: 9999px;
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Plus Jakarta Sans", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-family);
+      user-select: none;
+    }
+
+    /* ═══════════════════════════════════════════════════════ */
+    /* CINEMATIC WALLPAPER (DEEP LUXURY ABSTRACT FLUID & MESH) */
+    /* ═══════════════════════════════════════════════════════ */
+    body {
+      background-color: var(--bg-dark);
+      /* Base dark canvas */
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 28px 56px 24px;
+      position: relative;
+    }
+
+    /* Wallpaper Layer 1: Multi-Point Mesh Gradient Ambient */
+    .cinematic-wallpaper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      background: 
+        radial-gradient(circle at 18% 22%, rgba(19, 108, 252, 0.28) 0%, transparent 45%),
+        radial-gradient(circle at 82% 18%, rgba(168, 85, 247, 0.22) 0%, transparent 42%),
+        radial-gradient(circle at 50% 75%, rgba(14, 165, 233, 0.15) 0%, transparent 55%),
+        radial-gradient(circle at 75% 85%, rgba(195, 248, 74, 0.08) 0%, transparent 35%);
+      filter: blur(40px);
+    }
+
+    /* Wallpaper Layer 2: Subtle SVG Vector Waves & Star Dust Texture */
+    .wallpaper-art {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.65;
+    }
+
+    /* ═══════════════════════════════════════════════════════ */
+    /* TOPBAR HEADER                                           */
+    /* ═══════════════════════════════════════════════════════ */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .brand-logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 20px;
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(19, 108, 252, 0.45);
+    }
+
+    .brand-title {
+      font-size: 23px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      text-transform: lowercase;
+      color: #fff;
+    }
+
+    .brand-title span {
+      color: var(--accent-cyan);
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .top-icon-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 8px 18px;
+      border-radius: var(--radius-pill);
+      font-size: 13px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .top-icon-pill:hover, .top-icon-pill.focused {
+      background: rgba(255, 255, 255, 0.16);
+      color: #fff;
+    }
+
+    /* ═══════════════════════════════════════════════════════ */
+    /* MAIN ROWS CONTAINER                                    */
+    /* ═══════════════════════════════════════════════════════ */
+    .rows-container {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      z-index: 10;
+      margin: auto 0;
+    }
+
+    .row-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .row-label {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-subtle);
+      margin-left: 4px;
+    }
+
+    .cards-track {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      padding: 18px 8px;
+      overflow-x: visible;
+    }
+
+    /* ═══════════════════════════════════════════════════════ */
+    /* 16:9 CARDS: VERTICAL GRADIENT (TOP SEMI-TRANSPARENT)   */
+    /* ═══════════════════════════════════════════════════════ */
+    .tv-card-16-9 {
+      position: relative;
+      border: none;
+      outline: none;
+      border-radius: var(--radius-tv);
+      cursor: pointer;
+      aspect-ratio: 16 / 9;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                  box-shadow 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      overflow: hidden;
+    }
+
+    /* Spotlight Lamp Beam: ONLY on Selected / Focused Card */
+    .tv-card-16-9::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 85%;
+      height: 80%;
+      background: radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.68) 0%, rgba(255, 255, 255, 0.2) 45%, transparent 75%);
+      pointer-events: none;
+      opacity: 0; /* Default: OFF */
+      transition: opacity 0.32s ease, width 0.32s ease, height 0.32s ease;
+      z-index: 2;
+    }
+
+    /* Fixture Titik Lampu Atas Tengah */
+    .tv-card-16-9::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 58px;
+      height: 4px;
+      border-radius: 0 0 6px 6px;
+      background: #ffffff;
+      box-shadow: 0 2px 16px #ffffff, 0 0 12px var(--accent-cyan);
+      pointer-events: none;
+      opacity: 0; /* Default: OFF */
+      transition: opacity 0.32s ease;
+      z-index: 3;
+    }
+
+    /* Focus State: Tilt -3.2deg, Zoom 1.09x, & Lampu ON */
+    .tv-card-16-9:hover, .tv-card-16-9.focused {
+      transform: scale(1.10) rotate(-3.2deg);
+      transform-origin: center center;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.9), 0 0 28px rgba(56, 189, 248, 0.35);
+      z-index: 50;
+    }
+
+    .tv-card-16-9:hover::before, .tv-card-16-9.focused::before {
+      opacity: 1;
+    }
+
+    .tv-card-16-9:hover::after, .tv-card-16-9.focused::after {
+      opacity: 1;
+    }
+
+    /* ═══════════════════════════════════════════════════════ */
+    /* ROW 1: PRIMARY CATEGORIES (320px x 180px -> 16:9)       */
+    /* ═══════════════════════════════════════════════════════ */
+    .card-r1 {
+      width: 320px;
+      padding: 22px 24px;
+    }
+
+    .grad-tv-v {
+      background: linear-gradient(180deg, rgba(20, 70, 140, 0.38) 0%, rgba(10, 32, 68, 0.78) 55%, rgba(4, 13, 28, 0.98) 100%);
+    }
+    .grad-tv-v:hover, .grad-tv-v.focused {
+      box-shadow: 0 28px 65px rgba(0, 0, 0, 0.85), 0 0 32px rgba(19, 108, 252, 0.5);
+    }
+
+    .grad-media-v {
+      background: linear-gradient(180deg, rgba(25, 85, 55, 0.38) 0%, rgba(12, 45, 28, 0.78) 55%, rgba(4, 18, 11, 0.98) 100%);
+    }
+    .grad-media-v:hover, .grad-media-v.focused {
+      box-shadow: 0 28px 65px rgba(0, 0, 0, 0.85), 0 0 32px rgba(45, 212, 191, 0.5);
+    }
+
+    .grad-hdmi-v {
+      background: linear-gradient(180deg, rgba(75, 35, 130, 0.38) 0%, rgba(38, 17, 68, 0.78) 55%, rgba(14, 6, 26, 0.98) 100%);
+    }
+    .grad-hdmi-v:hover, .grad-hdmi-v.focused {
+      box-shadow: 0 28px 65px rgba(0, 0, 0, 0.85), 0 0 32px rgba(168, 85, 247, 0.5);
+    }
+
+    .grad-cast-v {
+      background: linear-gradient(180deg, rgba(120, 30, 45, 0.38) 0%, rgba(60, 14, 22, 0.78) 55%, rgba(22, 4, 7, 0.98) 100%);
+    }
+    .grad-cast-v:hover, .grad-cast-v.focused {
+      box-shadow: 0 28px 65px rgba(0, 0, 0, 0.85), 0 0 32px rgba(255, 93, 93, 0.5);
+    }
+
+    /* ═══════════════════════════════════════════════════════ */
+    /* CUSTOM DUOTONE VECTOR ICONS FOR ROW 1                   */
+    /* (Layer 1: Solid Crisp Outline + Layer 2: Duotone Fill)  */
+    /* ═══════════════════════════════════════════════════════ */
+    .custom-icon-wrapper {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .tv-card-16-9:hover .custom-icon-wrapper,
+    .tv-card-16-9.focused .custom-icon-wrapper {
+      transform: scale(1.06);
+    }
+
+    .icon-svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    .r1-meta {
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .r1-title {
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      color: #fff;
+    }
+
+    .r1-sub {
+      font-size: 12.5px;
+      color: rgba(255, 255, 255, 0.72);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    /* ═══════════════════════════════════════════════════════ */
+    /* ROW 2: INSTALLED APPS (208px x 117px -> 16:9)           */
+    /* ═══════════════════════════════════════════════════════ */
+    .card-r2 {
+      width: 208px;
+      padding: 16px 20px;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      text-align: center;
+    }
+
+    .grad-yt-v { background: linear-gradient(180deg, rgba(110, 18, 18, 0.38) 0%, rgba(55, 8, 8, 0.78) 55%, rgba(18, 2, 2, 0.98) 100%); }
+    .grad-spotify-v { background: linear-gradient(180deg, rgba(22, 95, 48, 0.38) 0%, rgba(10, 48, 24, 0.78) 55%, rgba(3, 18, 8, 0.98) 100%); }
+    .grad-netflix-v { background: linear-gradient(180deg, rgba(95, 14, 22, 0.38) 0%, rgba(48, 6, 10, 0.78) 55%, rgba(16, 2, 3, 0.98) 100%); }
+    .grad-vidio-v { background: linear-gradient(180deg, rgba(105, 22, 32, 0.38) 0%, rgba(52, 10, 16, 0.78) 55%, rgba(18, 3, 5, 0.98) 100%); }
+    .grad-mx-v { background: linear-gradient(180deg, rgba(18, 65, 120, 0.38) 0%, rgba(8, 32, 60, 0.78) 55%, rgba(3, 12, 24, 0.98) 100%); }
+    .grad-xplore-v { background: linear-gradient(180deg, rgba(115, 68, 18, 0.38) 0%, rgba(58, 32, 8, 0.78) 55%, rgba(20, 10, 2, 0.98) 100%); }
+
+    .app-icon-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+      z-index: 5;
+    }
+
+    .card-r2 span {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #ffffff;
+      z-index: 5;
+    }
+
+    /* ═══════════════════════════════════════════════════════ */
+    /* ROW 3: SETTINGS & CUSTOMIZATION (160px x 90px -> 16:9)  */
+    /* ═══════════════════════════════════════════════════════ */
+    .card-r3 {
+      width: 160px;
+      padding: 12px 14px;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(55, 70, 105, 0.38) 0%, rgba(25, 34, 52, 0.78) 55%, rgba(10, 14, 22, 0.98) 100%);
+    }
+
+    .card-r3:hover, .card-r3.focused {
+      box-shadow: 0 22px 50px rgba(0, 0, 0, 0.8), 0 0 25px rgba(255, 255, 255, 0.25);
+    }
+
+    .r3-icon {
+      font-size: 22px;
+      z-index: 5;
+    }
+
+    .r3-title {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #e2e8f0;
+      z-index: 5;
+    }
+
+    /* ═══════════════════════════════════════════════════════ */
+    /* BOTTOM STATUS BAR                                       */
+    /* ═══════════════════════════════════════════════════════ */
+    .bottom-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 16px;
+    }
+
+    .bottom-left-shortcuts {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
+    .shortcut-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .key-badge {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .bottom-right-telemetry {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .weather-widget {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .weather-temp {
+      font-size: 16px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .clock-widget {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: #ffffff;
+    }
+
+    .clock-period {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CINEMATIC WALLPAPER LAYERS -->
+  <div class="cinematic-wallpaper"></div>
+  <svg class="wallpaper-art" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Subtle Elegant Dark Fluid Wave Curves -->
+    <path d="M-100 450 C 400 320, 800 680, 1400 480 C 1700 380, 1950 500, 2100 550" stroke="rgba(56, 189, 248, 0.12)" stroke-width="2.5" stroke-dasharray="6 6" />
+    <path d="M-50 520 C 500 390, 900 740, 1500 560 C 1800 480, 2000 600, 2150 630" stroke="rgba(195, 248, 74, 0.08)" stroke-width="2" />
+    <path d="M0 600 C 600 480, 1000 820, 1600 640 C 1850 550, 2050 670, 2200 700" stroke="rgba(168, 85, 247, 0.09)" stroke-width="2.5" />
+    <!-- Fine Cosmic Stardust Elements -->
+    <circle cx="350" cy="180" r="1.5" fill="rgba(255, 255, 255, 0.4)" />
+    <circle cx="920" cy="120" r="2" fill="rgba(56, 189, 248, 0.5)" />
+    <circle cx="1450" cy="220" r="1.5" fill="rgba(255, 255, 255, 0.35)" />
+    <circle cx="1680" cy="140" r="2.5" fill="rgba(195, 248, 74, 0.45)" />
+  </svg>
+
+  <!-- 1. TOPBAR HEADER -->
+  <header class="topbar">
+    <div class="brand-logo-wrap">
+      <div class="brand-mark">M</div>
+      <div class="brand-title">play<span>box</span></div>
+    </div>
+
+    <div class="top-actions">
+      <div class="top-icon-pill" tabindex="0">
+        <span>🔍</span>
+        <span>Cari Saluran & Aplikasi</span>
+      </div>
+      <div class="top-icon-pill" tabindex="0">
+        <span>⚙️</span>
+        <span>Setelan TV</span>
+      </div>
+      <div class="top-icon-pill" tabindex="0">
+        <span>👤</span>
+        <span>Profil Teplok</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- 2. MAIN 3-ROW NAVIGATION -->
+  <main class="rows-container">
+
+    <!-- ROW 1: PRIMARY CATEGORIES WITH CUSTOM DUOTONE VECTOR ICONS -->
+    <section class="row-group">
+      <div class="row-label">Saluran Utama & Input (Rasio 16:9 • Ikon Kustom Duotone)</div>
+      <div class="cards-track">
+
+        <!-- Card 1: Live TV (Default Focused: Tilt -3.2deg, Zoom, & Top Spotlight ON) -->
+        <div class="tv-card-16-9 card-r1 grad-tv-v focused" tabindex="0" onclick="setFocus(this)">
+          <div class="custom-icon-wrapper">
+            <!-- Custom Duotone SVG: Live Digital TV Broadcast -->
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Duotone Fill (Layer 2) -->
+              <rect x="3" y="6" width="18" height="12" rx="2.5" fill="var(--accent-cyan)" fill-opacity="0.3" />
+              <!-- Solid Contour Line (Layer 1) -->
+              <rect x="3" y="6" width="18" height="12" rx="2.5" stroke="#ffffff" stroke-width="1.8" />
+              <!-- Antenna & Stand -->
+              <path d="M8.5 2.5L12 6L15.5 2.5" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M10 21H14" stroke="#ffffff" stroke-width="2" stroke-linecap="round" />
+              <!-- Live Signal Dot -->
+              <circle cx="17.5" cy="8.5" r="1.2" fill="#ffffff" />
+            </svg>
+          </div>
+          <div class="r1-meta">
+            <div class="r1-title">Live TV Digital</div>
+            <div class="r1-sub">+48 Saluran Terpasang</div>
+          </div>
+        </div>
+
+        <!-- Card 2: Media & Bioskop (Unfocused: Lamp is OFF) -->
+        <div class="tv-card-16-9 card-r1 grad-media-v" tabindex="0" onclick="setFocus(this)">
+          <div class="custom-icon-wrapper">
+            <!-- Custom Duotone SVG: Film Clapperboard & Cinema Reel -->
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Duotone Fill (Layer 2) -->
+              <rect x="3" y="5" width="18" height="15" rx="3" fill="var(--accent-lime)" fill-opacity="0.32" />
+              <!-- Solid Contour Line (Layer 1) -->
+              <rect x="3" y="5" width="18" height="15" rx="3" stroke="#ffffff" stroke-width="1.8" />
+              <path d="M3 10H21" stroke="#ffffff" stroke-width="1.8" />
+              <!-- Clapper Diagonal Stripes -->
+              <path d="M7 5L5.5 10M12 5L10.5 10M17 5L15.5 10" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" />
+              <!-- Play Symbol inside film -->
+              <polygon points="10,13 15,15.5 10,18" fill="#ffffff" />
+            </svg>
+          </div>
+          <div class="r1-meta">
+            <div class="r1-title">Media & Bioskop</div>
+            <div class="r1-sub">USB Flashdisk & LAN</div>
+          </div>
+        </div>
+
+        <!-- Card 3: Port HDMI 1 & 2 (Unfocused: Lamp is OFF) -->
+        <div class="tv-card-16-9 card-r1 grad-hdmi-v" tabindex="0" onclick="setFocus(this)">
+          <div class="custom-icon-wrapper">
+            <!-- Custom Duotone SVG: Game Console Gamepad & Video Port -->
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Duotone Fill (Layer 2) -->
+              <path d="M6 8H18C20.5 8 21.5 10.5 21 14L19.5 19C19 20.5 17.5 21 16 20L13.5 17.5H10.5L8 20C6.5 21 5 20.5 4.5 19L3 14C2.5 10.5 3.5 8 6 8Z" fill="var(--accent-purple)" fill-opacity="0.35" />
+              <!-- Solid Contour Line (Layer 1) -->
+              <path d="M6 8H18C20.5 8 21.5 10.5 21 14L19.5 19C19 20.5 17.5 21 16 20L13.5 17.5H10.5L8 20C6.5 21 5 20.5 4.5 19L3 14C2.5 10.5 3.5 8 6 8Z" stroke="#ffffff" stroke-width="1.8" stroke-linejoin="round" />
+              <!-- D-Pad Plus -->
+              <path d="M7 12V16M5 14H9" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" />
+              <!-- Action Buttons -->
+              <circle cx="16" cy="12.5" r="1" fill="#ffffff" />
+              <circle cx="18" cy="14.5" r="1" fill="#ffffff" />
+            </svg>
+          </div>
+          <div class="r1-meta">
+            <div class="r1-title">Port HDMI 1 & 2</div>
+            <div class="r1-sub">Konsol Game & STB</div>
+          </div>
+        </div>
+
+        <!-- Card 4: Transmisi Layar (Unfocused: Lamp is OFF) -->
+        <div class="tv-card-16-9 card-r1 grad-cast-v" tabindex="0" onclick="setFocus(this)">
+          <div class="custom-icon-wrapper">
+            <!-- Custom Duotone SVG: Wireless Screen Mirroring / Cast Beam -->
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Duotone Fill (Layer 2) -->
+              <path d="M3 6C3 4.89543 3.89543 4 5 4H19C20.1046 4 21 4.89543 21 6V16C21 17.1046 20.1046 18 19 18H13" fill="var(--accent-coral)" fill-opacity="0.32" />
+              <!-- Solid Contour Line (Layer 1) -->
+              <path d="M3 9V6C3 4.89543 3.89543 4 5 4H19C20.1046 4 21 4.89543 21 6V16C21 17.1046 20.1046 18 19 18H13" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" />
+              <!-- Cast Radiating Waves -->
+              <path d="M3 17C4.65685 17 6 18.3431 6 20" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" />
+              <path d="M3 13C6.86599 13 10 16.134 10 20" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" />
+              <circle cx="3.5" cy="19.5" r="1" fill="#ffffff" />
+            </svg>
+          </div>
+          <div class="r1-meta">
+            <div class="r1-title">Transmisi Layar</div>
+            <div class="r1-sub">Google Cast & Miracast</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ROW 2: INSTALLED APPS (16:9 RATIO - VERTICAL GRADIENT) -->
+    <section class="row-group">
+      <div class="row-label">Aplikasi Favorit (Rasio 16:9)</div>
+      <div class="cards-track">
+
+        <div class="tv-card-16-9 card-r2 grad-yt-v" tabindex="0" onclick="setFocus(this)">
+          <div class="app-icon-circle" style="background:#ff0000;">▶</div>
+          <span>YouTube</span>
+        </div>
+
+        <div class="tv-card-16-9 card-r2 grad-spotify-v" tabindex="0" onclick="setFocus(this)">
+          <div class="app-icon-circle" style="background:#1db954;">♫</div>
+          <span>Spotify</span>
+        </div>
+
+        <div class="tv-card-16-9 card-r2 grad-netflix-v" tabindex="0" onclick="setFocus(this)">
+          <div class="app-icon-circle" style="background:#e50914;">N</div>
+          <span>Netflix</span>
+        </div>
+
+        <div class="tv-card-16-9 card-r2 grad-vidio-v" tabindex="0" onclick="setFocus(this)">
+          <div class="app-icon-circle" style="background:#ed1c24;">V</div>
+          <span>Vidio</span>
+        </div>
+
+        <div class="tv-card-16-9 card-r2 grad-mx-v" tabindex="0" onclick="setFocus(this)">
+          <div class="app-icon-circle" style="background:#0078d7;">MX</div>
+          <span>MX Player</span>
+        </div>
+
+        <div class="tv-card-16-9 card-r2 grad-xplore-v" tabindex="0" onclick="setFocus(this)">
+          <div class="app-icon-circle" style="background:#f59e0b;">📁</div>
+          <span>X-plore</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ROW 3: CUSTOMIZATION & SETTINGS (16:9 RATIO) -->
+    <section class="row-group">
+      <div class="row-label">Kustomisasi & Pengaturan (Rasio 16:9)</div>
+      <div class="cards-track">
+
+        <div class="tv-card-16-9 card-r3" tabindex="0" onclick="setFocus(this)">
+          <div class="r3-icon">🏷️</div>
+          <span class="r3-title">Kategori Kustom</span>
+        </div>
+
+        <div class="tv-card-16-9 card-r3" tabindex="0" onclick="setFocus(this)">
+          <div class="r3-icon">↕️</div>
+          <span class="r3-title">Atur Urutan</span>
+        </div>
+
+        <div class="tv-card-16-9 card-r3" tabindex="0" onclick="setFocus(this)">
+          <div class="r3-icon">🎨</div>
+          <span class="r3-title">Tema & Latar</span>
+        </div>
+
+        <div class="tv-card-16-9 card-r3" tabindex="0" onclick="setFocus(this)">
+          <div class="r3-icon">📶</div>
+          <span class="r3-title">Jaringan & Wi-Fi</span>
+        </div>
+
+        <div class="tv-card-16-9 card-r3" tabindex="0" onclick="setFocus(this)">
+          <div class="r3-icon">🛡️</div>
+          <span class="r3-title">Pengaturan TV</span>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 3. BOTTOM STATUS BAR -->
+  <footer class="bottom-bar">
+    <div class="bottom-left-shortcuts">
+      <div class="shortcut-item">
+        <span class="key-badge">OK</span>
+        <span>Buka</span>
+      </div>
+      <div class="shortcut-item">
+        <span class="key-badge">MENU</span>
+        <span>Kustomisasi</span>
+      </div>
+      <div class="shortcut-item">
+        <span class="key-badge">SOURCE</span>
+        <span>Pilih Input</span>
+      </div>
+    </div>
+
+    <div class="bottom-right-telemetry">
+      <div class="weather-widget">
+        <span>🌤️</span>
+        <span class="weather-temp">28°C</span>
+        <span>Cerah Berawan</span>
+      </div>
+
+      <div class="clock-widget">
+        <span id="clockHours">17:50</span>
+        <span class="clock-period">WIB</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // D-Pad Navigation and Click Focus Management
+    function setFocus(element) {
+      document.querySelectorAll('.tv-card-16-9').forEach(c => c.classList.remove('focused'));
+      element.classList.add('focused');
+      element.focus();
+    }
+
+    // Keyboard Arrow Keys D-Pad Simulation for Android TV Remote
+    document.addEventListener('keydown', (e) => {
+      const allCards = Array.from(document.querySelectorAll('.tv-card-16-9'));
+      const currentIndex = allCards.findIndex(c => c.classList.contains('focused'));
+      
+      if (currentIndex === -1) {
+        setFocus(allCards[0]);
+        return;
+      }
+
+      let nextIndex = currentIndex;
+      if (e.key === 'ArrowRight') {
+        nextIndex = Math.min(currentIndex + 1, allCards.length - 1);
+      } else if (e.key === 'ArrowLeft') {
+        nextIndex = Math.max(currentIndex - 1, 0);
+      } else if (e.key === 'ArrowDown') {
+        nextIndex = Math.min(currentIndex + 4, allCards.length - 1);
+      } else if (e.key === 'ArrowUp') {
+        nextIndex = Math.max(currentIndex - 4, 0);
+      } else if (e.key === 'Enter') {
+        alert('Membuka: ' + allCards[currentIndex].innerText.split('\n')[0]);
+      }
+
+      if (nextIndex !== currentIndex) {
+        setFocus(allCards[nextIndex]);
+      }
+    });
+
+    // Realtime Clock Update
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const el = document.getElementById('clockHours');
+      if (el) el.innerText = `${h}:${m}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+  </script>
+
+</body>
+</html>
