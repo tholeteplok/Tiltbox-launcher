@@ -1,4 +1,4 @@
-# Tiltbox Launcher v1.6.1 — Full Customizer & RT41 Optimized
+# Tiltbox Launcher v1.6.2 — Full Customizer & RT41 Optimized
 
 Versi lengkap yang mencakup seluruh fitur kustomisasi dan perbaikan audit untuk **TCL Chassis RT41** (`Realtek RTD2841 / RTD2851`, Android TV 9 Pie `V8-R41KT01-LF1V343`):
 
@@ -11,6 +11,14 @@ Versi lengkap yang mencakup seluruh fitur kustomisasi dan perbaikan audit untuk 
 3. **Kustomisasi Wallpaper**:
    - **5 Preset Sinematik** (`Obsidian Dark`, `Pure OLED Black`, `Emerald Cinema`, `Royal Midnight`, `Sunset Amber`).
    - **Wallpaper Gambar Lokal**: Mendukung pemilih gambar lokal (`<input type="file" accept="image/*">` yang terhubung ke `WebChromeClient.onShowFileChooser` di `MainActivity.kt`) dengan kompresi kanvas otomatis (`1280×720` JPEG) agar hemat RAM dan tersimpan di `localStorage`.
+
+## Perubahan v1.6.2
+
+- **Input HDMI/AV nyata**: daftar port dan status (terhubung / standby / tidak ada sinyal / tidak terdeteksi) dibaca dari `TvInputManager`, termasuk nama kustom port dari pengguna. Pindah input memakai `TvContract` passthrough URI; cara lama (paket sumber TCL) tetap jadi cadangan.
+- **RAM Booster jujur**: hanya mematikan proses latar aplikasi yang bisa dibuka pengguna (paket sistem/TCL dilindungi), mengukur RAM ±1 detik sesudahnya, dan menampilkan angka sebenarnya. Tidak ada lagi angka karangan.
+- **Data palsu dihapus**: status statis di kartu sumber (+5000 Channels, USB-1, 1080p, dll.), widget cuaca 28°, titik "aktif" di semua aplikasi, dan aplikasi contoh saat bridge mengembalikan daftar kosong.
+- Kategori aplikasi dibaca dari sistem Android; daftar aplikasi diurutkan alfabet; label zona waktu (WIB/WITA/WIT) dinamis.
+- Wallpaper otomatis: opsi "15 detik (Demo)" dihapus dan default kini **Nonaktif** (pengaturan lama dimigrasikan otomatis).
 
 ## Perubahan v1.6.1 (hasil audit)
 
@@ -26,7 +34,7 @@ Versi lengkap yang mencakup seluruh fitur kustomisasi dan perbaikan audit untuk 
 
 ```bash
 adb connect <IP-TV>:5555
-adb install -r TiltboxLauncher_v1.6.1-debug.apk
+adb install -r TiltboxLauncher_v1.6.2-debug.apk
 ```
 
 Lalu pilih Tiltbox sebagai launcher saat menekan tombol HOME (atau lewat Setelan → Aplikasi → Aplikasi default, tergantung firmware).

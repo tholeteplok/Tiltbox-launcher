@@ -17,6 +17,9 @@ import android.graphics.Matrix
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.media.ExifInterface
+import android.media.tv.TvContract
+import android.media.tv.TvInputInfo
+import android.media.tv.TvInputManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -36,7 +39,6 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Toast
 import android.annotation.TargetApi
 import org.json.JSONArray
 import org.json.JSONObject
@@ -173,6 +175,11 @@ class MainActivity : Activity() {
             val ok = saveWallpaper(uri)
             runOnUiThread { notifyWallpaperResult(ok, if (ok) "" else "error") }
         }.start()
+    }
+
+    /** Dipanggil dari thread bridge; harus berjalan di UI thread. */
+    fun runJs(script: String) {
+        runOnUiThread { webView.evaluateJavascript(script, null) }
     }
 
     private fun notifyWallpaperResult(ok: Boolean, reason: String) {
@@ -398,25 +405,91 @@ class MainActivity : Activity() {
             return false
         }
 
+        /**
+         * Input fisik TV (HDMI 1..n dan AV) dari TvInputManager.
+         * Kunci: "HDMI1", "HDMI2", ..., "AV". Input turunan CEC (perangkat di balik port) dilewati.
+         */
+        private fun hardwareInputs(): Map<String, TvInputInfo> {
+            val result = LinkedHashMap<String, TvInputInfo>()
+            val tim = context.getSystemService(Context.TV_INPUT_SERVICE) as? TvInputManager ?: return result
+            val hdmi = ArrayList<TvInputInfo>()
+            var composite: TvInputInfo? = null
+
+            for (info in tim.tvInputList) {
+                if (!info.isPassthroughInput) continue
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && info.parentId != null) continue
+                when (info.type) {
+                    TvInputInfo.TYPE_HDMI -> hdmi.add(info)
+                    TvInputInfo.TYPE_COMPOSITE -> if (composite == null) composite = info
+                }
+            }
+
+            // Nomor port diambil dari label bawaan ("HDMI 1"); bila tidak konsisten, pakai urutan id.
+            val labelNums = hdmi.map { info ->
+                Regex("(\\d+)").find(info.loadLabel(context)?.toString() ?: "")?.value?.toIntOrNull()
+            }
+            val useLabel = labelNums.all { it != null } && labelNums.toSet().size == labelNums.size
+            if (useLabel) {
+                hdmi.indices.sortedBy { labelNums[it]!! }.forEach { i -> result["HDMI${labelNums[i]}"] = hdmi[i] }
+            } else {
+                hdmi.sortedBy { it.id }.forEachIndexed { i, info -> result["HDMI${i + 1}"] = info }
+            }
+            composite?.let { result["AV"] = it }
+            return result
+        }
+
+        /** JSON: [{key,label,state}] dengan state = connected | standby | disconnected | unknown */
+        @JavascriptInterface
+        fun getTvInputs(): String {
+            val arr = JSONArray()
+            try {
+                val tim = context.getSystemService(Context.TV_INPUT_SERVICE) as? TvInputManager
+                    ?: return arr.toString()
+                for ((key, info) in hardwareInputs()) {
+                    val state = when (tim.getInputState(info.id)) {
+                        TvInputManager.INPUT_STATE_CONNECTED -> "connected"
+                        TvInputManager.INPUT_STATE_CONNECTED_STANDBY -> "standby"
+                        TvInputManager.INPUT_STATE_DISCONNECTED -> "disconnected"
+                        else -> "unknown"
+                    }
+                    val label = (info.loadCustomLabel(context) ?: info.loadLabel(context))?.toString() ?: key
+                    arr.put(JSONObject().put("key", key).put("label", label).put("state", state))
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "Gagal membaca input TV", e)
+            }
+            return arr.toString()
+        }
+
         @JavascriptInterface
         fun launchHdmi(port: String): Boolean {
+            try {
+                val info = hardwareInputs()[port]
+                if (info != null) {
+                    val intent = Intent(Intent.ACTION_VIEW, TvContract.buildChannelUriForPassthroughInput(info.id)).apply {
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }
+                    context.startActivity(intent)
+                    return true
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "Pindah input $port lewat TvInputManager gagal, pakai cara lama", e)
+            }
+            return legacyLaunchInputSource(port)
+        }
+
+        // Cadangan: aplikasi sumber input bawaan TCL (perilaku v1.6.0)
+        private fun legacyLaunchInputSource(port: String): Boolean {
             return try {
                 val pm = context.packageManager
-                val tclSources = arrayOf("com.tcl.tvinput", "com.tcl.sourcemanager", "com.tcl.tv")
-                for (pkg in tclSources) {
-                    val intent = pm.getLaunchIntentForPackage(pkg)
-                    if (intent != null) {
-                        intent.putExtra("input_source", port)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        context.startActivity(intent)
-                        return true
-                    }
+                for (pkg in arrayOf("com.tcl.tvinput", "com.tcl.sourcemanager", "com.tcl.tv")) {
+                    val intent = pm.getLaunchIntentForPackage(pkg) ?: continue
+                    intent.putExtra("input_source", port)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(intent)
+                    return true
                 }
-                val intent = Intent("android.media.tv.action.VIEW_INPUTS").apply {
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                }
-                context.startActivity(intent)
-                true
+                false
             } catch (e: Exception) {
                 false
             }
@@ -549,40 +622,58 @@ class MainActivity : Activity() {
             }
         }
 
-        @JavascriptInterface
-        fun boostRam(): String {
-            return try {
-                val am = context.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
-                val pm = context.packageManager
-                val myPkg = context.packageName
+        @Volatile
+        private var boosting = false
 
-                val beforeMi = ActivityManager.MemoryInfo()
-                am?.getMemoryInfo(beforeMi)
+        // Paket sistem/TCL tidak pernah dimatikan (mis. service remote Bluetooth, input method).
+        private val protectedPrefixes = arrayOf(
+            "com.android.", "android", "com.tcl.", "com.mediatek", "com.realtek",
+            "com.google.android.gms", "com.google.android.gsf", "com.google.android.katniss",
+            "com.google.android.inputmethod", "com.google.android.tvlauncher"
+        )
 
-                if (am != null) {
-                    for (app in pm.getInstalledApplications(0)) {
-                        if (app.packageName != myPkg && !app.packageName.startsWith("com.android.systemui")) {
-                            am.killBackgroundProcesses(app.packageName)
-                        }
-                    }
-                }
-                System.gc()
-
-                val afterMi = ActivityManager.MemoryInfo()
-                am?.getMemoryInfo(afterMi)
-
-                val freedMb = Math.max(12L, (afterMi.availMem - beforeMi.availMem) / (1024 * 1024))
-                val availMb = afterMi.availMem / (1024 * 1024)
-                val totalMb = afterMi.totalMem / (1024 * 1024)
-                val msg = "RAM Booster: +${freedMb} MB dibebaskan (Tersedia ${availMb} / ${totalMb} MB)"
-
-                Handler(Looper.getMainLooper()).post {
-                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
-                }
-                msg
-            } catch (e: Exception) {
-                "Gagal membersihkan RAM"
+        private fun launchablePackages(): Set<String> {
+            val pm = context.packageManager
+            val pkgs = LinkedHashSet<String>()
+            for (cat in arrayOf(Intent.CATEGORY_LEANBACK_LAUNCHER, Intent.CATEGORY_LAUNCHER)) {
+                @Suppress("DEPRECATION")
+                pm.queryIntentActivities(Intent(Intent.ACTION_MAIN).addCategory(cat), 0)
+                    .forEach { it.activityInfo?.packageName?.let(pkgs::add) }
             }
+            return pkgs
+        }
+
+        /**
+         * Mematikan proses latar aplikasi yang bisa dibuka pengguna (bukan sistem/TCL), lalu
+         * mengukur RAM ~1 detik kemudian (sistem butuh waktu memperbarui angka).
+         * Hasil nyata dikirim ke JS lewat onRamBoosted(freedMb, availMb, totalMb); freedMb = -1 bila gagal.
+         */
+        @JavascriptInterface
+        fun boostRam(): Boolean {
+            if (boosting) return true
+            boosting = true
+            Thread {
+                try {
+                    val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+                    val before = ActivityManager.MemoryInfo().also { am.getMemoryInfo(it) }
+                    for (pkg in launchablePackages()) {
+                        if (pkg == context.packageName) continue
+                        if (protectedPrefixes.any { pkg.startsWith(it) }) continue
+                        am.killBackgroundProcesses(pkg)
+                    }
+                    Thread.sleep(1200)
+                    val after = ActivityManager.MemoryInfo().also { am.getMemoryInfo(it) }
+                    val mb = 1024L * 1024L
+                    val freed = Math.max(0L, (after.availMem - before.availMem) / mb)
+                    activity.runJs("if(typeof onRamBoosted==='function') onRamBoosted($freed, ${after.availMem / mb}, ${after.totalMem / mb});")
+                } catch (e: Throwable) {
+                    Log.e(TAG, "RAM boost gagal", e)
+                    activity.runJs("if(typeof onRamBoosted==='function') onRamBoosted(-1, 0, 0);")
+                } finally {
+                    boosting = false
+                }
+            }.start()
+            return true
         }
 
         @JavascriptInterface
@@ -591,10 +682,9 @@ class MainActivity : Activity() {
                 val am = context.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
                 val mi = ActivityManager.MemoryInfo()
                 am?.getMemoryInfo(mi)
-                val availMb = mi.availMem / (1024 * 1024)
-                "${availMb} MB Bebas"
+                "${mi.availMem / (1024 * 1024)} MB Bebas"
             } catch (e: Exception) {
-                "450 MB Bebas"
+                "RAM tidak terbaca"
             }
         }
 
@@ -623,6 +713,7 @@ class MainActivity : Activity() {
                     "com.tcl.tv"
                 )
 
+                val items = mutableListOf<JSONObject>()
                 val allResolveInfos = mutableListOf<ResolveInfo>()
                 allResolveInfos.addAll(pm.queryIntentActivities(intentLeanback, 0))
                 allResolveInfos.addAll(pm.queryIntentActivities(intentStandard, 0))
@@ -640,9 +731,13 @@ class MainActivity : Activity() {
                         put("packageName", pkgName)
                         put("name", appName)
                         put("icon", iconBase64)
+                        put("category", if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                            info.activityInfo.applicationInfo.category else -1)
                     }
-                    jsonArray.put(appObj)
+                    items.add(appObj)
                 }
+                items.sortBy { it.optString("name").lowercase() }
+                items.forEach { jsonArray.put(it) }
             } catch (e: Exception) {
                 Log.e(TAG, "Gagal mengambil daftar aplikasi", e)
             }
