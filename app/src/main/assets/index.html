@@ -3,376 +3,383 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Playbox — Smart TV Launcher</title>
+<title>Tiltbox Launcher v1.6.1 (RT41 Full Customizer Edition)</title>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
     --yellow:#f6c515;
-    --teal-1:rgba(133,222,214,.75); --teal-2:rgba(38,128,132,.55); --teal-3:rgba(12,74,80,.70);
-    --glass-1:rgba(255,255,255,.16); --glass-2:rgba(255,255,255,.04);
-    --txt:#fff; --muted:rgba(255,255,255,.55);
+    --teal-1:rgba(133,222,214,.78); --teal-2:rgba(38,128,132,.62); --teal-3:rgba(12,74,80,.82);
+    --glass-1:rgba(255,255,255,.15); --glass-2:rgba(255,255,255,.05);
+    --txt:#fff; --muted:rgba(255,255,255,.58);
+    --card-w:256px; --card-h:142px;
   }
-  *{margin:0;padding:0;box-sizing:border-box;font-family:'Manrope',system-ui,sans-serif;}
-  html,body{height:100%;overflow:hidden;background:#07090a;}
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Manrope',system-ui,-apple-system,sans-serif;}
+  html,body{height:100%;overflow:hidden;background:#07090a;color:var(--txt);user-select:none;}
   button{background:none;border:none;color:inherit;cursor:pointer;text-align:left;}
 
-  /* ============ BACKGROUND ============ */
+  /* ============ BACKGROUND (PRESET SINEMATIK + WALLPAPER LOKAL) ============ */
   .bg{position:fixed;inset:0;background:
-      radial-gradient(500px 400px at 85% 55%, rgba(0,0,0,.55), transparent 70%),
-      radial-gradient(900px 500px at 70% 15%, #17211f 0%, transparent 60%),
-      linear-gradient(180deg,#0c1112,#080b0c 55%,#050708);}
-  .collage{position:absolute;left:7%;top:9%;width:34%;height:48%;display:grid;
-    grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:8px;
-    filter:blur(16px) saturate(.75);opacity:.45;transform:rotate(-2deg);}
-  .collage div:nth-child(1){background:linear-gradient(140deg,#3a403d,#232827);}
-  .collage div:nth-child(2){background:linear-gradient(140deg,#2c3230,#434a46);}
-  .collage div:nth-child(3){background:linear-gradient(140deg,#242928,#313735);}
-  .collage div:nth-child(4){background:linear-gradient(140deg,#3d4340,#202524);}
-  .beam{position:absolute;height:170px;width:65%;filter:blur(26px);
-    background:linear-gradient(90deg,transparent,rgba(255,255,255,.075),transparent);
-    transform:rotate(-16deg);animation:drift 14s ease-in-out infinite alternate;}
-  .beam.b1{top:5%;left:25%;} .beam.b2{top:24%;left:45%;opacity:.6;animation-delay:-6s;}
-  @keyframes drift{from{transform:rotate(-16deg) translateX(-40px);}to{transform:rotate(-16deg) translateX(60px);}}
-  .vignette{position:absolute;inset:0;background:radial-gradient(120% 95% at 50% 40%, transparent 42%, rgba(0,0,0,.6) 100%);}
+      radial-gradient(550px 420px at 82% 52%, rgba(0,0,0,.58), transparent 70%),
+      radial-gradient(880px 480px at 68% 16%, #162221 0%, transparent 62%),
+      linear-gradient(180deg,#0c1112,#080b0c 55%,#050708);
+      background-size:cover;background-position:center;
+      transition:background 1.2s ease;}
+  body.theme-oled .bg{background:radial-gradient(700px 420px at 50% 18%, #0c1213 0%, #000000 78%);}
+  body.theme-emerald .bg{background:radial-gradient(880px 500px at 68% 16%, #0f2c29 0%, #040908 78%);}
+  body.theme-royal .bg{background:radial-gradient(880px 500px at 68% 16%, #162038 0%, #060911 78%);}
+  body.theme-sunset .bg{background:radial-gradient(880px 500px at 68% 16%, #331a12 0%, #090605 78%);}
+  body.has-custom-wp .collage{display:none;}
+
+  .collage{position:absolute;left:6%;top:9%;width:34%;height:46%;display:grid;
+    grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px;
+    opacity:.22;transform:rotate(-2deg);pointer-events:none;}
+  .collage div{border-radius:16px;}
+  .collage div:nth-child(1){background:radial-gradient(circle at 30% 30%,#3a423f,transparent 75%);}
+  .collage div:nth-child(2){background:radial-gradient(circle at 70% 30%,#2d3533,transparent 75%);}
+  .collage div:nth-child(3){background:radial-gradient(circle at 30% 70%,#252c2a,transparent 75%);}
+  .collage div:nth-child(4){background:radial-gradient(circle at 70% 70%,#363d3a,transparent 75%);}
+
+  .beam{position:absolute;inset:0;pointer-events:none;
+    background:
+      linear-gradient(164deg, transparent 22%, rgba(255,255,255,.045) 36%, transparent 50%),
+      radial-gradient(650px 260px at 65% 22%, rgba(246,197,21,.06), transparent 70%);
+    transition:opacity .35s ease;}
+  .beam.off{opacity:0;}
+  .vignette{position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(120% 95% at 50% 40%, rgba(0,0,0,.18) 35%, rgba(0,0,0,.72) 100%);}
 
   /* ============ HEADER ============ */
-  header{position:absolute;top:0;left:0;right:0;z-index:6;padding:22px 50px 8px;
-    display:flex !important;flex-direction:row !important;justify-content:space-between !important;align-items:flex-start !important;}
-  
-  .header-left{display:flex;flex-direction:column;gap:8px;align-items:flex-start;}
+  header{position:absolute;top:0;left:0;right:0;z-index:6;padding:18px 46px;
+    display:flex;justify-content:space-between;align-items:center;gap:12px;}
+  .brand-pill{display:flex;align-items:center;gap:10px;padding:6px 14px 6px 8px;border-radius:999px;
+    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);}
+  .brand-logo{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--yellow),#d4a200);
+    display:grid;place-items:center;color:#111;font-weight:800;}
+  .brand-pill span{font-size:11.5px;font-weight:700;color:rgba(255,255,255,.85);}
+  .brand-pill small{font-size:10px;color:var(--yellow);font-weight:800;margin-left:4px;}
 
-  /* Tiltbox rata kiri dengan text besar 2x (48px) */
-  .logo{font-size:48px;font-weight:800;letter-spacing:-1.2px;line-height:1;color:var(--txt);user-select:none;text-align:left;}
-  .logo span{color:var(--yellow);} 
-  .logo sup{font-size:15px;color:var(--muted);vertical-align:super;margin-left:2px;}
+  .logo-txt{position:absolute;left:50%;transform:translateX(-50%);font-size:25px;font-weight:800;
+    letter-spacing:-.5px;color:var(--txt);user-select:none;}
+  .logo-txt span{color:var(--yellow);} .logo-txt sup{font-size:9px;color:var(--muted);margin-left:2px;}
 
-  /* Search bar manual & voice input dibawahnya */
-  .search-container{display:flex;align-items:center;gap:10px;margin-top:2px;}
-  
-  .search-bar{display:flex;align-items:center;gap:10px;width:320px;height:36px;padding:0 14px;
-    border-radius:18px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
-    backdrop-filter:blur(14px);color:#fff;cursor:pointer;
-    transition:all .3s cubic-bezier(.22,1,.36,1);}
-  .search-bar:hover, .search-bar.focus{border-color:var(--yellow);background:rgba(255,255,255,.14);
-    box-shadow:0 0 0 2px rgba(246,197,21,.5), 0 8px 24px rgba(0,0,0,.4);transform:scale(1.02);}
-  .search-bar svg{width:16px;height:16px;stroke:var(--muted);transition:.3s;flex-shrink:0;}
-  .search-bar:hover svg, .search-bar.focus svg{stroke:var(--yellow);}
-  .search-input{background:none;border:none;outline:none;color:#fff;font-size:11.5px;width:100%;font-weight:500;}
-  .search-input::placeholder{color:var(--muted);opacity:.85;}
+  .header-actions{display:flex;align-items:center;gap:10px;}
+  .ctrl{width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.11);
+    background:rgba(255,255,255,.07);display:grid;place-items:center;transition:transform .2s ease, background .2s ease, border-color .2s ease;color:#fff;}
+  .ctrl:hover,.ctrl.focus{background:rgba(255,255,255,.16);border-color:var(--yellow);transform:scale(1.06);
+    box-shadow:0 0 0 2px rgba(246,197,21,.45);}
+  .ctrl svg{width:19px;height:19px;}
+  .avatar{background:radial-gradient(circle at 35% 28%, #ff6b5e, #a9241d 75%);overflow:hidden;}
+  .avatar svg{width:27px;height:27px;transform:translateY(3px);}
 
-  .voice-btn{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.07);
-    border:1px solid rgba(255,255,255,.12);display:grid;place-items:center;cursor:pointer;
-    backdrop-filter:blur(14px);transition:all .3s cubic-bezier(.22,1,.36,1);color:#fff;}
-  .voice-btn:hover, .voice-btn.focus{background:var(--yellow);border-color:transparent;color:#151006;
-    box-shadow:0 0 24px rgba(246,197,21,.65);transform:scale(1.08);}
-  .voice-btn svg{width:17px;height:17px;}
-
-  .header-right{display:flex;align-items:center;gap:12px;padding-top:4px;}
-  .ctrl{width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.09);
-    background:rgba(255,255,255,.07);display:grid;place-items:center;transition:.3s;color:#fff;}
-  .ctrl:hover, .ctrl.focus{background:rgba(255,255,255,.18);transform:scale(1.05);border-color:rgba(255,255,255,.3);}
-  .ctrl svg{width:20px;height:20px;transition:.4s;}
-  .ctrl.gear:hover svg, .ctrl.gear.focus svg{transform:rotate(60deg);}
-
-  /* ============ LANES (3 BARIS) ============ */
-  main{position:absolute;top:136px;bottom:60px;left:0;right:0;z-index:4;
-    display:flex;flex-direction:column;gap:18px;
-    overflow-y:auto;scroll-behavior:smooth;scrollbar-width:none;
-    scroll-padding-top:60px;
-    padding-bottom:32px;}
+  /* ============ MAIN 3-LANE CONTAINER ============ */
+  main{position:absolute;top:68px;bottom:0;left:0;right:0;z-index:4;
+    display:flex;flex-direction:column;justify-content:flex-start;gap:8px;
+    overflow-y:auto;scrollbar-width:none;padding-top:6px;padding-bottom:96px;scroll-behavior:smooth;}
   main::-webkit-scrollbar{display:none;}
-  .lane{display:flex;flex-direction:column;gap:8px;flex-shrink:0;}
-  .lane-head{padding:0 50px;display:flex;align-items:baseline;gap:10px;}
-  .lane-head h2{font-size:11.5px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.85);}
-  .lane-head h2::before{content:"";display:inline-block;width:14px;height:3px;border-radius:2px;
-    background:var(--yellow);margin-right:8px;vertical-align:middle;}
-  .lane-head em{font-style:normal;font-size:9.5px;color:var(--muted);letter-spacing:.06em;}
-  
-  /* Baris container dengan ruang lega ekstra agar kartu miring (-4°) tidak terpotong header */
-  .row{display:flex;gap:18px;overflow-x:auto;padding:26px 50px 18px;width:100%;
-    align-items:center;scroll-snap-type:x proximity;scrollbar-width:none;
-    margin-top:-10px;margin-bottom:-6px;}
+  .lane{display:flex;flex-direction:column;gap:2px;transition:opacity .25s ease;}
+  .lane.lane-hidden{display:none !important;}
+  .lane-head{padding:0 64px;display:flex;align-items:baseline;gap:12px;}
+  .lane-head h2{font-size:11.5px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.88);}
+  .lane-head h2::before{content:"";display:inline-block;width:16px;height:3px;border-radius:2px;
+    background:var(--yellow);margin-right:10px;vertical-align:middle;}
+  .lane-head em{font-style:normal;font-size:10px;color:var(--muted);letter-spacing:.05em;}
+  .row{display:flex;gap:20px;overflow-x:auto;padding:18px 64px;width:100%;
+    align-items:center;scroll-snap-type:x proximity;scrollbar-width:none;}
   .row::-webkit-scrollbar{display:none;}
-  .item{position:relative;flex:0 0 auto;scroll-snap-align:center;scroll-margin-top:50px;
-    transition:transform .4s cubic-bezier(.22,1,.36,1), background .4s, box-shadow .4s, border-color .4s;}
+
+  .item{position:relative;flex:0 0 auto;scroll-snap-align:center;
+    transition:transform .26s cubic-bezier(.22,1,.36,1), background .26s ease, box-shadow .26s ease, border-color .26s ease;}
   .item:focus{outline:none;}
-  .item.pulse{box-shadow:0 0 0 3px rgba(246,197,21,.9), 0 24px 60px rgba(0,0,0,.5) !important;}
+  .item.pulse{box-shadow:0 0 0 3px rgba(246,197,21,.95), 0 20px 48px rgba(0,0,0,.55) !important;}
 
-  /* --- Baris 1 : Sumber / Input (KARTU BESAR 16:9 & TIDAK TERPOTONG SAAT MIRING) --- */
-  .src{width:244px;height:126px;border-radius:17px;padding:14px 17px;color:var(--txt);
+  /* ============ KARTU BESAR BARIS 1 & 2 ============ */
+  .card{width:var(--card-w);height:var(--card-h);border-radius:20px;padding:16px 20px;color:var(--txt);
     display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;
-    background:linear-gradient(150deg,var(--glass-1),var(--glass-2) 55%,rgba(255,255,255,.02));
-    border:1px solid rgba(255,255,255,.13);
-    backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-    box-shadow:0 16px 36px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.12);}
-  .src:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.25);}
-  .src h3{font-size:16.5px;font-weight:700;}
-  .src .count{font-size:11px;font-weight:600;opacity:.92;}
-  .src .stat{margin-top:2px;font-size:8.5px;color:var(--muted);display:flex;align-items:center;gap:5px;}
-  .dot{width:6px;height:6px;border-radius:50%;background:#42d77d;box-shadow:0 0 8px #42d77d;}
+    background:linear-gradient(150deg,rgba(255,255,255,.15) 0%,rgba(28,40,42,.68) 52%,rgba(12,20,22,.86) 100%);
+    border-top:1px solid rgba(255,255,255,.24);
+    border-left:1px solid rgba(255,255,255,.18);
+    border-right:1px solid rgba(255,255,255,.09);
+    border-bottom:1px solid rgba(255,255,255,.08);
+    box-shadow:0 14px 32px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.14);}
+  .card h3{font-size:18px;font-weight:700;max-width:146px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .card .count{font-size:12px;font-weight:600;opacity:.92;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .card .stat{margin-top:3px;font-size:10px;color:var(--muted);display:flex;align-items:center;gap:6px;}
+  .dot{width:6px;height:6px;border-radius:50%;background:#42d77d;box-shadow:0 0 6px #42d77d;}
   .dot.off{background:rgba(255,255,255,.25);box-shadow:none;}
-  .src-icon{position:absolute;right:15px;top:50%;transform:translateY(-50%);width:50px;height:50px;
-    filter:drop-shadow(0 6px 14px rgba(0,0,0,.35));}
-  .src-icon svg{width:100%;height:100%;}
-  .tab{position:absolute;top:-10px;left:50%;transform:translateX(-50%) scale(.5);width:70px;height:14px;
-    border-radius:7px;background:var(--yellow);opacity:0;transition:.4s cubic-bezier(.22,1,.36,1);}
-  .src.focus{transform:rotate(-4deg) translateY(-8px) scale(1.05);z-index:2;
+
+  .card-icon{position:absolute;right:20px;top:50%;transform:translateY(-50%);width:62px;height:62px;}
+  .card-icon svg{width:100%;height:100%;}
+
+  .logo-box{position:absolute;right:20px;top:50%;transform:translateY(-50%);width:62px;height:62px;
+    border-radius:15px;overflow:hidden;background:#111718;
+    box-shadow:0 8px 18px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.14);
+    display:grid;place-items:center;}
+  .logo-box svg,.logo-box img{width:100%;height:100%;object-fit:cover;display:block;}
+
+  .tab{position:absolute;top:-11px;left:50%;transform:translateX(-50%) scale(.5);width:76px;height:15px;
+    border-radius:7px;background:var(--yellow);opacity:0;
+    box-shadow:0 0 24px rgba(246,197,21,.75);
+    transition:transform .26s cubic-bezier(.22,1,.36,1), opacity .26s ease;}
+
+  .card.focus{transform:rotate(-3.2deg) translateY(-9px) scale(1.05);z-index:5;
     background:linear-gradient(155deg,var(--teal-1),var(--teal-2) 45%,var(--teal-3));
-    border-color:rgba(255,255,255,.28);
-    box-shadow:0 28px 64px rgba(0,0,0,.55), 0 0 44px rgba(64,190,185,.18), inset 0 1px 0 rgba(255,255,255,.3);}
-  .src.focus .tab{opacity:1;transform:translateX(-50%) scale(1);
-    box-shadow:0 0 28px rgba(246,197,21,.6);animation:glow 2.6s ease-in-out infinite;}
-  @keyframes glow{0%,100%{box-shadow:0 0 18px rgba(246,197,21,.45);}50%{box-shadow:0 0 38px rgba(246,197,21,.85);}}
+    border-color:rgba(255,255,255,.32);
+    box-shadow:0 24px 52px rgba(0,0,0,.6), 0 0 36px rgba(64,190,185,.22), inset 0 1px 0 rgba(255,255,255,.32);}
+  .card.focus .tab{opacity:1;transform:translateX(-50%) scale(1);}
 
-  /* --- Baris 2 : Aplikasi (KARTU BESAR SQUIRCLE PAS DI ATAS FOOTER) --- */
-  .app{display:flex;flex-direction:column;align-items:center;gap:6px;width:76px;}
-  .thumb{width:76px;height:76px;border-radius:18px;overflow:hidden;display:grid;place-items:center;
-    border:1px solid rgba(255,255,255,.1);box-shadow:0 10px 24px rgba(0,0,0,.5);transition:inherit;}
-  .thumb svg{width:100%;height:100%;display:block;}
-  .app-name{font-size:9.5px;font-weight:600;color:var(--muted);transition:.3s;white-space:nowrap;}
-  .app:hover .thumb{transform:translateY(-3px);}
-  .app.focus{transform:translateY(-5px) scale(1.10);z-index:2;}
-  .app.focus .thumb{box-shadow:0 0 0 3px var(--yellow), 0 0 32px rgba(246,197,21,.35), 0 18px 36px rgba(0,0,0,.6);}
-  .app.focus .app-name{color:var(--yellow);}
+  .card.add{align-items:center;justify-content:center;gap:6px;text-align:center;
+    background:rgba(255,255,255,.04);border:1.5px dashed rgba(255,255,255,.3);}
+  .card.add .plus{font-size:30px;font-weight:300;color:rgba(255,255,255,.75);line-height:1;}
+  .card.add p{font-size:11px;color:var(--muted);max-width:155px;}
+  .card.add.focus{background:rgba(246,197,21,.14);border-color:var(--yellow);}
+  .card.add.focus .plus{color:var(--yellow);}
 
-  /* --- Baris 3 : Pengaturan cepat (LEGA DI BAWAH) --- */
-  .set{display:flex;align-items:center;gap:12px;width:260px;padding:12px 15px;border-radius:16px;color:var(--txt);
-    background:linear-gradient(150deg,rgba(255,255,255,.1),rgba(255,255,255,.03));
-    border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(14px);
+  /* ============ BARIS 3 : PENGATURAN CEPAT ============ */
+  .set{display:flex;align-items:center;gap:14px;width:276px;padding:13px 16px;border-radius:18px;color:var(--txt);
+    background:linear-gradient(150deg,rgba(255,255,255,.11),rgba(18,26,28,.82));
+    border:1px solid rgba(255,255,255,.13);
     box-shadow:0 10px 24px rgba(0,0,0,.4);}
-  .set:hover{transform:translateY(-2px);}
-  .s-ico{width:36px;height:36px;flex:0 0 auto;border-radius:10px;background:rgba(255,255,255,.08);
-    border:1px solid rgba(255,255,255,.08);display:grid;place-items:center;transition:.35s;}
-  .s-ico svg{width:18px;height:18px;}
-  .s-txt b{display:block;font-size:12px;font-weight:700;}
-  .s-txt span{font-size:9.5px;color:var(--muted);}
-  .set.focus{transform:scale(1.04);border-color:rgba(246,197,21,.65);z-index:2;
-    background:linear-gradient(150deg,rgba(246,197,21,.16),rgba(255,255,255,.04));
+  .s-ico{width:40px;height:40px;flex:0 0 auto;border-radius:12px;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.09);display:grid;place-items:center;transition:.25s;}
+  .s-ico svg{width:19px;height:19px;}
+  .s-txt b{display:block;font-size:13px;font-weight:700;}
+  .s-txt span{font-size:10px;color:var(--muted);}
+  .set.focus{transform:scale(1.04);border-color:rgba(246,197,21,.7);z-index:5;
+    background:linear-gradient(150deg,rgba(246,197,21,.18),rgba(20,28,30,.88));
     box-shadow:0 0 0 2px rgba(246,197,21,.55), 0 16px 36px rgba(0,0,0,.5);}
   .set.focus .s-ico{background:var(--yellow);color:#151006;border-color:transparent;}
 
-  /* ============ FOOTER ============ */
-  footer{position:absolute;left:30px;right:30px;bottom:12px;z-index:6;padding:10px 32px;
-    border-radius:24px;
-    background:rgba(12,18,20,.52);
-    border:1px solid rgba(255,255,255,.1);
-    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-    box-shadow:0 8px 32px rgba(0,0,0,.5);
+  /* ============ 1. BOTTOM BAR TRANSPARAN & DINAMIS (FROSTED GLASS + AUTO HIDE/SHOW) ============ */
+  footer{
+    position:fixed;left:36px;right:36px;bottom:14px;z-index:15;
+    padding:12px 28px;border-radius:22px;
     display:flex;justify-content:space-between;align-items:center;color:var(--txt);
-    transition:transform .4s cubic-bezier(.22,1,.36,1), opacity .35s ease;
-    will-change:transform, opacity;}
-  footer.hide{transform:translateY(120%);opacity:0;pointer-events:none;}
-  .shift{display:flex;align-items:center;gap:10px;font-size:12px;font-weight:600;}
-  .shift .ico{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.08);
-    border:1px solid rgba(255,255,255,.1);display:grid;place-items:center;}
-  .shift .ico svg{width:16px;height:16px;}
-  .status{display:flex;align-items:center;gap:14px;}
-  .time{font-size:18px;font-weight:800;letter-spacing:.5px;}
-  .time small{font-size:10px;font-weight:600;opacity:.6;margin-left:3px;}
-  .divider{width:1px;height:30px;background:rgba(255,255,255,.16);}
+    /* Semi-transparent Frosted Glass styling */
+    background:linear-gradient(135deg, rgba(28, 40, 44, 0.62) 0%, rgba(10, 16, 18, 0.76) 100%);
+    border-top:1px solid rgba(255, 255, 255, 0.24);
+    border-left:1px solid rgba(255, 255, 255, 0.16);
+    border-right:1px solid rgba(255, 255, 255, 0.10);
+    border-bottom:1px solid rgba(255, 255, 255, 0.08);
+    box-shadow:0 14px 36px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    transform:translateY(0);opacity:1;
+    transition:transform .32s cubic-bezier(.22,1,.36,1), opacity .28s ease;
+  }
+  footer.auto-hidden{
+    transform:translateY(calc(100% + 28px));
+    opacity:0;
+    pointer-events:none;
+  }
+  .shift{display:flex;align-items:center;gap:12px;font-size:12.5px;font-weight:600;padding:4px 12px 4px 4px;
+    border-radius:999px;transition:.2s;}
+  .shift:hover,.shift.focus{background:rgba(246,197,21,.14);box-shadow:0 0 0 1.5px var(--yellow);}
+  .shift .ico{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.09);
+    border:1px solid rgba(255,255,255,.12);display:grid;place-items:center;}
+  .shift .ico svg{width:17px;height:17px;}
+  .status{display:flex;align-items:center;gap:16px;}
+  .time{font-size:19px;font-weight:800;letter-spacing:.4px;}
+  .time small{font-size:10.5px;font-weight:600;opacity:.65;margin-left:3px;}
+  .divider{width:1px;height:28px;background:rgba(255,255,255,.16);}
   .place b{display:block;font-size:13.5px;font-weight:700;}
-  .place span{font-size:9.5px;color:var(--muted);}
-  .weather{display:flex;align-items:center;gap:8px;}
+  .place span{font-size:10px;color:var(--muted);}
+  .weather{display:flex;align-items:center;gap:7px;}
   .weather svg{width:32px;height:32px;}
-  .temp{font-size:13px;font-weight:600;opacity:.85;}
+  .temp{font-size:13px;font-weight:700;opacity:.9;}
 
-  /* ============ MODAL KUSTOMISASI & ALL APPS ============ */
-  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-    z-index:20;display:flex;justify-content:center;align-items:center;opacity:0;pointer-events:none;transition:opacity .3s ease;}
-  .modal-overlay.open{opacity:1;pointer-events:auto;}
-  .modal-card{width:860px;max-height:85vh;border-radius:24px;background:linear-gradient(160deg,rgba(25,32,36,.92),rgba(14,19,22,.95));
-    border:1px solid rgba(255,255,255,.14);box-shadow:0 24px 60px rgba(0,0,0,.8);padding:30px 40px;display:flex;flex-direction:column;gap:20px;color:#fff;}
-  .modal-head{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.08);padding-bottom:14px;}
-  .modal-head h3{font-size:20px;font-weight:800;letter-spacing:-.5px;}
+  /* ============ MODALS (CUSTOMIZER, ALL APPS GRID, FAVORITE ORDER) ============ */
+  .modal-overlay{position:fixed;inset:0;background:rgba(5,8,9,.90);
+    z-index:100;display:none;place-items:center;padding:20px;}
+  .modal-overlay.active{display:grid;}
+  .modal-card{width:100%;max-width:680px;max-height:88vh;overflow-y:auto;background:#101618;
+    border:1px solid rgba(255,255,255,.16);border-radius:24px;padding:24px 28px;
+    display:flex;flex-direction:column;gap:14px;box-shadow:0 28px 70px rgba(0,0,0,.85);}
+  .modal-head{display:flex;justify-content:space-between;align-items:center;
+    border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:12px;}
+  .modal-head h3{font-size:19px;font-weight:800;}
   .modal-head h3 span{color:var(--yellow);}
-  .modal-head .close-hint{font-size:11px;color:var(--muted);}
-  .modal-body{overflow-y:auto;display:flex;flex-direction:column;gap:18px;max-height:60vh;padding:4px;}
-  .modal-body::-webkit-scrollbar{display:none;}
+  .close-btn{padding:6px 14px;border-radius:999px;background:rgba(255,255,255,.08);
+    font-size:11px;font-weight:700;color:var(--muted);border:1px solid rgba(255,255,255,.1);}
+  .close-btn:hover{background:rgba(246,197,21,.2);color:var(--yellow);border-color:var(--yellow);}
+  .modal-body{display:flex;flex-direction:column;gap:9px;}
+  .modal-section-label{font-size:10.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--yellow);margin-top:6px;}
+  .modal-item{width:100%;padding:12px 16px;border-radius:14px;background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;
+    transition:.2s;gap:12px;}
+  .modal-item b{display:block;font-size:13.5px;font-weight:700;}
+  .modal-item span{font-size:11px;color:var(--muted);}
+  .modal-item .set-val{font-size:11.5px;font-weight:800;color:var(--yellow);white-space:nowrap;}
+  .modal-item:hover,.modal-item.focused{border-color:var(--yellow);background:rgba(246,197,21,.12);outline:none;}
 
-  /* Setting row item inside modal */
-  .set-opt{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-radius:14px;
-    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);cursor:pointer;transition:.25s;}
-  .set-opt:hover, .set-opt.focus{background:rgba(255,255,255,.12);border-color:var(--yellow);transform:scale(1.01);box-shadow:0 0 16px rgba(246,197,21,.3);}
-  .set-opt b{font-size:13.5px;display:block;}
-  .set-opt span{font-size:10.5px;color:var(--muted);}
-  .set-val{font-size:12px;font-weight:700;color:var(--yellow);background:rgba(246,197,21,.15);padding:4px 10px;border-radius:8px;}
+  /* Grid Semua Aplikasi + Kontrol Pin Favorit (Maks 9) & Geser Urutan */
+  .grid-apps{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:12px;margin-top:4px;}
+  .grid-app-card{padding:12px;border-radius:16px;background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.1);display:flex;flex-direction:column;justify-content:space-between;
+    gap:10px;transition:.2s;}
+  .grid-app-card.is-fav{border-color:rgba(246,197,21,.45);background:rgba(246,197,21,.06);}
+  .grid-app-top{display:flex;align-items:center;gap:10px;cursor:pointer;}
+  .grid-app-top .tile-ico{width:44px;height:44px;border-radius:11px;overflow:hidden;flex:0 0 auto;display:grid;place-items:center;background:#0c1112;}
+  .grid-app-top .tile-ico svg,.grid-app-top .tile-ico img{width:100%;height:100%;object-fit:cover;}
+  .grid-app-info{overflow:hidden;}
+  .grid-app-info b{display:block;font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .grid-app-info small{display:block;font-size:10px;color:var(--muted);}
+  .grid-app-actions{display:flex;align-items:center;justify-content:space-between;gap:6px;border-top:1px solid rgba(255,255,255,.07);padding-top:8px;}
+  .pill-btn{padding:4px 9px;border-radius:8px;font-size:10.5px;font-weight:700;background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.1);}
+  .pill-btn:hover{border-color:var(--yellow);color:var(--yellow);}
+  .pill-btn.fav-on{background:rgba(246,197,21,.2);color:var(--yellow);border-color:rgba(246,197,21,.5);}
 
-  /* Grid Semua Aplikasi Modal */
-  .grid-apps{display:grid;grid-template-columns:repeat(5, 1fr);gap:18px;padding:10px 4px;}
-  .grid-app-item{display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px;border-radius:16px;cursor:pointer;transition:.25s;}
-  .grid-app-item:hover, .grid-app-item.focus{background:rgba(255,255,255,.1);transform:scale(1.08);}
-  .grid-app-item.focus .thumb{box-shadow:0 0 0 3px var(--yellow), 0 0 24px rgba(246,197,21,.4);}
-  .grid-app-item .thumb{width:68px;height:68px;border-radius:18px;}
-  .grid-app-item span{font-size:10px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80px;text-align:center;}
+  /* Fokus D-Pad di dalam modal */
+  .mf{outline:2px solid var(--yellow) !important;outline-offset:2px;border-color:var(--yellow) !important;
+    background:rgba(246,197,21,.14) !important;}
+  .grid-app-top.mf{border-radius:12px;}
 
   /* ============ TOAST & HINT ============ */
-  .toast{position:fixed;left:50%;bottom:104px;transform:translate(-50%,16px);z-index:9;
-    display:flex;align-items:center;gap:10px;padding:11px 20px;border-radius:999px;
-    background:rgba(20,26,27,.85);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(14px);
-    font-size:12.5px;font-weight:600;color:#fff;opacity:0;pointer-events:none;transition:.35s;}
+  .toast{position:fixed;left:50%;bottom:88px;transform:translate(-50%,16px);z-index:200;
+    display:flex;align-items:center;gap:10px;padding:11px 22px;border-radius:999px;
+    background:#141c1e;border:1px solid var(--yellow);
+    box-shadow:0 16px 40px rgba(0,0,0,.75);
+    font-size:12.5px;font-weight:700;color:#fff;opacity:0;pointer-events:none;transition:.3s;}
   .toast.show{opacity:1;transform:translate(-50%,0);}
-  .t-dot{width:8px;height:8px;border-radius:50%;background:var(--yellow);box-shadow:0 0 10px var(--yellow);}
-  .hint{display:none;}
+  .t-dot{width:8px;height:8px;border-radius:50%;background:var(--yellow);box-shadow:0 0 8px var(--yellow);}
+  .hint{position:fixed;bottom:78px;left:50%;transform:translateX(-50%);z-index:5;
+    font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);opacity:.55;transition:opacity 1s;pointer-events:none;}
+  .hint.hide{opacity:0;}
+
+  @media (max-height:800px){
+    :root{--card-w:236px;--card-h:126px;}
+    .card{padding:14px 18px;} .card h3{font-size:16.5px;}
+    .card-icon,.logo-box{width:52px;height:52px;right:16px;}
+    .set{width:248px;padding:11px 14px;} .row{padding:14px 56px;gap:16px;}
+    .lane-head{padding:0 56px;}
+  }
+  @media (max-width:900px){
+    .row,.lane-head{padding-left:24px;padding-right:24px;}
+    .brand-pill{display:none;}
+    footer{left:16px;right:16px;bottom:10px;padding:10px 18px;}
+  }
 </style>
 </head>
 <body>
 
-<div class="bg">
+<div class="bg" id="bgLayer">
   <div class="collage"><div></div><div></div><div></div><div></div></div>
-  <div class="beam b1"></div><div class="beam b2"></div><div class="vignette"></div>
+  <div class="beam" id="beamBg"></div>
+  <div class="vignette"></div>
 </div>
 
+<!-- Hidden File Input for Local Wallpaper Image -->
+<input type="file" id="wallpaperFileInput" accept="image/*" style="display:none;" />
+
 <header>
-  <div class="header-left">
-    <div class="logo">tilt<span>box</span><sup>™</sup></div>
-    <div class="search-container">
-      <div class="search-bar item" tabindex="0" data-name="Pencarian" data-action="search" onclick="document.getElementById('manualSearchInput').focus();">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-        <input type="text" class="search-input" id="manualSearchInput" placeholder="Cari film, acara TV, aplikasi…" onkeydown="if(event.key==='Enter'&&window.TiltboxBridge){window.TiltboxBridge.launchSearch(this.value);event.stopPropagation();}" />
-      </div>
-      <button class="voice-btn item" tabindex="0" title="Voice Search" data-name="Pencarian Suara" data-action="voice" onclick="if(window.TiltboxBridge) window.TiltboxBridge.launchVoiceSearch();">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
-        </svg>
-      </button>
-    </div>
+  <div class="brand-pill">
+    <div class="brand-logo">T</div>
+    <span>Tiltbox <b>RT41</b> <small>v1.6.1</small></span>
   </div>
 
-  <div class="header-right">
-    <button class="ctrl gear item" tabindex="0" title="Kustomisasi &amp; Pengaturan" data-name="Kustomisasi" data-action="customizer">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+  <div class="logo-txt">play<span>box</span><sup>™</sup></div>
+
+  <div class="header-actions">
+    <button type="button" class="ctrl" id="btnVoice" title="Pencarian Suara">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+    </button>
+    <button type="button" class="ctrl gear" id="btnCustomizer" title="Kustomisasi Baris, Favorit &amp; Wallpaper">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+    <button type="button" class="ctrl avatar" id="btnProfile" title="Overlay Semua Aplikasi &amp; Atur Favorit">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4" fill="#40100d"/><path d="M4 22c1.6-5.4 5-7.5 8-7.5s6.4 2.1 8 7.5z" fill="#40100d"/></svg>
     </button>
   </div>
 </header>
 
-<main>
+<main id="mainContainer">
   <!-- ===== BARIS 1 : SUMBER & INPUT ===== -->
-  <section class="lane">
-    <div class="lane-head"><h2>Sumber &amp; Input</h2><em>Live TV, Media, HDMI</em></div>
-    <div class="row">
-      <button class="item src" data-name="Live TV's" data-action="livetv">
+  <section class="lane" id="laneSources">
+    <div class="lane-head"><h2>Sumber &amp; Input</h2><em>Live TV, Media, HDMI (TCL TV+ V5.2.0)</em></div>
+    <div class="row" id="rowSources">
+      <button type="button" class="item card" data-action="livetv" data-name="Live TV's">
         <span class="tab"></span><h3>Live TV's</h3>
-        <div class="src-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="20" width="50" height="36" rx="9"/><path d="M24 20 18 9M40 20 46 9"/><polyline points="22,40 29,33 35,41 43,31" stroke="#f6c515"/></svg></div>
-        <div><p class="count">+48 Saluran</p><p class="stat"><span class="dot"></span>Siaran TV Digital</p></div>
+        <div class="card-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="20" width="50" height="36" rx="9"/><path d="M24 20 18 9M40 20 46 9"/><polyline points="22,40 29,33 35,41 43,31" stroke="#f6c515"/></svg></div>
+        <div><p class="count">+5000 Channels</p><p class="stat"><span class="dot"></span>Siaran aktif</p></div>
       </button>
-      <button class="item src" data-name="Media Player" data-action="media">
+      <button type="button" class="item card" data-action="media" data-name="Media Player">
         <span class="tab"></span><h3>Media</h3>
-        <div class="src-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20a6 6 0 0 1 6-6h10l6 6h18a6 6 0 0 1 6 6v20a6 6 0 0 1-6 6H14a6 6 0 0 1-6-6z"/><path d="M28 30l12 7-12 7z" stroke="#f6c515"/></svg></div>
-        <div><p class="count">USB &amp; File Lokal</p><p class="stat"><span class="dot"></span>Penyimpanan lokal</p></div>
+        <div class="card-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20a6 6 0 0 1 6-6h10l6 6h18a6 6 0 0 1 6 6v20a6 6 0 0 1-6 6H14a6 6 0 0 1-6-6z"/><path d="M28 30l12 7-12 7z" stroke="#f6c515"/></svg></div>
+        <div><p class="count">USB &amp; File Lokal</p><p class="stat"><span class="dot"></span>USB-1 terbaca</p></div>
       </button>
-      <button class="item src" data-name="HDMI 1" data-action="hdmi" data-port="HDMI1">
+      <button type="button" class="item card" data-action="hdmi" data-port="HDMI1" data-name="HDMI 1">
         <span class="tab"></span><h3>HDMI 1</h3>
-        <div class="src-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 22h44v12l-6 6H16l-6-6z"/><path d="M20 28v6M28 28v6M36 28v6M44 28v6" stroke="#f6c515"/><path d="M32 40v10"/></svg></div>
-        <div><p class="count">Input HDMI 1</p><p class="stat"><span class="dot"></span>Terhubung</p></div>
+        <div class="card-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 22h44v12l-6 6H16l-6-6z"/><path d="M20 28v6M28 28v6M36 28v6M44 28v6" stroke="#f6c515"/><path d="M32 40v10"/></svg></div>
+        <div><p class="count">PlayStation / STB</p><p class="stat"><span class="dot"></span>Terhubung • 1080p</p></div>
       </button>
-      <button class="item src" data-name="HDMI 2" data-action="hdmi" data-port="HDMI2">
+      <button type="button" class="item card" data-action="hdmi" data-port="HDMI2" data-name="HDMI 2">
         <span class="tab"></span><h3>HDMI 2</h3>
-        <div class="src-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 22h44v12l-6 6H16l-6-6z"/><path d="M20 28v6M28 28v6M36 28v6M44 28v6" stroke="#f6c515"/><path d="M32 40v10"/></svg></div>
-        <div><p class="count">Input HDMI 2</p><p class="stat"><span class="dot off"></span>Standby</p></div>
+        <div class="card-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 22h44v12l-6 6H16l-6-6z"/><path d="M20 28v6M28 28v6M36 28v6M44 28v6" stroke="#f6c515"/><path d="M32 40v10"/></svg></div>
+        <div><p class="count">PC Desktop / ARC</p><p class="stat"><span class="dot off"></span>Standby</p></div>
       </button>
-      <button class="item src" data-name="Screen Cast" data-action="cast">
+      <button type="button" class="item card" data-action="hdmi" data-port="AV" data-name="AV Input">
+        <span class="tab"></span><h3>AV Input</h3>
+        <div class="card-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 22h44v12l-6 6H16l-6-6z"/><path d="M20 28v6M28 28v6M36 28v6M44 28v6"/><path d="M32 40v10"/></svg></div>
+        <div><p class="count">RCA / Composite</p><p class="stat"><span class="dot off"></span>Port siap</p></div>
+      </button>
+      <button type="button" class="item card" data-action="cast" data-name="Screen Cast">
         <span class="tab"></span><h3>Cast</h3>
-        <div class="src-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="14" width="48" height="34" rx="6"/><path d="M14 42a10 10 0 0 1 10 10M14 34a18 18 0 0 1 18 18" stroke="#f6c515"/><circle cx="15" cy="47" r="2.5" fill="#f6c515" stroke="none"/></svg></div>
-        <div><p class="count">Google Cast</p><p class="stat"><span class="dot"></span>Siap menerima</p></div>
+        <div class="card-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="14" width="48" height="34" rx="6"/><path d="M14 42a10 10 0 0 1 10 10M14 34a18 18 0 0 1 18 18" stroke="#f6c515"/><circle cx="15" cy="47" r="2.5" fill="#f6c515" stroke="none"/></svg></div>
+        <div><p class="count">Miracast / Cast</p><p class="stat"><span class="dot"></span>Siap menerima</p></div>
       </button>
     </div>
   </section>
 
-  <!-- ===== BARIS 2 : APLIKASI TERPASANG (MAX 9 + SEMUA APLIKASI 9-DOT GRID) ===== -->
-  <section class="lane" id="appsLane">
-    <div class="lane-head"><h2>Aplikasi Terpasang</h2><em>Streaming &amp; Hiburan</em></div>
-    <div class="row" id="appsRow">
-      <button class="item app" data-name="YouTube" data-action="app" data-pkg="com.google.android.youtube.tv">
-        <span class="thumb"><svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#f00"/><path d="M19 15v18l16-9z" fill="#fff"/></svg></span>
-        <span class="app-name">YouTube</span>
-      </button>
-      <button class="item app" data-name="Spotify" data-action="app" data-pkg="com.spotify.tv.android">
-        <span class="thumb"><svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#1db954"/><g fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round"><path d="M13 18c8-2.2 16-1.6 22 1.4"/><path d="M14.5 24.5c6.6-1.8 12.6-1.3 17.6 1.1"/><path d="M16 30.5c5-1.3 9.4-.9 13.2 1"/></g></svg></span>
-        <span class="app-name">Spotify</span>
-      </button>
-      <button class="item app" data-name="Vision+" data-action="app" data-pkg="id.visionplus.android.atv">
-        <span class="thumb"><svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#002b49"/><text x="24" y="32" text-anchor="middle" font-family="Manrope,sans-serif" font-size="20" font-weight="900" fill="#00d6ff">V+</text></svg></span>
-        <span class="app-name">Vision+</span>
-      </button>
-      <button class="item app" data-name="MX Player" data-action="app" data-pkg="com.mxtech.videoplayer.ad">
-        <span class="thumb"><svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#0078d7"/><text x="24" y="30" text-anchor="middle" font-family="Manrope,sans-serif" font-size="16" font-weight="800" fill="#fff">MX</text></svg></span>
-        <span class="app-name">MX Player</span>
-      </button>
-      <button class="item app" data-name="X-plore" data-action="app" data-pkg="com.lonelycatgames.Xplore">
-        <span class="thumb"><svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#f59e0b"/><path d="M12 16h8l4 4h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V18a2 2 0 0 1 2-2z" fill="#fff"/></svg></span>
-        <span class="app-name">X-plore</span>
-      </button>
-      <button class="item app" data-name="Play Store" data-action="app" data-pkg="com.android.vending">
-        <span class="thumb"><svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#141a21"/><path d="M13 11v26l14-13z" fill="#00d6ff"/><path d="M27 24L33.5 30.2 13 11z" fill="#00f076"/><path d="M27 24l4.2-2.7 5.2 3c1 .6 1 1.7 0 2.2l-5.2 3.1L27 24z" fill="#ffc107"/><path d="M13 37l14-13 6.5 6.2L14.8 38.6c-.9.5-1.8.1-1.8-1.6z" fill="#ff3d00"/></svg></span>
-        <span class="app-name">Play Store</span>
-      </button>
-      <button class="item app" data-name="Semua Aplikasi" data-action="apps">
-        <span class="thumb" style="border-color:rgba(246,197,21,.35);background:rgba(255,255,255,.05);">
-          <svg viewBox="0 0 48 48">
-            <rect width="48" height="48" rx="14" fill="rgba(255,255,255,.06)"/>
-            <g fill="#f6c515">
-              <circle cx="16" cy="16" r="3.2"/>
-              <circle cx="24" cy="16" r="3.2"/>
-              <circle cx="32" cy="16" r="3.2"/>
-              <circle cx="16" cy="24" r="3.2"/>
-              <circle cx="24" cy="24" r="3.2"/>
-              <circle cx="32" cy="24" r="3.2"/>
-              <circle cx="16" cy="32" r="3.2"/>
-              <circle cx="24" cy="32" r="3.2"/>
-              <circle cx="32" cy="32" r="3.2"/>
-            </g>
-          </svg>
-        </span>
-        <span class="app-name" style="color:var(--yellow);font-weight:700;">Semua Aplikasi</span>
-      </button>
+  <!-- ===== BARIS 2 : APLIKASI FAVORIT (MAKS 9 + OVERLAY GRID SEMUA APLIKASI) ===== -->
+  <section class="lane" id="laneApps">
+    <div class="lane-head"><h2>Aplikasi Favorit</h2><em id="favCountSubtitle">Menampilkan 6/9 favorit • Klik + untuk Semua Aplikasi</em></div>
+    <div class="row" id="rowApps">
+      <!-- Dirender secara dinamis (Maksimal 9 Aplikasi Favorit + Kartu Semua Aplikasi) -->
     </div>
   </section>
 
   <!-- ===== BARIS 3 : PENGATURAN CEPAT ===== -->
-  <section class="lane">
-    <div class="lane-head"><h2>Pengaturan Cepat</h2><em>Setelan &amp; Utilitas TV</em></div>
-    <div class="row">
-      <button class="item set" data-name="RAM Booster" data-action="boost">
-        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
-        <span class="s-txt"><b>RAM Booster</b><span>Percepat TV &amp; bersihkan memori</span></span>
+  <section class="lane" id="laneSettings">
+    <div class="lane-head"><h2>Pengaturan Cepat</h2><em>kustomisasi baris, wallpaper lokal, memori RT41</em></div>
+    <div class="row" id="rowSettings">
+      <button type="button" class="item set" data-action="customizer" data-name="Kustomisasi Tiltbox">
+        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg></span>
+        <span class="s-txt"><b>Kustomisasi &amp; Wallpaper</b><span>Baris, favorit (maks 9) &amp; foto lokal</span></span>
       </button>
-      <button class="item set" data-name="Pengaturan TV" data-action="settings">
-        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
-        <span class="s-txt"><b>Pengaturan TV</b><span>Setelan sistem Android</span></span>
+      <button type="button" class="item set" data-action="order" data-name="Urutan Launcher">
+        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16m0 0l-3-3m3 3l3-3M17 20V4m0 0l-3 3m3-3l3 3"/></svg></span>
+        <span class="s-txt"><b>Tukar Urutan Baris</b><span id="subRowOrder">Sumber &rarr; Aplikasi</span></span>
       </button>
-      <button class="item set" data-name="Jaringan & Wi-Fi" data-action="wifi">
-        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg></span>
-        <span class="s-txt"><b>Jaringan &amp; Wi-Fi</b><span>Koneksi internet &amp; Wi-Fi</span></span>
+      <button type="button" class="item set" data-action="local_wp" data-name="Wallpaper Gambar Lokal">
+        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span>
+        <span class="s-txt"><b>Wallpaper Lokal</b><span id="subLocalWp">Pilih gambar dari TV / USB</span></span>
       </button>
-      <button class="item set" data-name="Kelola Aplikasi" data-action="apps">
-        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg></span>
-        <span class="s-txt"><b>Kelola Aplikasi</b><span>Daftar aplikasi terpasang</span></span>
+      <button type="button" class="item set" data-action="boost" data-name="RAM Booster RT41">
+        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
+        <span class="s-txt"><b>Boost RAM RT41</b><span id="subRamBoost">Bersihkan aplikasi latar</span></span>
       </button>
-      <button class="item set" data-name="Gambar & Suara TCL" data-action="tcl_settings">
-        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></span>
-        <span class="s-txt"><b>Gambar &amp; Suara TCL</b><span>Preset TV</span></span>
+      <button type="button" class="item set" data-action="tcl_settings" data-name="Gambar & Suara TCL">
+        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></svg></span>
+        <span class="s-txt"><b>Gambar &amp; Suara TCL</b><span>Setelan panel &amp; audio TV+</span></span>
       </button>
-      <button class="item set" data-name="Kustomisasi Launcher" data-action="customizer">
-        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>
-        <span class="s-txt"><b>Kustomisasi Launcher</b><span>Tema, wallpaper &amp; susunan baris</span></span>
+      <button type="button" class="item set" data-action="settings" data-name="Pengaturan Android TV">
+        <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="3"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+        <span class="s-txt"><b>Setelan Sistem</b><span>Android TV 9 Pie (API 28)</span></span>
       </button>
     </div>
   </section>
 </main>
 
-<p class="hint" id="hint">↑ ↓ ← → navigasi &nbsp;•&nbsp; Enter pilih</p>
+<p class="hint" id="hint">↑ ↓ ← → navigasi D-Pad (Scroll Down = Auto-Hide Bottom Bar, Scroll Up = Auto-Show)</p>
 
-<footer>
-  <div class="shift" onclick="boostRamAction();" style="cursor:pointer;" title="Percepat TV &amp; bersihkan memori">
+<!-- ============ 1. FROSTED GLASS SEMI-TRANSPARENT DYNAMIC BOTTOM BAR ============ -->
+<footer id="bottomBar">
+  <button type="button" class="shift" id="btnFooterRam" title="Percepat TV &amp; bersihkan memori">
     <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
-    <span>RAM Booster: <b id="ramBoosterText" style="color:var(--yellow);font-weight:700;">450 MB Bebas</b></span>
-  </div>
+    <span>RAM Booster: <b id="ramBoosterText" style="color:var(--yellow);font-weight:800;">450 MB Bebas</b></span>
+  </button>
   <div class="status">
     <div class="time" id="clock">12:51 <small>am</small></div>
     <div class="divider"></div>
-    <div class="place"><b>Indonesia</b><span>Zona WIB</span></div>
+    <div class="place"><b>Indonesia</b><span>TCL RT41 • WIB</span></div>
     <div class="weather" id="weatherWidget">
       <svg id="weatherIcon" viewBox="0 0 64 64"><circle cx="24" cy="18" r="9" fill="#f6c515"/><path transform="translate(8,10) scale(2.2)" d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" fill="#fff" opacity=".92"/></svg>
       <span class="temp" id="weatherTemp">28°</span>
@@ -380,57 +387,96 @@
   </div>
 </footer>
 
-<!-- MODAL KUSTOMISASI -->
+<!-- ============ MODAL KUSTOMISASI LENGKAP ============ -->
 <div class="modal-overlay" id="customizerModal">
   <div class="modal-card">
     <div class="modal-head">
       <h3>Kustomisasi <span>Tiltbox</span></h3>
-      <span class="close-hint">Tekan BACK untuk kembali</span>
+      <button type="button" class="close-btn" id="btnCloseCustomizer">✕ Tutup (BACK)</button>
     </div>
     <div class="modal-body" id="customizerOptions">
-      <div class="set-opt modal-item" tabindex="0" data-opt="wallpaper">
+      <div class="modal-section-label">1. Kustomisasi Urutan &amp; Visibilitas Baris</div>
+      <button type="button" class="set-opt modal-item" data-opt="order">
         <div>
-          <b>Tema &amp; Wallpaper</b>
-          <span>Pilih latar belakang sinematik</span>
-        </div>
-        <span class="set-val" id="valWallpaper">Obsidian Dark</span>
-      </div>
-      <div class="set-opt modal-item" tabindex="0" data-opt="order">
-        <div>
-          <b>Urutan Baris Utama</b>
-          <span>Tukar urutan Sumber vs Aplikasi</span>
+          <b>Tukar Posisi Baris Utama</b>
+          <span>Ubah susunan antara Sumber &amp; Input dengan Aplikasi Favorit</span>
         </div>
         <span class="set-val" id="valRowOrder">Sumber &rarr; Aplikasi</span>
-      </div>
-      <div class="set-opt modal-item" tabindex="0" data-opt="beam">
+      </button>
+      <button type="button" class="set-opt modal-item" data-opt="toggle_sources">
         <div>
-          <b>Animasi Cahaya Beam</b>
-          <span>Efek sorotan miring dinamis</span>
+          <b>Visibilitas Baris Sumber &amp; Input</b>
+          <span>Tampilkan atau sembunyikan baris Live TV &amp; HDMI</span>
+        </div>
+        <span class="set-val" id="valShowSources">Tampil</span>
+      </button>
+      <button type="button" class="set-opt modal-item" data-opt="toggle_settings">
+        <div>
+          <b>Visibilitas Baris Pengaturan Cepat</b>
+          <span>Tampilkan atau sembunyikan baris ke-3 di bawah</span>
+        </div>
+        <span class="set-val" id="valShowSettings">Tampil</span>
+      </button>
+      <button type="button" class="set-opt modal-item" data-opt="manage_favs">
+        <div>
+          <b>Susunan Aplikasi Favorit (Maks 9) &amp; Semua Aplikasi</b>
+          <span>Pin/unpin dan geser urutan aplikasi favorit di beranda</span>
+        </div>
+        <span class="set-val" id="valFavCount">6 / 9 Favorit &rarr;</span>
+      </button>
+
+      <div class="modal-section-label">2. Kustomisasi Wallpaper (Preset, Auto-Rotate &amp; Gambar Lokal)</div>
+      <button type="button" class="set-opt modal-item" data-opt="wallpaper">
+        <div>
+          <b>Preset Tema Sinematik</b>
+          <span>Obsidian Dark, Pure OLED, Emerald Cinema, Royal, Sunset</span>
+        </div>
+        <span class="set-val" id="valWallpaper">Obsidian Dark</span>
+      </button>
+      <button type="button" class="set-opt modal-item" data-opt="auto_wallpaper">
+        <div>
+          <b>Rotasi Otomatis Preset Wallpaper</b>
+          <span>Ganti tema preset otomatis (Nonaktif / 15 dtk / 5 mnt / 15 mnt / 30 mnt / 1 jam)</span>
+        </div>
+        <span class="set-val" id="valAutoWallpaper">Tiap 15 Menit</span>
+      </button>
+      <button type="button" class="set-opt modal-item" data-opt="local_wallpaper">
+        <div>
+          <b>Pilih Wallpaper Gambar Lokal</b>
+          <span>Muat foto/gambar kustom dari memori internal TV atau USB</span>
+        </div>
+        <span class="set-val" id="valLocalWallpaper">Pilih Berkas...</span>
+      </button>
+      <button type="button" class="set-opt modal-item" data-opt="reset_wallpaper">
+        <div>
+          <b>Hapus Wallpaper Lokal</b>
+          <span>Kembalikan latar ke preset sinematik bawaan</span>
+        </div>
+        <span class="set-val">Reset</span>
+      </button>
+      <button type="button" class="set-opt modal-item" data-opt="beam">
+        <div>
+          <b>Sorotan Cahaya Beam</b>
+          <span>Efek pencahayaan diagonal sinematik</span>
         </div>
         <span class="set-val" id="valBeam">Aktif</span>
-      </div>
-      <div class="set-opt modal-item" tabindex="0" data-opt="system">
-        <div>
-          <b>Pengaturan TV Android</b>
-          <span>Buka setelan bawaan sistem</span>
-        </div>
-        <span class="set-val">&rarr;</span>
-      </div>
+      </button>
     </div>
   </div>
 </div>
 
-<!-- MODAL SEMUA APLIKASI (GRID VIEW) -->
+<!-- ============ MODAL OVERLAY GRID SEMUA APLIKASI & KELOLA FAVORIT (MAKS 9) ============ -->
 <div class="modal-overlay" id="allAppsModal">
-  <div class="modal-card" style="width:920px;">
+  <div class="modal-card" style="max-width:880px;">
     <div class="modal-head">
-      <h3>Semua <span>Aplikasi</span></h3>
-      <span class="close-hint">Tekan BACK untuk kembali</span>
+      <div>
+        <h3>Semua <span>Aplikasi</span> &amp; Susunan Favorit</h3>
+        <p style="font-size:11.5px;color:var(--muted);margin-top:2px;">Klik ikon aplikasi untuk membuka, klik <b>★ Favorit</b> (Maks 9), atau gunakan <b>◀ ▶</b> untuk menggeser urutan favorit.</p>
+      </div>
+      <button type="button" class="close-btn" id="btnCloseAllApps">✕ Tutup (BACK)</button>
     </div>
     <div class="modal-body">
-      <div class="grid-apps" id="allAppsGridContainer">
-        <!-- Rendered dynamically -->
-      </div>
+      <div class="grid-apps" id="allAppsGridContainer"></div>
     </div>
   </div>
 </div>
@@ -438,494 +484,864 @@
 <div class="toast" id="toast"><span class="t-dot"></span><span id="toastMsg"></span></div>
 
 <script>
+  const MAX_FAVORITES = 9;
+
   const KNOWN_APP_ICONS = {
-    'com.google.android.youtube.tv': '<rect width="48" height="48" fill="#f00"/><path d="M19 15v18l16-9z" fill="#fff"/>',
-    'com.spotify.tv.android': '<rect width="48" height="48" fill="#1db954"/><g fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round"><path d="M13 18c8-2.2 16-1.6 22 1.4"/><path d="M14.5 24.5c6.6-1.8 12.6-1.3 17.6 1.1"/><path d="M16 30.5c5-1.3 9.4-.9 13.2 1"/></g>',
-    'id.visionplus.android.atv': '<rect width="48" height="48" fill="#002b49"/><text x="24" y="32" text-anchor="middle" font-family="Manrope,sans-serif" font-size="20" font-weight="900" fill="#00d6ff">V+</text>',
-    'com.mxtech.videoplayer.ad': '<rect width="48" height="48" fill="#0078d7"/><text x="24" y="30" text-anchor="middle" font-family="Manrope,sans-serif" font-size="16" font-weight="800" fill="#fff">MX</text>',
-    'com.lonelycatgames.Xplore': '<rect width="48" height="48" fill="#f59e0b"/><path d="M12 16h8l4 4h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V18a2 2 0 0 1 2-2z" fill="#fff"/>',
-    'com.android.vending': '<rect width="48" height="48" fill="#141a21"/><path d="M13 11v26l14-13z" fill="#00d6ff"/><path d="M27 24L33.5 30.2 13 11z" fill="#00f076"/><path d="M27 24l4.2-2.7 5.2 3c1 .6 1 1.7 0 2.2l-5.2 3.1L27 24z" fill="#ffc107"/><path d="M13 37l14-13 6.5 6.2L14.8 38.6c-.9.5-1.8.1-1.8-1.6z" fill="#ff3d00"/>',
-    'com.netflix.ninja': '<rect width="48" height="48" fill="#0b0b0b"/><text x="24" y="34" text-anchor="middle" font-family="Manrope,sans-serif" font-size="27" font-weight="800" fill="#e50914">N</text>',
-    'com.kmk.video.tcl': '<rect width="48" height="48" fill="#e52d27"/><path d="M17 14l16 10-16 10V14z" fill="#fff"/>',
-    'com.android.gallery3d': '<rect width="48" height="48" fill="#0284c7"/><circle cx="20" cy="18" r="5" fill="#f6c515"/><polygon points="10,38 22,24 32,34 38,28 44,38" fill="#fff"/>'
+    'com.google.android.youtube.tv': '<svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#f00"/><path d="M19 15v18l16-9z" fill="#fff"/></svg>',
+    'com.netflix.ninja': '<svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#0b0b0b"/><text x="24" y="34" text-anchor="middle" font-family="Manrope,sans-serif" font-size="27" font-weight="800" fill="#e50914">N</text></svg>',
+    'com.spotify.tv.android': '<svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#1db954"/><g fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round"><path d="M13 18c8-2.2 16-1.6 22 1.4"/><path d="M14.5 24.5c6.6-1.8 12.6-1.3 17.6 1.1"/><path d="M16 30.5c5-1.3 9.4-.9 13.2 1"/></g></svg>',
+    'com.amazon.amazonvideo.livingroom': '<svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#1399ff"/><text x="24" y="24" text-anchor="middle" font-family="Manrope,sans-serif" font-size="11" font-weight="800" fill="#fff">prime</text><path d="M12 30c7 5 17 5 24 0l-3-1" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>',
+    'in.startv.hotstar': '<svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#0b1d48"/><text x="24" y="30" text-anchor="middle" font-family="Manrope,sans-serif" font-size="15" font-weight="800" fill="#fff">D+</text></svg>',
+    'org.videolan.vlc': '<svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#2b2b2b"/><path d="M24 9l10 28H14z" fill="#ff8800"/><rect x="10" y="37" width="28" height="4" rx="2" fill="#ff8800"/></svg>',
+    'com.lonelycatgames.Xplore': '<svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#f59e0b"/><path d="M12 16h8l4 4h12a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V18a2 2 0 0 1 2-2z" fill="#fff"/></svg>',
+    'com.liskovsoft.smarttubetv.beta': '<svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#b91c1c"/><path d="M18 14l16 10-16 10z" fill="#f6c515"/></svg>',
+    'com.vidio.android.tv': '<svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#e11d48"/><text x="24" y="31" text-anchor="middle" font-family="Manrope,sans-serif" font-size="16" font-weight="800" fill="#fff">Vidio</text></svg>',
+    'org.xbmc.kodi': '<svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#0284c7"/><polygon points="24,10 38,24 24,38 10,24" fill="#fff"/></svg>',
+    'id.visionplus.android.atv': '<svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#002b49"/><text x="24" y="31" text-anchor="middle" font-family="Manrope,sans-serif" font-size="18" font-weight="800" fill="#fff">V+</text></svg>',
+    'com.mxtech.videoplayer.ad': '<svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#0078d7"/><text x="24" y="30" text-anchor="middle" font-family="Manrope,sans-serif" font-size="15" font-weight="800" fill="#fff">MX</text></svg>'
   };
 
-  const ALL_APPS_GRID_SVG = `
-    <rect width="48" height="48" rx="14" fill="rgba(255,255,255,.06)"/>
-    <g fill="#f6c515">
-      <circle cx="16" cy="16" r="3.2"/>
-      <circle cx="24" cy="16" r="3.2"/>
-      <circle cx="32" cy="16" r="3.2"/>
-      <circle cx="16" cy="24" r="3.2"/>
-      <circle cx="24" cy="24" r="3.2"/>
-      <circle cx="32" cy="24" r="3.2"/>
-      <circle cx="16" cy="32" r="3.2"/>
-      <circle cx="24" cy="32" r="3.2"/>
-      <circle cx="32" cy="32" r="3.2"/>
-    </g>
-  `;
+  const FALLBACK_APPS = [
+    { name: 'YouTube', packageName: 'com.google.android.youtube.tv', category: 'Streaming • Video', status: 'Sedang berjalan', active: true },
+    { name: 'Netflix', packageName: 'com.netflix.ninja', category: 'Streaming • Film', status: 'Terpasang • 118 MB', active: false },
+    { name: 'Spotify', packageName: 'com.spotify.tv.android', category: 'Musik • Podcast', status: 'Sedang berjalan', active: true },
+    { name: 'Prime Video', packageName: 'com.amazon.amazonvideo.livingroom', category: 'Streaming • Film', status: 'Terpasang • 96 MB', active: false },
+    { name: 'Disney+', packageName: 'in.startv.hotstar', category: 'Streaming • Keluarga', status: 'Terpasang • 87 MB', active: false },
+    { name: 'VLC', packageName: 'org.videolan.vlc', category: 'Pemutar • Lokal', status: 'Terpasang • 42 MB', active: false },
+    { name: 'SmartTube', packageName: 'com.liskovsoft.smarttubetv.beta', category: 'Bebas Iklan • 4K', status: 'Terpasang • 34 MB', active: true },
+    { name: 'Vidio TV', packageName: 'com.vidio.android.tv', category: 'Olahraga & TV Lokal', status: 'Terpasang • 64 MB', active: false },
+    { name: 'Kodi Media', packageName: 'org.xbmc.kodi', category: 'Home Theater', status: 'Terpasang • 82 MB', active: false },
+    { name: 'X-plore File', packageName: 'com.lonelycatgames.Xplore', category: 'Manajer Berkas USB', status: 'Terpasang • 12 MB', active: false },
+    { name: 'Vision+ TV', packageName: 'id.visionplus.android.atv', category: 'Saluran Nasional', status: 'Terpasang • 51 MB', active: false },
+    { name: 'MX Player', packageName: 'com.mxtech.videoplayer.ad', category: 'Video Lokal', status: 'Terpasang • 39 MB', active: false }
+  ];
 
-  /* ===== Navigasi 2D ala remote TV ===== */
+  const THEMES = [
+    { cls: '', name: 'Obsidian Dark' },
+    { cls: 'theme-oled', name: 'Pure OLED Black' },
+    { cls: 'theme-emerald', name: 'Emerald Cinema' },
+    { cls: 'theme-royal', name: 'Royal Midnight' },
+    { cls: 'theme-sunset', name: 'Sunset Amber' }
+  ];
+
+  const AUTO_WALLPAPER_INTERVALS = [
+    { ms: 0, label: 'Nonaktif (Manual)' },
+    { ms: 15 * 1000, label: 'Tiap 15 Detik (Demo)' },
+    { ms: 5 * 60 * 1000, label: 'Tiap 5 Menit' },
+    { ms: 15 * 60 * 1000, label: 'Tiap 15 Menit' },
+    { ms: 30 * 60 * 1000, label: 'Tiap 30 Menit' },
+    { ms: 60 * 60 * 1000, label: 'Tiap 1 Jam' }
+  ];
+
+  let installedAppsList = [];
+  // Ordered list of favorite package names (max 9)
+  let favoritePackages = [
+    'com.google.android.youtube.tv',
+    'com.netflix.ninja',
+    'com.spotify.tv.android',
+    'com.amazon.amazonvideo.livingroom',
+    'in.startv.hotstar',
+    'org.videolan.vlc'
+  ];
+
   let lanes = [];
-  let cols = [];
-  let r = 1, toastTimer; // default pada Baris 1 (Live TV's)
-  const mainEl = document.querySelector('main');
+  let cols = [0, 0, 0];
+  let r = 0;
+  let lastScrollTop = 0;
+  let toastTimer = null;
+  let currentThemeIdx = 0;
+  let autoWallpaperIdx = 3; // Default: Tiap 15 Menit (900.000 ms)
+  let autoWallpaperTimer = null;
+  let sourcesFirst = true;
+  let showSourcesLane = true;
+  let showSettingsLane = true;
+  let beamEnabled = true;
+  let customWallpaperDataUrl = '';  // hanya di memori; file aslinya disimpan native (filesDir)
+  const WP_FALLBACK_KEY = 'tiltbox_wp_v1'; // dipakai hanya saat berjalan tanpa bridge (preview browser)
 
-  function rebindNav() {
-    const headerItems = [...document.querySelectorAll('header .item')];
-    const laneRows = [...document.querySelectorAll('main .lane')].map(l => [...l.querySelectorAll('.item')]);
-    lanes = [headerItems, ...laneRows];
-    cols = lanes.map(() => 0);
+  // Safe localStorage persistence
+  function loadSavedConfig(){
+    try {
+      const raw = localStorage.getItem('tiltbox_rt41_config_v16');
+      if(!raw) return;
+      const cfg = JSON.parse(raw);
+      if(Array.isArray(cfg.favoritePackages) && cfg.favoritePackages.length > 0){
+        favoritePackages = cfg.favoritePackages.slice(0, MAX_FAVORITES);
+      }
+      if(typeof cfg.currentThemeIdx === 'number') currentThemeIdx = cfg.currentThemeIdx % THEMES.length;
+      if(typeof cfg.autoWallpaperIdx === 'number') autoWallpaperIdx = cfg.autoWallpaperIdx % AUTO_WALLPAPER_INTERVALS.length;
+      if(typeof cfg.sourcesFirst === 'boolean') sourcesFirst = cfg.sourcesFirst;
+      if(typeof cfg.showSourcesLane === 'boolean') showSourcesLane = cfg.showSourcesLane;
+      if(typeof cfg.showSettingsLane === 'boolean') showSettingsLane = cfg.showSettingsLane;
+      if(typeof cfg.beamEnabled === 'boolean') beamEnabled = cfg.beamEnabled;
+    } catch(e){}
+  }
 
+  function saveConfig(){
+    try {
+      localStorage.setItem('tiltbox_rt41_config_v16', JSON.stringify({
+        favoritePackages: favoritePackages.slice(0, MAX_FAVORITES),
+        currentThemeIdx,
+        autoWallpaperIdx,
+        sourcesFirst,
+        showSourcesLane,
+        showSettingsLane,
+        beamEnabled
+      }));
+    } catch(e){}
+  }
+
+  function esc(v){
+    return String(v == null ? '' : v).replace(/[&<>"']/g, c =>
+      ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function hasBridge(name){
+    return !!(window.TiltboxBridge && typeof window.TiltboxBridge[name] === 'function');
+  }
+
+  // Panggil fungsi bridge; tampilkan toast gagal bila bridge mengembalikan false / melempar error.
+  function bridgeOK(name, failMsg){
+    if(!hasBridge(name)) return false;
+    const args = Array.prototype.slice.call(arguments, 2);
+    try {
+      const ok = window.TiltboxBridge[name].apply(window.TiltboxBridge, args);
+      if(ok === false){ if(failMsg) showToast(failMsg); return false; }
+      return true;
+    } catch(e){
+      if(failMsg) showToast(failMsg);
+      return false;
+    }
+  }
+
+  function showToast(msg){
+    const toast = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+  }
+
+  // ============ 1. DYNAMIC BOTTOM BAR SHOW / HIDE CONTROLLER ============
+  function setBottomBarVisible(visible){
+    const bottomBar = document.getElementById('bottomBar');
+    if(!bottomBar) return;
+    if(visible){
+      bottomBar.classList.remove('auto-hidden');
+    } else {
+      bottomBar.classList.add('auto-hidden');
+    }
+  }
+
+  // ============ 3. WALLPAPER ENGINE (PRESET + LOCAL IMAGE) ============
+  function applyWallpaperState(){
+    const bgLayer = document.getElementById('bgLayer');
+    document.body.className = THEMES[currentThemeIdx].cls;
+    if(customWallpaperDataUrl){
+      document.body.classList.add('has-custom-wp');
+      bgLayer.style.backgroundImage = `linear-gradient(180deg, rgba(7,9,10,0.45) 0%, rgba(5,7,8,0.82) 100%), url("${customWallpaperDataUrl}")`;
+      document.getElementById('valLocalWallpaper').textContent = 'Aktif (Gambar Lokal)';
+      document.getElementById('subLocalWp').textContent = 'Wallpaper lokal aktif';
+    } else {
+      document.body.classList.remove('has-custom-wp');
+      bgLayer.style.backgroundImage = '';
+      document.getElementById('valLocalWallpaper').textContent = 'Pilih Berkas...';
+      document.getElementById('subLocalWp').textContent = 'Pilih gambar dari TV / USB';
+    }
+    document.getElementById('valWallpaper').textContent = THEMES[currentThemeIdx].name;
+    const autoCfg = AUTO_WALLPAPER_INTERVALS[autoWallpaperIdx] || AUTO_WALLPAPER_INTERVALS[0];
+    document.getElementById('valAutoWallpaper').textContent = autoCfg.label;
+    document.getElementById('beamBg').classList.toggle('off', !beamEnabled);
+    document.getElementById('valBeam').textContent = beamEnabled ? 'Aktif' : 'Nonaktif';
+  }
+
+  function scheduleAutoWallpaperRotation(){
+    if(autoWallpaperTimer){
+      clearInterval(autoWallpaperTimer);
+      autoWallpaperTimer = null;
+    }
+    const autoCfg = AUTO_WALLPAPER_INTERVALS[autoWallpaperIdx] || AUTO_WALLPAPER_INTERVALS[0];
+    if(autoCfg.ms > 0){
+      autoWallpaperTimer = setInterval(() => {
+        if(document.hidden || customWallpaperDataUrl) return;
+        currentThemeIdx = (currentThemeIdx + 1) % THEMES.length;
+        saveConfig();
+        applyWallpaperState();
+        showToast(`🔄 Auto-Wallpaper: ${THEMES[currentThemeIdx].name}`);
+      }, autoCfg.ms);
+    }
+  }
+
+  function cycleAutoWallpaperInterval(){
+    autoWallpaperIdx = (autoWallpaperIdx + 1) % AUTO_WALLPAPER_INTERVALS.length;
+    saveConfig();
+    applyWallpaperState();
+    scheduleAutoWallpaperRotation();
+    const label = AUTO_WALLPAPER_INTERVALS[autoWallpaperIdx].label;
+    showToast(`⏱️ Rotasi Otomatis Wallpaper: ${label}`);
+  }
+
+  function applyLaneOrderAndVisibility(){
+    const mainEl = document.getElementById('mainContainer');
+    const laneSources = document.getElementById('laneSources');
+    const laneApps = document.getElementById('laneApps');
+    const laneSettings = document.getElementById('laneSettings');
+
+    if(sourcesFirst){
+      mainEl.insertBefore(laneSources, laneApps);
+    } else {
+      mainEl.insertBefore(laneApps, laneSources);
+    }
+    mainEl.appendChild(laneSettings);
+
+    laneSources.classList.toggle('lane-hidden', !showSourcesLane);
+    laneSettings.classList.toggle('lane-hidden', !showSettingsLane);
+
+    const orderLabel = sourcesFirst ? 'Sumber → Aplikasi' : 'Aplikasi → Sumber';
+    document.getElementById('valRowOrder').textContent = orderLabel;
+    document.getElementById('subRowOrder').textContent = orderLabel;
+    document.getElementById('valShowSources').textContent = showSourcesLane ? 'Tampil' : 'Disembunyikan';
+    document.getElementById('valShowSettings').textContent = showSettingsLane ? 'Tampil' : 'Disembunyikan';
+  }
+
+  function renderLogoHtml(app){
+    if(typeof app.icon === 'string' && /^data:image\/(webp|png|jpeg);base64,[A-Za-z0-9+\/=]+$/.test(app.icon)){
+      return `<img src="${app.icon}" alt="${esc(app.name)}" />`;
+    }
+    if(KNOWN_APP_ICONS[app.packageName]){
+      return KNOWN_APP_ICONS[app.packageName];
+    }
+    const initials = esc((app.name || 'TV').slice(0, 2).toUpperCase());
+    return `<svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#184e54"/><text x="24" y="30" text-anchor="middle" font-family="Manrope,sans-serif" font-size="17" font-weight="800" fill="#f6c515">${initials}</text></svg>`;
+  }
+
+  function fetchAppsFromBridgeOrFallback(){
+    let apps = [...FALLBACK_APPS];
+    if(window.TiltboxBridge && typeof window.TiltboxBridge.getInstalledApps === 'function'){
+      try {
+        const raw = window.TiltboxBridge.getInstalledApps();
+        const parsed = JSON.parse(raw);
+        if(Array.isArray(parsed) && parsed.length > 0){
+          apps = parsed.map(a => ({
+            name: a.name,
+            packageName: a.packageName,
+            icon: a.icon,
+            category: 'Aplikasi TV',
+            status: 'Terpasang',
+            active: true
+          }));
+        }
+      } catch(e){}
+    }
+    installedAppsList = apps;
+    // Favorit yang aplikasinya sedang tidak ada (mis. saat update) tidak dihapus dari config;
+    // renderInstalledApps hanya menampilkan yang terpasang. Inisialisasi bila tak ada satupun yang valid.
+    const validMap = new Set(apps.map(a => a.packageName));
+    if(!favoritePackages.some(p => validMap.has(p))){
+      favoritePackages = apps.slice(0, Math.min(6, MAX_FAVORITES)).map(a => a.packageName);
+    }
+  }
+
+  function pruneFavorites(){
+    const valid = new Set(installedAppsList.map(a => a.packageName));
+    favoritePackages = favoritePackages.filter(p => valid.has(p));
+  }
+
+  // Dipanggil native saat aplikasi dipasang / dihapus / diperbarui
+  function refreshInstalledApps(){
+    installedAppsList = [];
+    renderInstalledApps();
+  }
+
+  // ============ 2. RENDER FAVORITES (MAX 9) + ALL APPS GRID OVERLAY ============
+  function renderInstalledApps(){
+    if(installedAppsList.length === 0) fetchAppsFromBridgeOrFallback();
+
+    const savedModalKey = (activeModal() && modalFocusEl) ? mfKey(modalFocusEl) : null;
+    const rowApps = document.getElementById('rowApps');
+    const gridAll = document.getElementById('allAppsGridContainer');
+    rowApps.innerHTML = '';
+    gridAll.innerHTML = '';
+
+    const appByPkg = {};
+    installedAppsList.forEach(a => { appByPkg[a.packageName] = a; });
+
+    // Render up to MAX_FAVORITES (9) in the Favorite Row in user-defined order
+    const favApps = favoritePackages
+      .slice(0, MAX_FAVORITES)
+      .map(pkg => appByPkg[pkg])
+      .filter(Boolean);
+
+    const favSet = new Set(favApps.map(a => a.packageName));
+
+    document.getElementById('favCountSubtitle').textContent =
+      `Menampilkan ${favApps.length}/${MAX_FAVORITES} favorit • Klik + untuk Semua Aplikasi (${installedAppsList.length})`;
+    document.getElementById('valFavCount').textContent = `${favApps.length} / ${MAX_FAVORITES} Favorit →`;
+
+    favApps.forEach((app, idx) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'item card';
+      btn.dataset.action = 'app';
+      btn.dataset.pkg = app.packageName;
+      btn.dataset.name = app.name;
+      btn.innerHTML = `
+        <span class="tab"></span><h3>${esc(app.name)}</h3>
+        <span class="logo-box">${renderLogoHtml(app)}</span>
+        <div><p class="count">${esc(app.category)}</p><p class="stat"><span class="dot ${app.active ? '' : 'off'}"></span>#${idx + 1} Favorit</p></div>
+      `;
+      rowApps.appendChild(btn);
+    });
+
+    // Always append "+ Semua Aplikasi" card at the end of Favorite Row
+    const allBtn = document.createElement('button');
+    allBtn.type = 'button';
+    allBtn.className = 'item card add';
+    allBtn.dataset.action = 'all_apps';
+    allBtn.dataset.name = 'Semua Aplikasi';
+    allBtn.innerHTML = `<span class="tab"></span><span class="plus">+</span><p>Semua Aplikasi (${installedAppsList.length}) &amp; Atur Favorit</p>`;
+    rowApps.appendChild(allBtn);
+
+    // Populate All Apps Grid Overlay (Favorites first in order, then non-favorites)
+    const sortedForModal = [
+      ...favApps,
+      ...installedAppsList.filter(a => !favSet.has(a.packageName))
+    ];
+
+    sortedForModal.forEach(app => {
+      const favIdx = favApps.findIndex(a => a.packageName === app.packageName);
+      const isFav = favIdx !== -1;
+
+      const card = document.createElement('div');
+      card.className = `grid-app-card ${isFav ? 'is-fav' : ''}`;
+      card.innerHTML = `
+        <div class="grid-app-top" data-launch-pkg="${esc(app.packageName)}">
+          <div class="tile-ico">${renderLogoHtml(app)}</div>
+          <div class="grid-app-info">
+            <b>${esc(app.name)}</b>
+            <small>${isFav ? `★ Favorit #${favIdx + 1}` : 'Ketuk untuk buka'}</small>
+          </div>
+        </div>
+        <div class="grid-app-actions">
+          <button type="button" class="pill-btn ${isFav ? 'fav-on' : ''}" data-toggle-fav="${esc(app.packageName)}">
+            ${isFav ? '★ Favorit' : '☆ Pin Favorit'}
+          </button>
+          <div style="display:flex;gap:4px;">
+            ${isFav ? `<button type="button" class="pill-btn" data-move-fav="${esc(app.packageName)}" data-dir="-1" title="Geser Kiri">◀</button>` : ''}
+            ${isFav ? `<button type="button" class="pill-btn" data-move-fav="${esc(app.packageName)}" data-dir="1" title="Geser Kanan">▶</button>` : ''}
+          </div>
+        </div>
+      `;
+
+      card.querySelector('[data-launch-pkg]').addEventListener('click', () => {
+        closeAllModals();
+        launchAppByPackage(app.packageName, app.name);
+      });
+
+      card.querySelector('[data-toggle-fav]').addEventListener('click', () => {
+        toggleFavoritePackage(app.packageName, app.name);
+      });
+
+      card.querySelectorAll('[data-move-fav]').forEach(mvBtn => {
+        mvBtn.addEventListener('click', () => {
+          const dir = parseInt(mvBtn.getAttribute('data-dir'), 10);
+          moveFavoritePackage(app.packageName, dir);
+        });
+      });
+
+      gridAll.appendChild(card);
+    });
+
+    rebuildLanes();
+    // rebuild menghapus kelas fokus (elemen dibuat ulang): pasang kembali
+    if(lanes.length) focusItem(r, cols[r] || 0, false);
+    if(activeModal()) restoreModalFocus(savedModalKey);
+  }
+
+  function toggleFavoritePackage(pkg, name){
+    pruneFavorites();
+    const idx = favoritePackages.indexOf(pkg);
+    if(idx !== -1){
+      if(favoritePackages.length <= 1){
+        showToast('Minimal 1 aplikasi favorit harus tersisa');
+        return;
+      }
+      favoritePackages.splice(idx, 1);
+      showToast(`${name} dihapus dari Favorit (${favoritePackages.length}/${MAX_FAVORITES})`);
+    } else {
+      if(favoritePackages.length >= MAX_FAVORITES){
+        showToast(`Maksimal ${MAX_FAVORITES} aplikasi favorit! Lepas salah satu terlebih dahulu.`);
+        return;
+      }
+      favoritePackages.push(pkg);
+      showToast(`★ ${name} ditambahkan ke Favorit (${favoritePackages.length}/${MAX_FAVORITES})`);
+    }
+    saveConfig();
+    renderInstalledApps();
+  }
+
+  function moveFavoritePackage(pkg, delta){
+    pruneFavorites();
+    const idx = favoritePackages.indexOf(pkg);
+    if(idx === -1) return;
+    const targetIdx = idx + delta;
+    if(targetIdx < 0 || targetIdx >= favoritePackages.length) return;
+    const temp = favoritePackages[idx];
+    favoritePackages[idx] = favoritePackages[targetIdx];
+    favoritePackages[targetIdx] = temp;
+    saveConfig();
+    renderInstalledApps();
+    showToast(`Urutan favorit diperbarui (#${targetIdx + 1})`);
+  }
+
+  // Susunan fokus remote: [0] header (mic, gear, avatar) -> baris konten -> [terakhir] tombol RAM di footer
+  function rebuildLanes(){
+    const header = [...document.querySelectorAll('header .ctrl')];
+    const content = [...document.querySelectorAll('#mainContainer .lane:not(.lane-hidden)')]
+      .map(l => [...l.querySelectorAll('.item')]);
+    const footer = [document.getElementById('btnFooterRam')].filter(Boolean);
+    lanes = [header, ...content, footer];
     lanes.forEach((lane, rI) => lane.forEach((el, cI) => {
-      el.onclick = () => { focusItem(rI, cI); select(el); };
+      // Tombol header/footer sudah punya click listener sendiri; jangan didobel.
+      if(el.classList.contains('item')){
+        el.onclick = () => { focusItem(rI, cI); selectItem(el); };
+      }
       el.onmouseenter = () => focusItem(rI, cI, false);
     }));
-
-    focusItem(1, 0, false);
   }
 
   function focusItem(rI, cI, scroll = true){
-    r = Math.max(0, Math.min(lanes.length - 1, rI));
-    const lane = lanes[r];
+    if(lanes.length === 0) rebuildLanes();
+    const nr = Math.max(0, Math.min(lanes.length - 1, rI));
+    const lane = lanes[nr];
+    if(!lane || lane.length === 0) return;
+    const prevR = r;
+    r = nr;
     const c = Math.max(0, Math.min(lane.length - 1, cI));
     cols[r] = c;
-    document.querySelectorAll('.item.focus').forEach(el => el.classList.remove('focus'));
+    document.querySelectorAll('.item.focus, .ctrl.focus, .shift.focus').forEach(el => el.classList.remove('focus'));
     const el = lane[c];
-    if (el) el.classList.add('focus');
+    el.classList.add('focus');
+    if(scroll && el.closest('#mainContainer')) el.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
 
-    if (scroll && el) {
-      if (r <= 1) {
-        // Reset penuh ke scrollTop 0 agar kartu Sumber & Input tidak pernah terpotong header
-        if (mainEl) mainEl.scrollTo({ top: 0, behavior: 'smooth' });
-        el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-        // Tampilkan bottom bar saat kembali ke atas (Baris 1 atau Header)
-        const footer = document.querySelector('footer');
-        if (footer) footer.classList.remove('hide');
-      } else if (r === 2) {
-        el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-        // Sembunyikan bottom bar saat scroll ke bawah agar ruang aplikasi & settings maksimal
-        const footer = document.querySelector('footer');
-        if (footer) footer.classList.add('hide');
-      } else if (r >= 3) {
-        if (mainEl) mainEl.scrollTo({ top: mainEl.scrollHeight, behavior: 'smooth' });
-        el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-        const footer = document.querySelector('footer');
-        if (footer) footer.classList.add('hide');
-      }
+    // Bottom bar: turun ke baris bawah = sembunyi, naik = tampil, fokus di footer = tampil
+    if(r === lanes.length - 1){
+      setBottomBarVisible(true);
+    } else if(r > prevR && prevR >= 1){
+      setBottomBarVisible(false);
+    } else if(r < prevR){
+      setBottomBarVisible(true);
     }
   }
 
-  /* ===== Render Aplikasi Terpasang Dinamis (Maks 9 + Semua Aplikasi Grid) ===== */
-  function renderInstalledApps() {
-    let appList = [];
-    if (window.TiltboxBridge && window.TiltboxBridge.getInstalledApps) {
+  function activateFocused(){
+    const lane = lanes[r];
+    const el = lane && lane[cols[r] || 0];
+    if(!el) return;
+    if(el.classList.contains('item')) selectItem(el); else el.click();
+  }
+
+  function goHome(){
+    closeAllModals();
+    document.getElementById('mainContainer').scrollTop = 0;
+    setBottomBarVisible(true);
+    focusItem(1, 0);
+  }
+
+  function launchAppByPackage(pkg, name){
+    showToast(`Membuka ${name}…`);
+    bridgeOK('launchApp', `Gagal membuka ${name}`, pkg);
+  }
+
+  function updateRamStatus(){
+    if(document.hidden) return;
+    if(window.TiltboxBridge && typeof window.TiltboxBridge.getAvailableRam === 'function'){
       try {
-        const raw = window.TiltboxBridge.getInstalledApps();
-        if (raw) appList = JSON.parse(raw);
-      } catch(e) {
-        console.error("Error parsing apps", e);
-      }
-    }
-
-    if (!appList || appList.length === 0) {
-      appList = [
-        { packageName: 'com.google.android.youtube.tv', name: 'YouTube' },
-        { packageName: 'com.spotify.tv.android', name: 'Spotify' },
-        { packageName: 'id.visionplus.android.atv', name: 'Vision+' },
-        { packageName: 'com.mxtech.videoplayer.ad', name: 'MX Player' },
-        { packageName: 'com.lonelycatgames.Xplore', name: 'X-plore' },
-        { packageName: 'com.android.vending', name: 'Play Store' }
-      ];
-    }
-
-    // Maksimal 9 aplikasi terlihat
-    const maxVisibleApps = appList.slice(0, 9);
-    const rowEl = document.getElementById('appsRow');
-    if (!rowEl) return;
-
-    let html = '';
-    maxVisibleApps.forEach(app => {
-      let iconSvg = KNOWN_APP_ICONS[app.packageName];
-      let innerContent = '';
-      if (iconSvg) {
-        innerContent = `<svg viewBox="0 0 48 48">${iconSvg}</svg>`;
-      } else if (app.icon && app.icon.startsWith('data:image')) {
-        innerContent = `<img src="${app.icon}" style="width:100%;height:100%;object-fit:cover;border-radius:24px;" />`;
-      } else {
-        const initial = (app.name || 'A').charAt(0).toUpperCase();
-        innerContent = `<svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#1e293b"/><text x="24" y="32" text-anchor="middle" font-family="Manrope,sans-serif" font-size="20" font-weight="800" fill="#f6c515">${initial}</text></svg>`;
-      }
-
-      html += `
-        <button class="item app" data-name="${app.name}" data-action="app" data-pkg="${app.packageName}">
-          <span class="thumb">${innerContent}</span>
-          <span class="app-name">${app.name}</span>
-        </button>
-      `;
-    });
-
-    // 1 tombol "Semua Aplikasi" di ujung dengan ikon 9-dot grid
-    html += `
-      <button class="item app" data-name="Semua Aplikasi" data-action="all_apps">
-        <span class="thumb" style="border-color:rgba(246,197,21,.35);background:rgba(255,255,255,.05);">
-          <svg viewBox="0 0 48 48">${ALL_APPS_GRID_SVG}</svg>
-        </span>
-        <span class="app-name" style="color:var(--yellow);font-weight:700;">Semua Aplikasi</span>
-      </button>
-    `;
-
-    rowEl.innerHTML = html;
-    rebindNav();
-  }
-
-  function select(el){
-    el.classList.add('pulse');
-    setTimeout(() => el.classList.remove('pulse'), 380);
-    const toast = document.getElementById('toast');
-    document.getElementById('toastMsg').textContent = `Membuka ${el.dataset.name}…`;
-    toast.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
-
-    // Native Android TV Bridge Execution
-    if (window.TiltboxBridge) {
-      const action = el.dataset.action;
-      const pkg = el.dataset.pkg;
-      const port = el.dataset.port || el.dataset.name;
-      if (action === 'search') {
-        const inp = document.getElementById('manualSearchInput');
-        if (inp) inp.focus();
-        if (window.TiltboxBridge) window.TiltboxBridge.launchSearch(inp ? inp.value : "");
-      } else if (action === 'voice') {
-        if (window.TiltboxBridge) window.TiltboxBridge.launchVoiceSearch();
-      } else if (action === 'livetv') {
-        window.TiltboxBridge.launchLiveTv();
-      } else if (action === 'media') {
-        window.TiltboxBridge.launchMedia();
-      } else if (action === 'hdmi') {
-        window.TiltboxBridge.launchHdmi(port);
-      } else if (action === 'cast') {
-        window.TiltboxBridge.launchApp('com.google.android.apps.mediashell');
-      } else if (action === 'app' && pkg) {
-        window.TiltboxBridge.launchApp(pkg);
-      } else if (action === 'settings') {
-        window.TiltboxBridge.launchSettings();
-      } else if (action === 'wifi') {
-        window.TiltboxBridge.launchWifiSettings();
-      } else if (action === 'apps') {
-        window.TiltboxBridge.launchAppsSettings();
-      } else if (action === 'tcl_settings') {
-        window.TiltboxBridge.launchTclPictureAudioSettings();
-      } else if (action === 'boost') {
-        boostRamAction();
-      } else if (action === 'customizer') {
-        openCustomizer();
-      } else if (action === 'all_apps') {
-        openAllAppsModal();
-      }
+        const txt = window.TiltboxBridge.getAvailableRam();
+        document.getElementById('ramBoosterText').textContent = txt;
+      } catch(e){}
     }
   }
 
-  function boostRamAction() {
-    if (window.TiltboxBridge) {
-      window.TiltboxBridge.boostRam();
-      setTimeout(updateRamStatus, 1200);
+  function boostRamAction(){
+    setBottomBarVisible(true);
+    if(window.TiltboxBridge && typeof window.TiltboxBridge.boostRam === 'function'){
+      const res = window.TiltboxBridge.boostRam();
+      showToast(res || 'RAM Booster dijalankan');
+      setTimeout(updateRamStatus, 800);
+    } else {
+      const mb = Math.floor(540 + Math.random() * 90);
+      document.getElementById('ramBoosterText').textContent = `${mb} MB Bebas`;
+      document.getElementById('subRamBoost').textContent = `Tersedia ${mb} MB`;
+      showToast(`⚡ RT41 RAM Booster: Tersedia ${mb} MB Bebas`);
     }
   }
 
-  /* ===== RAM Booster Dinamis Realtime ===== */
-  function updateRamStatus() {
-    if (window.TiltboxBridge && window.TiltboxBridge.getAvailableRam) {
-      const ramText = window.TiltboxBridge.getAvailableRam();
-      const el = document.getElementById('ramBoosterText');
-      if (el && ramText) el.textContent = ramText;
-    }
-  }
-  setInterval(updateRamStatus, 4000);
-  setTimeout(updateRamStatus, 800);
-
-  /* ===== Cuaca Dinamis Berfungsi Nyata ===== */
-  async function updateRealWeather() {
-    try {
-      const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=-6.2088&longitude=106.8456&current_weather=true');
-      if (res.ok) {
-        const data = await res.json();
-        const cur = data.current_weather;
-        if (cur && typeof cur.temperature === 'number') {
-          const tempC = Math.round(cur.temperature);
-          const tEl = document.getElementById('weatherTemp');
-          if (tEl) tEl.textContent = `${tempC}°`;
-          
-          const code = cur.weathercode;
-          const wIcon = document.getElementById('weatherIcon');
-          if (wIcon) {
-            if (code === 0) {
-              wIcon.innerHTML = `<circle cx="32" cy="32" r="14" fill="#f6c515"/>`;
-            } else if (code >= 1 && code <= 3) {
-              wIcon.innerHTML = `<circle cx="24" cy="20" r="9" fill="#f6c515"/><path transform="translate(8,12) scale(2)" d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" fill="#fff" opacity=".92"/>`;
-            } else if (code >= 51 && code <= 67 || code >= 80 && code <= 82) {
-              wIcon.innerHTML = `<path transform="translate(8,8) scale(1.8)" d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" fill="#a0c4ff"/><line x1="20" y1="46" x2="16" y2="56" stroke="#4dabf7" stroke-width="3"/><line x1="32" y1="46" x2="28" y2="56" stroke="#4dabf7" stroke-width="3"/>`;
-            }
-          }
-        }
-      }
-    } catch(e) {
-      console.log('Cuaca offline', e);
-    }
-  }
-  updateRealWeather();
-  setInterval(updateRealWeather, 1800000); // refresh tiap 30 menit
-
-  /* ============ LOGIKA MODAL KUSTOMISASI & ALL APPS ============ */
-  let activeModal = null; // 'customizer' | 'allApps' | null
-  let modalIndex = 0;
-  let modalItems = [];
-
-  const WALLPAPERS = [
-    { id: 'obsidian', name: 'Obsidian Dark', bg: 'linear-gradient(180deg,#0c1112,#080b0c 55%,#050708)' },
-    { id: 'oled', name: 'Midnight OLED', bg: '#000000' },
-    { id: 'teal', name: 'Cyberpunk Teal', bg: 'linear-gradient(160deg,#041f22,#031214 60%,#00080a)' },
-    { id: 'amber', name: 'Warm Amber', bg: 'linear-gradient(160deg,#221a08,#130e03 60%,#080601)' }
-  ];
-  let curWpIdx = 0;
-  let curRowOrder = 'normal'; // 'normal' (Sumber lalu Apps) | 'reversed' (Apps lalu Sumber)
-  let beamEnabled = true;
-
-  function loadSettings() {
-    try {
-      const saved = localStorage.getItem('tiltbox_custom_cfg');
-      if (saved) {
-        const cfg = JSON.parse(saved);
-        if (typeof cfg.wpIdx === 'number') curWpIdx = cfg.wpIdx % WALLPAPERS.length;
-        if (cfg.rowOrder) curRowOrder = cfg.rowOrder;
-        if (typeof cfg.beam === 'boolean') beamEnabled = cfg.beam;
-      }
-    } catch(e) {}
-    applyVisualSettings();
+  function toggleRowOrder(){
+    sourcesFirst = !sourcesFirst;
+    saveConfig();
+    applyLaneOrderAndVisibility();
+    rebuildLanes();
+    focusItem(1, 0, false);
+    showToast(`Urutan baris: ${sourcesFirst ? 'Sumber → Aplikasi' : 'Aplikasi → Sumber'}`);
   }
 
-  function saveSettings() {
-    try {
-      localStorage.setItem('tiltbox_custom_cfg', JSON.stringify({
-        wpIdx: curWpIdx,
-        rowOrder: curRowOrder,
-        beam: beamEnabled
-      }));
-    } catch(e) {}
+  function toggleSourcesVisibility(){
+    showSourcesLane = !showSourcesLane;
+    saveConfig();
+    applyLaneOrderAndVisibility();
+    rebuildLanes();
+    focusItem(1, 0, false);
+    showToast(showSourcesLane ? 'Baris Sumber & Input ditampilkan' : 'Baris Sumber & Input disembunyikan');
   }
 
-  function applyVisualSettings() {
-    // Wallpaper
-    const wp = WALLPAPERS[curWpIdx];
-    const bgEl = document.querySelector('.bg');
-    if (bgEl && wp) bgEl.style.background = wp.bg;
-    const valWp = document.getElementById('valWallpaper');
-    if (valWp) valWp.textContent = wp.name;
+  function toggleSettingsVisibility(){
+    showSettingsLane = !showSettingsLane;
+    saveConfig();
+    applyLaneOrderAndVisibility();
+    rebuildLanes();
+    focusItem(1, 0, false);
+    showToast(showSettingsLane ? 'Baris Pengaturan Cepat ditampilkan' : 'Baris Pengaturan Cepat disembunyikan');
+  }
 
-    // Beams
-    document.querySelectorAll('.beam').forEach(b => {
-      b.style.display = beamEnabled ? 'block' : 'none';
-    });
-    const valBeam = document.getElementById('valBeam');
-    if (valBeam) valBeam.textContent = beamEnabled ? 'Aktif' : 'Nonaktif';
+  function cycleTheme(){
+    currentThemeIdx = (currentThemeIdx + 1) % THEMES.length;
+    saveConfig();
+    applyWallpaperState();
+    showToast(`Preset Tema: ${THEMES[currentThemeIdx].name}`);
+  }
 
-    // Row order
-    const laneSources = document.querySelector('main .lane:nth-of-type(1)');
-    const laneApps = document.getElementById('appsLane');
-    const valOrder = document.getElementById('valRowOrder');
-    if (laneSources && laneApps) {
-      if (curRowOrder === 'reversed') {
-        laneApps.style.order = '1';
-        laneSources.style.order = '2';
-        if (valOrder) valOrder.textContent = 'Aplikasi → Sumber';
-      } else {
-        laneSources.style.order = '1';
-        laneApps.style.order = '2';
-        if (valOrder) valOrder.textContent = 'Sumber → Aplikasi';
-      }
+  function triggerLocalWallpaperPicker(){
+    if(hasBridge('pickWallpaper')){
+      // Native: tidak butuh user-gesture & aman dari batas memori WebView
+      showToast('Membuka pemilih gambar…');
+      try { window.TiltboxBridge.pickWallpaper(); } catch(e){ showToast('Pemilih gambar gagal dibuka'); }
+    } else {
+      document.getElementById('wallpaperFileInput').click(); // preview di browser
     }
   }
 
-  function openCustomizer() {
-    activeModal = 'customizer';
-    const modal = document.getElementById('customizerModal');
-    if (modal) modal.classList.add('open');
-    modalItems = [...document.querySelectorAll('#customizerOptions .modal-item')];
-    modalIndex = 0;
-    updateModalFocus();
-  }
-
-  function openAllAppsModal() {
-    activeModal = 'allApps';
-    const modal = document.getElementById('allAppsModal');
-    if (modal) modal.classList.add('open');
-
-    // Render full grid
-    let appList = [];
-    if (window.TiltboxBridge && window.TiltboxBridge.getInstalledApps) {
-      try {
-        const raw = window.TiltboxBridge.getInstalledApps();
-        if (raw) appList = JSON.parse(raw);
-      } catch(e) {}
-    }
-    if (!appList || appList.length === 0) {
-      appList = [
-        { packageName: 'com.google.android.youtube.tv', name: 'YouTube' },
-        { packageName: 'com.spotify.tv.android', name: 'Spotify' },
-        { packageName: 'id.visionplus.android.atv', name: 'Vision+' },
-        { packageName: 'com.mxtech.videoplayer.ad', name: 'MX Player' },
-        { packageName: 'com.lonelycatgames.Xplore', name: 'X-plore' },
-        { packageName: 'com.android.vending', name: 'Play Store' }
-      ];
-    }
-
-    const container = document.getElementById('allAppsGridContainer');
-    if (container) {
-      let html = '';
-      appList.forEach(app => {
-        let iconSvg = KNOWN_APP_ICONS[app.packageName];
-        let innerContent = '';
-        if (iconSvg) {
-          innerContent = `<svg viewBox="0 0 48 48">${iconSvg}</svg>`;
-        } else if (app.icon && app.icon.startsWith('data:image')) {
-          innerContent = `<img src="${app.icon}" style="width:100%;height:100%;object-fit:cover;border-radius:18px;" />`;
-        } else {
-          const initial = (app.name || 'A').charAt(0).toUpperCase();
-          innerContent = `<svg viewBox="0 0 48 48"><rect width="48" height="48" fill="#1e293b"/><text x="24" y="32" text-anchor="middle" font-family="Manrope,sans-serif" font-size="20" font-weight="800" fill="#f6c515">${initial}</text></svg>`;
-        }
-
-        html += `
-          <div class="grid-app-item modal-item" tabindex="0" data-pkg="${app.packageName}" data-name="${app.name}">
-            <div class="thumb">${innerContent}</div>
-            <span>${app.name}</span>
-          </div>
-        `;
-      });
-      container.innerHTML = html;
-    }
-
-    modalItems = [...document.querySelectorAll('#allAppsGridContainer .modal-item')];
-    modalIndex = 0;
-    updateModalFocus();
-  }
-
-  function closeModal() {
-    if (activeModal === 'customizer') {
-      const m = document.getElementById('customizerModal');
-      if (m) m.classList.remove('open');
-    } else if (activeModal === 'allApps') {
-      const m = document.getElementById('allAppsModal');
-      if (m) m.classList.remove('open');
-    }
-    activeModal = null;
-    modalItems = [];
-    rebindNav();
-  }
-
-  function updateModalFocus() {
-    modalItems.forEach(el => el.classList.remove('focus'));
-    const target = modalItems[modalIndex];
-    if (target) {
-      target.classList.add('focus');
-      target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  function loadCustomWallpaper(){
+    customWallpaperDataUrl = '';
+    if(hasBridge('getWallpaperDataUrl')){
+      try { customWallpaperDataUrl = window.TiltboxBridge.getWallpaperDataUrl() || ''; } catch(e){}
+    } else {
+      try { customWallpaperDataUrl = localStorage.getItem(WP_FALLBACK_KEY) || ''; } catch(e){}
     }
   }
 
-  function handleModalAction() {
-    if (activeModal === 'customizer') {
-      const item = modalItems[modalIndex];
-      if (!item) return;
-      const opt = item.dataset.opt;
-      if (opt === 'wallpaper') {
-        curWpIdx = (curWpIdx + 1) % WALLPAPERS.length;
-        applyVisualSettings();
-        saveSettings();
-      } else if (opt === 'order') {
-        curRowOrder = (curRowOrder === 'normal') ? 'reversed' : 'normal';
-        applyVisualSettings();
-        saveSettings();
-        rebindNav();
-      } else if (opt === 'beam') {
-        beamEnabled = !beamEnabled;
-        applyVisualSettings();
-        saveSettings();
-      } else if (opt === 'system') {
-        closeModal();
-        if (window.TiltboxBridge) window.TiltboxBridge.launchSettings();
-      }
-    } else if (activeModal === 'allApps') {
-      const item = modalItems[modalIndex];
-      if (item && item.dataset.pkg && window.TiltboxBridge) {
-        closeModal();
-        window.TiltboxBridge.launchApp(item.dataset.pkg);
-      }
+  // Dipanggil native setelah gambar dipilih & diproses
+  window.onWallpaperPicked = function(ok, reason){
+    if(ok){
+      loadCustomWallpaper();
+      applyWallpaperState();
+      showToast('🖼️ Wallpaper gambar lokal berhasil diterapkan!');
+    } else if(reason === 'nopicker'){
+      showToast('TV ini tidak punya aplikasi pemilih gambar (file manager/galeri)');
+    } else if(reason === 'error'){
+      showToast('Gagal memproses gambar, coba gambar lain');
+    }
+    // 'cancel' = pengguna membatalkan, tanpa pesan
+  };
+
+  function resetLocalWallpaper(){
+    customWallpaperDataUrl = '';
+    if(hasBridge('clearWallpaper')){ try { window.TiltboxBridge.clearWallpaper(); } catch(e){} }
+    try { localStorage.removeItem(WP_FALLBACK_KEY); } catch(e){}
+    applyWallpaperState();
+    showToast('Wallpaper lokal dihapus, kembali ke preset sinematik');
+  }
+
+  function toggleBeam(){
+    beamEnabled = !beamEnabled;
+    saveConfig();
+    applyWallpaperState();
+    showToast(beamEnabled ? 'Efek Beam: Aktif' : 'Efek Beam: Nonaktif');
+  }
+
+  // ============ NAVIGASI D-PAD DI DALAM MODAL ============
+  let modalFocusEl = null;
+
+  function activeModal(){ return document.querySelector('.modal-overlay.active'); }
+
+  function modalFocusables(){
+    const m = activeModal();
+    if(!m) return [];
+    return [...m.querySelectorAll('.close-btn, .set-opt, .grid-app-top, .pill-btn')]
+      .filter(el => el.getClientRects().length > 0);
+  }
+
+  function setModalFocus(el){
+    if(modalFocusEl) modalFocusEl.classList.remove('mf');
+    modalFocusEl = el || null;
+    if(modalFocusEl){
+      modalFocusEl.classList.add('mf');
+      modalFocusEl.scrollIntoView({block:'nearest', inline:'nearest'});
     }
   }
 
-  window.handleDpad = function(dir) {
-    if (activeModal) {
-      const colsPerRow = (activeModal === 'allApps') ? 5 : 1;
-      if (dir === 'right') {
-        if (modalIndex + 1 < modalItems.length) modalIndex++;
-      } else if (dir === 'left') {
-        if (modalIndex - 1 >= 0) modalIndex--;
-      } else if (dir === 'down') {
-        if (modalIndex + colsPerRow < modalItems.length) modalIndex += colsPerRow;
-      } else if (dir === 'up') {
-        if (modalIndex - colsPerRow >= 0) modalIndex -= colsPerRow;
-      } else if (dir === 'enter') {
-        handleModalAction();
-        return;
-      }
-      updateModalFocus();
+  // Kunci stabil agar fokus bisa dipulihkan setelah grid dirender ulang
+  function mfKey(el){
+    if(!el) return '';
+    const d = el.dataset;
+    if(d.launchPkg) return 'L:' + d.launchPkg;
+    if(d.toggleFav) return 'T:' + d.toggleFav;
+    if(d.moveFav) return 'M:' + d.moveFav + ':' + d.dir;
+    if(el.id) return 'I:' + el.id;
+    if(d.opt) return 'O:' + d.opt;
+    return '';
+  }
+
+  function restoreModalFocus(key){
+    if(!activeModal()) return;
+    const list = modalFocusables();
+    let el = key ? list.find(e => mfKey(e) === key) : null;
+    if(!el && key){
+      const pkg = key.split(':')[1];
+      el = list.find(e => mfKey(e) === 'T:' + pkg) || list.find(e => mfKey(e) === 'L:' + pkg) || null;
+    }
+    if(!el) el = list.find(e => !e.classList.contains('close-btn')) || list[0] || null;
+    setModalFocus(el);
+  }
+
+  function modalMove(dir){
+    const m = activeModal();
+    if(!m) return;
+    const list = modalFocusables();
+    if(list.length === 0) return;
+    if(!modalFocusEl || list.indexOf(modalFocusEl) === -1){ restoreModalFocus(''); return; }
+
+    // Modal kustomisasi: daftar vertikal
+    if(m.id === 'customizerModal'){
+      const i = list.indexOf(modalFocusEl);
+      if(dir === 'down') setModalFocus(list[Math.min(list.length - 1, i + 1)]);
+      else if(dir === 'up') setModalFocus(list[Math.max(0, i - 1)]);
       return;
     }
 
-    if (dir === 'right') focusItem(r, cols[r] + 1);
-    else if (dir === 'left') focusItem(r, cols[r] - 1);
-    else if (dir === 'down') focusItem(r + 1, cols[r + 1] ?? 0);
-    else if (dir === 'up') focusItem(r - 1, cols[r - 1] ?? 0);
-    else if (dir === 'enter') select(lanes[r][cols[r]]);
+    // Modal Semua Aplikasi: grid kartu (tiap kartu: ikon + tombol Pin/geser)
+    const cards = [...m.querySelectorAll('.grid-app-card')];
+    if(cards.length === 0) return;
+    const card = modalFocusEl.closest('.grid-app-card');
+    if(!card){ // sedang di tombol Tutup
+      if(dir === 'down') setModalFocus(cards[0].querySelector('.grid-app-top'));
+      return;
+    }
+    const firstTop = cards[0].offsetTop;
+    let colCount = 0;
+    for(const c of cards){ if(c.offsetTop === firstTop) colCount++; else break; }
+    colCount = Math.max(1, colCount);
+    const idx = cards.indexOf(card);
+    const topEl = card.querySelector('.grid-app-top');
+    const pills = [...card.querySelectorAll('.pill-btn')];
+
+    if(modalFocusEl === topEl){
+      if(dir === 'left'){ if(idx % colCount > 0) setModalFocus(cards[idx - 1].querySelector('.grid-app-top')); }
+      else if(dir === 'right'){
+        if(idx % colCount < colCount - 1 && idx + 1 < cards.length) setModalFocus(cards[idx + 1].querySelector('.grid-app-top'));
+      }
+      else if(dir === 'down'){ if(pills[0]) setModalFocus(pills[0]); }
+      else if(dir === 'up'){
+        if(idx - colCount >= 0) setModalFocus(cards[idx - colCount].querySelector('.pill-btn'));
+        else setModalFocus(m.querySelector('.close-btn'));
+      }
+    } else {
+      const pi = pills.indexOf(modalFocusEl);
+      if(dir === 'left'){ if(pi > 0) setModalFocus(pills[pi - 1]); }
+      else if(dir === 'right'){ if(pi >= 0 && pi < pills.length - 1) setModalFocus(pills[pi + 1]); }
+      else if(dir === 'up'){ setModalFocus(topEl); }
+      else if(dir === 'down'){ if(idx + colCount < cards.length) setModalFocus(cards[idx + colCount].querySelector('.grid-app-top')); }
+    }
+  }
+
+  function openCustomizerModal(){
+    document.getElementById('customizerModal').classList.add('active');
+    setModalFocus(null);
+    restoreModalFocus('');
+  }
+
+  function openAllAppsModal(){
+    document.getElementById('allAppsModal').classList.add('active');
+    setModalFocus(null);
+    restoreModalFocus('');
+  }
+
+  function closeAllModals(){
+    document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+    setModalFocus(null);
+    if(lanes.length) focusItem(r, cols[r] || 0, false);
+  }
+
+  function selectItem(el){
+    if(!el) return;
+    el.classList.add('pulse');
+    setTimeout(() => el.classList.remove('pulse'), 360);
+
+    const act = el.dataset.action;
+    if(act === 'livetv'){
+      showToast('Membuka Live TV TCL…');
+      bridgeOK('launchLiveTv', 'Live TV TCL tidak ditemukan');
+    } else if(act === 'media'){
+      showToast('Membuka Media Player…');
+      bridgeOK('launchMedia', 'Aplikasi media tidak ditemukan');
+    } else if(act === 'hdmi'){
+      const port = el.dataset.port || 'HDMI1';
+      showToast(`Beralih ke ${port}…`);
+      bridgeOK('launchHdmi', `Gagal beralih ke ${port}`, port);
+    } else if(act === 'cast'){
+      launchAppByPackage('com.google.android.apps.mediashell', 'Google Cast');
+    } else if(act === 'app'){
+      launchAppByPackage(el.dataset.pkg, el.dataset.name);
+    } else if(act === 'all_apps'){
+      openAllAppsModal();
+    } else if(act === 'customizer'){
+      openCustomizerModal();
+    } else if(act === 'order'){
+      toggleRowOrder();
+    } else if(act === 'local_wp'){
+      triggerLocalWallpaperPicker();
+    } else if(act === 'boost'){
+      boostRamAction();
+    } else if(act === 'tcl_settings'){
+      showToast('Membuka Setelan Gambar & Suara TCL…');
+      bridgeOK('launchTclPictureAudioSettings', 'Gagal membuka setelan TCL');
+    } else if(act === 'settings'){
+      showToast('Membuka Pengaturan Sistem Android TV…');
+      bridgeOK('launchSettings', 'Gagal membuka pengaturan sistem');
+    }
+  }
+
+  // Global D-Pad Handler called by MainActivity.kt or Keyboard
+  window.handleDpad = function(dir){
+    if(activeModal()){
+      if(dir === 'back') closeAllModals();
+      else if(dir === 'enter'){
+        if(modalFocusEl) modalFocusEl.click(); else restoreModalFocus('');
+      } else modalMove(dir);
+      return;
+    }
+    const colOf = i => (cols[i] || 0);
+    if(dir === 'right') focusItem(r, colOf(r) + 1);
+    else if(dir === 'left') focusItem(r, colOf(r) - 1);
+    else if(dir === 'down'){ if(r < lanes.length - 1) focusItem(r + 1, colOf(r + 1)); }
+    else if(dir === 'up'){ if(r > 0) focusItem(r - 1, colOf(r - 1)); }
+    else if(dir === 'enter') activateFocused();
+    else if(dir === 'back'){
+      setBottomBarVisible(true);
+      focusItem(1, 0);
+    }
   };
 
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' || e.key === 'Backspace' || e.key === 'GoBack') {
-      if (activeModal) {
-        closeModal();
-        e.preventDefault();
-        return;
-      }
-    }
-
-    if (activeModal) {
-      if (e.key === 'ArrowRight') { window.handleDpad('right'); e.preventDefault(); }
-      else if (e.key === 'ArrowLeft') { window.handleDpad('left'); e.preventDefault(); }
-      else if (e.key === 'ArrowDown') { window.handleDpad('down'); e.preventDefault(); }
-      else if (e.key === 'ArrowUp') { window.handleDpad('up'); e.preventDefault(); }
-      else if (e.key === 'Enter' || e.key === ' ') { handleModalAction(); e.preventDefault(); }
-      return;
-    }
-
-    if(e.key === 'ArrowRight'){ focusItem(r, cols[r] + 1); e.preventDefault(); }
-    else if(e.key === 'ArrowLeft'){ focusItem(r, cols[r] - 1); e.preventDefault(); }
-    else if(e.key === 'ArrowDown'){ focusItem(r + 1, cols[r + 1] ?? 0); e.preventDefault(); }
-    else if(e.key === 'ArrowUp'){ focusItem(r - 1, cols[r - 1] ?? 0); e.preventDefault(); }
-    else if(e.key === 'Enter' || e.key === ' '){ select(lanes[r][cols[r]]); e.preventDefault(); }
+    if(e.key === 'ArrowRight'){ window.handleDpad('right'); e.preventDefault(); }
+    else if(e.key === 'ArrowLeft'){ window.handleDpad('left'); e.preventDefault(); }
+    else if(e.key === 'ArrowDown'){ window.handleDpad('down'); e.preventDefault(); }
+    else if(e.key === 'ArrowUp'){ window.handleDpad('up'); e.preventDefault(); }
+    else if(e.key === 'Enter' || e.key === ' '){ window.handleDpad('enter'); e.preventDefault(); }
+    else if(e.key === 'Escape' || e.key === 'Backspace'){ window.handleDpad('back'); e.preventDefault(); }
   });
 
-  rebindNav();
-  renderInstalledApps();
-  loadSettings();
+  // Scroll & Wheel Listener for Dynamic Bottom Bar (Scroll Down -> Auto Hide, Scroll Up -> Auto Show)
+  const mainContainer = document.getElementById('mainContainer');
+  mainContainer.addEventListener('scroll', () => {
+    const st = mainContainer.scrollTop;
+    if(st > lastScrollTop + 8){
+      setBottomBarVisible(false);
+    } else if(st < lastScrollTop - 8 || st <= 10){
+      setBottomBarVisible(true);
+    }
+    lastScrollTop = st;
+  }, { passive: true });
 
-  /* ===== Jam real-time ===== */
+  window.addEventListener('wheel', e => {
+    if(document.querySelector('.modal-overlay.active')) return;
+    if(e.deltaY > 12){
+      setBottomBarVisible(false);
+    } else if(e.deltaY < -12){
+      setBottomBarVisible(true);
+    }
+  }, { passive: true });
+
+  // Local Wallpaper Image File Reader (Downscaled to 1280x720 JPEG for RT41 RAM safety)
+  document.getElementById('wallpaperFileInput').addEventListener('change', e => {
+    const file = e.target.files && e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const maxW = 1280, maxH = 720;
+        let w = img.width, h = img.height;
+        if(w > maxW || h > maxH){
+          const ratio = Math.min(maxW / w, maxH / h);
+          w = Math.round(w * ratio);
+          h = Math.round(h * ratio);
+        }
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        customWallpaperDataUrl = canvas.toDataURL('image/jpeg', 0.82);
+        try { localStorage.setItem(WP_FALLBACK_KEY, customWallpaperDataUrl); }
+        catch(err){ showToast('Wallpaper diterapkan, tapi tidak bisa disimpan (penyimpanan penuh)'); }
+        applyWallpaperState();
+        showToast('🖼️ Wallpaper gambar lokal berhasil diterapkan!');
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Wire Header, Footer & Modal Controls
+  document.getElementById('btnVoice').addEventListener('click', () => {
+    showToast('Membuka Pencarian Suara…');
+    bridgeOK('launchVoiceSearch', 'Pencarian suara tidak tersedia di TV ini');
+  });
+  document.getElementById('btnCustomizer').addEventListener('click', openCustomizerModal);
+  document.getElementById('btnProfile').addEventListener('click', openAllAppsModal);
+  document.getElementById('btnFooterRam').addEventListener('click', boostRamAction);
+  document.getElementById('btnCloseCustomizer').addEventListener('click', closeAllModals);
+  document.getElementById('btnCloseAllApps').addEventListener('click', closeAllModals);
+
+  document.querySelectorAll('#customizerOptions .set-opt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const opt = btn.dataset.opt;
+      if(opt === 'order') toggleRowOrder();
+      else if(opt === 'toggle_sources') toggleSourcesVisibility();
+      else if(opt === 'toggle_settings') toggleSettingsVisibility();
+      else if(opt === 'manage_favs'){
+        closeAllModals();
+        openAllAppsModal();
+      } else if(opt === 'wallpaper') cycleTheme();
+      else if(opt === 'auto_wallpaper') cycleAutoWallpaperInterval();
+      else if(opt === 'local_wallpaper') triggerLocalWallpaperPicker();
+      else if(opt === 'reset_wallpaper') resetLocalWallpaper();
+      else if(opt === 'beam') toggleBeam();
+    });
+  });
+
   function tick(){
+    if(document.hidden) return;
     const d = new Date(); let h = d.getHours();
     const ap = h < 12 ? 'am' : 'pm'; h = h % 12 || 12;
     document.getElementById('clock').innerHTML =
       `${h}:${String(d.getMinutes()).padStart(2,'0')} <small>${ap}</small>`;
   }
-  tick(); setInterval(tick, 1000);
+
+  loadSavedConfig();
+  loadCustomWallpaper();
+  applyWallpaperState();
+  scheduleAutoWallpaperRotation();
+  applyLaneOrderAndVisibility();
+  renderInstalledApps();
+  focusItem(1, 0, false);
+  tick();
+  updateRamStatus();
+  // Segarkan jam & RAM segera saat kembali dari aplikasi lain
+  document.addEventListener('visibilitychange', () => { if(!document.hidden){ tick(); updateRamStatus(); } });
+  setInterval(tick, 10000);
+  setInterval(updateRamStatus, 8000);
   setTimeout(() => document.getElementById('hint').classList.add('hide'), 6000);
 </script>
 </body>
