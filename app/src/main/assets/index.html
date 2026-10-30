@@ -134,6 +134,61 @@
   .card.add.focus{background:rgba(246,197,21,.14);border-color:var(--yellow);}
   .card.add.focus .plus{color:var(--yellow);}
 
+  /* ============ CARD SIZE MODIFIERS (KHUSUS APLIKASI FAVORIT) ============ */
+  /* Ukuran M (Sedang - Kompak) */
+  #rowApps.size-m .card{
+    width:184px;height:102px;padding:12px 14px;border-radius:18px;
+  }
+  #rowApps.size-m .card h3{
+    font-size:14px;max-width:105px;
+  }
+  #rowApps.size-m .logo-box{
+    right:14px;width:48px;height:48px;border-radius:12px;
+  }
+  #rowApps.size-m .card .count{
+    font-size:10.5px;max-width:105px;
+  }
+  #rowApps.size-m .card .stat{
+    font-size:9px;margin-top:2px;
+  }
+  #rowApps.size-m .tab{
+    width:56px;height:11px;
+  }
+  #rowApps.size-m .card.add .plus{
+    font-size:24px;
+  }
+  #rowApps.size-m .card.add p{
+    font-size:10px;max-width:130px;
+  }
+
+  /* Ukuran S (Kecil - Pure Icon Square 1:1) */
+  #rowApps.size-s .card{
+    width:108px;height:108px;padding:0;border-radius:20px;
+    align-items:center;justify-content:center;
+  }
+  #rowApps.size-s .card h3,
+  #rowApps.size-s .card .count,
+  #rowApps.size-s .card .stat{
+    display:none !important;
+  }
+  #rowApps.size-s .logo-box{
+    position:static;transform:none;right:auto;top:auto;
+    width:58px;height:58px;border-radius:15px;
+    box-shadow:0 8px 20px rgba(0,0,0,.5);
+  }
+  #rowApps.size-s .tab{
+    width:42px;height:9px;
+  }
+  #rowApps.size-s .card.add{
+    flex-direction:column;gap:4px;padding:8px;
+  }
+  #rowApps.size-s .card.add .plus{
+    font-size:28px;
+  }
+  #rowApps.size-s .card.add p{
+    font-size:9.5px;max-width:90px;line-height:1.2;
+  }
+
   /* ============ BARIS 3 : PENGATURAN CEPAT ============ */
   .set{display:flex;align-items:center;gap:14px;width:276px;padding:13px 16px;border-radius:18px;color:var(--txt);
     background:linear-gradient(150deg,rgba(255,255,255,.11),rgba(18,26,28,.82));
@@ -180,8 +235,8 @@
   .time{font-size:19px;font-weight:800;letter-spacing:.4px;}
   .time small{font-size:10.5px;font-weight:600;opacity:.65;margin-left:3px;}
   .divider{width:1px;height:28px;background:rgba(255,255,255,.16);}
-  .place b{display:block;font-size:13.5px;font-weight:700;}
-  .place span{font-size:10px;color:var(--muted);}
+  .place b{display:block;font-size:13.5px;font-weight:700;max-width:145px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .place span{display:block;font-size:10px;color:var(--muted);max-width:145px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .weather{display:flex;align-items:center;gap:7px;}
   .weather svg{width:32px;height:32px;}
   .temp{font-size:15px;font-weight:800;opacity:.95;min-width:34px;}
@@ -278,7 +333,11 @@
   @media (max-height:800px){
     :root{--card-w:236px;--card-h:126px;}
     main{top:88px;bottom:58px;scroll-padding-top:36px;}
-    .card{padding:14px 18px;} .card h3{font-size:16.5px;}
+    .card{padding:14px 18px;}
+    #rowApps.size-m .card{width:176px;height:98px;padding:10px 12px;}
+    #rowApps.size-m .logo-box{width:44px;height:44px;}
+    #rowApps.size-s .card{width:102px;height:102px;}
+    #rowApps.size-s .logo-box{width:54px;height:54px;} .card h3{font-size:16.5px;}
     .card-icon,.logo-box{width:52px;height:52px;right:16px;}
     .set{width:248px;padding:11px 14px;} .row{padding:26px 50px 18px;gap:18px;margin-top:0;margin-bottom:0;}
     .lane-head{padding:0 56px;}
@@ -401,9 +460,9 @@
     <span>Penyegar TV: <b id="ramBoosterText" style="color:var(--yellow);font-weight:800;">Performa Siap</b></span>
   </button>
   <div class="status">
-    <div class="time" id="clock">12:51 <small>am</small></div>
+    <div class="time" id="clock">--:-- <small>WIB</small></div>
     <div class="divider"></div>
-    <div class="place"><b id="placeName">Indonesia</b><span id="placeSub">WIB</span></div>
+    <div class="place"><b id="placeName">Indonesia</b><span id="placeSub">Cuaca</span></div>
     <button type="button" class="shift weather" id="weatherWidget" title="Cuaca — tekan untuk detail">
       <span id="weatherIcon"></span>
       <span class="temp" id="weatherTemp">--°</span>
@@ -447,6 +506,13 @@
           <span>Pin/unpin dan geser urutan aplikasi favorit di beranda</span>
         </div>
         <span class="set-val" id="valFavCount">6 / 9 Favorit &rarr;</span>
+      </button>
+      <button type="button" class="set-opt modal-item" data-opt="card_size">
+        <div>
+          <b>Ukuran Kartu Favorit</b>
+          <span>Pilihan: Kecil (Square Icon), Sedang (Kompak), Besar (Penuh)</span>
+        </div>
+        <span class="set-val" id="valCardSize">Besar (L)</span>
       </button>
 
       <div class="modal-section-label">2. Kustomisasi Wallpaper (Preset, Auto-Rotate &amp; Gambar Lokal)</div>
@@ -589,6 +655,35 @@
   let weatherCity = null;     // {name, lat, lon} bila manual
   let autoWallpaperTimer = null;
   let sourcesFirst = true;
+  let appCardSize = 'l';
+  let currentTimezoneAbbr = 'WIB';
+
+  const CARD_SIZES = [
+    { id: 'l', name: 'Besar (L)', cls: 'size-l' },
+    { id: 'm', name: 'Sedang (M)', cls: 'size-m' },
+    { id: 's', name: 'Kecil (S)', cls: 'size-s' }
+  ];
+
+  function applyCardSize(){
+    const rowApps = document.getElementById('rowApps');
+    if(!rowApps) return;
+    rowApps.classList.remove('size-s', 'size-m', 'size-l');
+    rowApps.classList.add('size-' + appCardSize);
+
+    const cur = CARD_SIZES.find(s => s.id === appCardSize) || CARD_SIZES[0];
+    const valEl = document.getElementById('valCardSize');
+    if(valEl) valEl.textContent = cur.name;
+  }
+
+  function cycleCardSize(){
+    const idx = CARD_SIZES.findIndex(s => s.id === appCardSize);
+    const next = CARD_SIZES[(idx + 1) % CARD_SIZES.length];
+    appCardSize = next.id;
+    saveConfig();
+    applyCardSize();
+    rebuildLanes();
+    showToast(`📐 Ukuran Kartu: ${next.name}`);
+  }
   let showSourcesLane = true;
   let showSettingsLane = true;
   let beamEnabled = true;
@@ -617,6 +712,7 @@
       }
       if(weatherMode === 'manual' && !weatherCity) weatherMode = 'auto';
       if(typeof cfg.sourcesFirst === 'boolean') sourcesFirst = cfg.sourcesFirst;
+      if(cfg.appCardSize === 's' || cfg.appCardSize === 'm' || cfg.appCardSize === 'l') appCardSize = cfg.appCardSize;
       if(typeof cfg.showSourcesLane === 'boolean') showSourcesLane = cfg.showSourcesLane;
       if(typeof cfg.showSettingsLane === 'boolean') showSettingsLane = cfg.showSettingsLane;
       if(typeof cfg.beamEnabled === 'boolean') beamEnabled = cfg.beamEnabled;
@@ -631,6 +727,7 @@
         cfgRev: 2,
         autoWallpaperIdx,
         sourcesFirst,
+        appCardSize,
         showSourcesLane,
         showSettingsLane,
         beamEnabled,
@@ -1075,6 +1172,17 @@
       }
     }
 
+    // Dynamic App Title pada subtitle baris favorit saat kartu S difokuskan
+    const subTitleEl = document.getElementById('favCountSubtitle');
+    if(subTitleEl){
+      if(appCardSize === 's' && el.closest('#rowApps') && el.dataset.name){
+        const cat = el.querySelector('.count')?.textContent || 'Aplikasi Favorit';
+        subTitleEl.innerHTML = `<span style="color:var(--yellow);font-weight:700;">${esc(el.dataset.name)}</span> &bull; <span style="color:var(--txt);opacity:.85;">${esc(cat)}</span>`;
+      } else {
+        subTitleEl.innerHTML = `Menampilkan ${favoritePackages.length}/${MAX_FAVORITES} favorit &bull; Klik + untuk Semua Aplikasi`;
+      }
+    }
+
     // Bottom bar: turun ke baris bawah = sembunyi, naik = tampil, fokus di footer = tampil
     if(r === lanes.length - 1){
       setBottomBarVisible(true);
@@ -1234,10 +1342,23 @@
       tz = names[offMin] || 'WIB';
     }
 
+    currentTimezoneAbbr = tz;
+    tick();
+
     const nameEl = document.getElementById('placeName');
     const subEl = document.getElementById('placeSub');
     if(nameEl) nameEl.textContent = placeName;
-    if(subEl) subEl.textContent = tz;
+
+    const cur = weatherData && weatherData.data && weatherData.data.current;
+    if(subEl){
+      if(cur && typeof cur.weather_code === 'number'){
+        subEl.textContent = wxText(cur.weather_code);
+      } else if(weatherState === 'loading'){
+        subEl.textContent = 'Memuat cuaca…';
+      } else {
+        subEl.textContent = 'Cuaca Lokal';
+      }
+    }
   }
 
   // ============ CUACA (Open-Meteo lewat bridge native) ============
@@ -1966,7 +2087,8 @@
       else if(opt === 'manage_favs'){
         closeAllModals();
         openAllAppsModal();
-      } else if(opt === 'wallpaper') cycleTheme();
+      } else if(opt === 'card_size') cycleCardSize();
+      else if(opt === 'wallpaper') cycleTheme();
       else if(opt === 'auto_wallpaper') cycleAutoWallpaperInterval();
       else if(opt === 'local_wallpaper') triggerLocalWallpaperPicker();
       else if(opt === 'reset_wallpaper') resetLocalWallpaper();
@@ -1977,13 +2099,11 @@
   function tick(){
     if(document.hidden) return;
     const d = getLocationDate();
-    let h = d.getUTCHours();
-    const m = d.getUTCMinutes();
-    const ap = h < 12 ? 'am' : 'pm';
-    h = h % 12 || 12;
+    const hh = String(d.getUTCHours()).padStart(2, '0');
+    const mm = String(d.getUTCMinutes()).padStart(2, '0');
     const clockEl = document.getElementById('clock');
     if(clockEl){
-      clockEl.innerHTML = `${h}:${String(m).padStart(2,'0')} <small>${ap}</small>`;
+      clockEl.innerHTML = `${hh}:${mm} <small>${currentTimezoneAbbr || 'WIB'}</small>`;
     }
   }
 
@@ -1992,6 +2112,7 @@
   applyWallpaperState();
   scheduleAutoWallpaperRotation();
   applyLaneOrderAndVisibility();
+  applyCardSize();
   renderInstalledApps();
   focusItem(1, 0, false);
   wxLoadCache();
