@@ -122,9 +122,9 @@
     transition:transform .26s cubic-bezier(.22,1,.36,1), opacity .26s ease;}
 
   .card.focus{transform:rotate(-3.2deg) translateY(-9px) scale(1.05);z-index:5;
-    background:linear-gradient(155deg,var(--teal-1),var(--teal-2) 45%,var(--teal-3));
+    background:linear-gradient(155deg,var(--card-c1,var(--teal-1)),var(--card-c2,var(--teal-2)) 45%,var(--card-c3,var(--teal-3)));
     border-color:rgba(255,255,255,.32);
-    box-shadow:0 24px 52px rgba(0,0,0,.6), 0 0 36px rgba(64,190,185,.22), inset 0 1px 0 rgba(255,255,255,.32);}
+    box-shadow:0 24px 52px rgba(0,0,0,.6), 0 0 36px var(--card-glow,rgba(64,190,185,.22)), inset 0 1px 0 rgba(255,255,255,.32);}
   .card.focus .tab{opacity:1;transform:translate(-50%,-50%) scale(1);}
 
   .card.add{align-items:center;justify-content:center;gap:6px;text-align:center;
@@ -777,6 +777,7 @@
             name: a.name,
             packageName: a.packageName,
             icon: a.icon,
+            color: a.color,
             category: APP_CATEGORY[a.category] || 'Aplikasi TV'
           }));
         }
@@ -802,6 +803,80 @@
   function refreshInstalledApps(){
     installedAppsList = [];
     renderInstalledApps();
+  }
+
+  // ============ BRAND COLOR PALETTE & ADAPTIVE CARD SILHOUETTES ============
+  const APP_BRAND_COLORS = {
+    // Video & Streaming
+    youtube: '#FF0033',
+    smarttube: '#FF0033',
+    newpipe: '#FF0033',
+    spotify: '#1DB954',
+    netflix: '#E50914',
+    amazon: '#00A8E1',
+    prime: '#00A8E1',
+    hotstar: '#0A448C',
+    disney: '#0A448C',
+    vidio: '#E52320',
+    twitch: '#9146FF',
+    apple: '#333336',
+    hbo: '#5822B4',
+    max: '#002BE7',
+    iqiyi: '#00C853',
+    wetv: '#FF5722',
+    viu: '#FAAC18',
+    vision: '#0095DA',
+    catchplay: '#FF6D00',
+    mola: '#0E1724',
+
+    // Media, Tools & Games
+    kodi: '#17B2E7',
+    vlc: '#FF8800',
+    plex: '#E5A00D',
+    emby: '#52B54B',
+    jellyfin: '#AA5CC3',
+    browser: '#2979FF',
+    chrome: '#4285F4',
+    playstore: '#01875F',
+    vending: '#01875F',
+    google: '#4285F4',
+    retroarch: '#D32F2F',
+    steam: '#171A21'
+  };
+
+  function getAppBrandColor(app){
+    if(!app) return null;
+    const pkg = (app.packageName || '').toLowerCase();
+    const name = (app.name || '').toLowerCase();
+
+    for(const [key, color] of Object.entries(APP_BRAND_COLORS)){
+      if(pkg.includes(key) || name.includes(key)) return color;
+    }
+
+    if(app.color && typeof app.color === 'string') return app.color;
+    return null;
+  }
+
+  function hexToCardVars(hex){
+    if(!hex) return '';
+    let c = hex.replace('#', '');
+    if(c.length === 3) c = c.split('').map(x => x + x).join('');
+    const num = parseInt(c, 16);
+    if(isNaN(num)) return '';
+    const r = (num >> 16) & 255;
+    const g = (num >> 8) & 255;
+    const b = num & 255;
+
+    // 1. Puncak cahaya kiri atas (transparan .75)
+    const c1 = "rgba(" + Math.min(255, Math.round(r * 1.08 + 28)) + "," + Math.min(255, Math.round(g * 1.08 + 28)) + "," + Math.min(255, Math.round(b * 1.08 + 28)) + ",.75)";
+    // 2. Badan tengah 45% (saturasi warna utama .55)
+    const c2 = "rgba(" + Math.round(r * 0.70) + "," + Math.round(g * 0.70) + "," + Math.round(b * 0.70) + ",.55)";
+    // 3. Kedalaman dasar kanan bawah (gelap pekat .75)
+    const c3 = "rgba(" + Math.round(r * 0.22) + "," + Math.round(g * 0.22) + "," + Math.round(b * 0.22) + ",.75)";
+    // 4. Ambient aura glow bayangan
+    const glow = "rgba(" + r + "," + g + "," + b + ",.26)";
+
+    return "--card-c1:" + c1 + ";--card-c2:" + c2 + ";--card-c3:" + c3 + ";--card-glow:" + glow + ";";
   }
 
   // ============ 2. RENDER FAVORITES (MAX 9) + ALL APPS GRID OVERLAY ============
@@ -836,6 +911,13 @@
       btn.dataset.action = 'app';
       btn.dataset.pkg = app.packageName;
       btn.dataset.name = app.name;
+
+      const brandColor = getAppBrandColor(app);
+      if(brandColor){
+        const vars = hexToCardVars(brandColor);
+        if(vars) btn.setAttribute('style', vars);
+      }
+
       btn.innerHTML = `
         <span class="tab"></span><h3>${esc(app.name)}</h3>
         <span class="logo-box">${renderLogoHtml(app)}</span>

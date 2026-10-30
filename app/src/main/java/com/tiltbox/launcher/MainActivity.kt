@@ -16,6 +16,7 @@ import android.content.pm.ResolveInfo
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -804,12 +805,13 @@ class MainActivity : Activity() {
 
                     val appName = info.loadLabel(pm).toString()
                     val iconDrawable = info.loadIcon(pm)
-                    val iconBase64 = drawableToBase64(iconDrawable)
+                    val iconRes = processIcon(iconDrawable)
 
                     val appObj = JSONObject().apply {
                         put("packageName", pkgName)
                         put("name", appName)
-                        put("icon", iconBase64)
+                        put("icon", iconRes.base64)
+                        if (iconRes.color != null) put("color", iconRes.color)
                         put("category", if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                             info.activityInfo.applicationInfo.category else -1)
                     }
@@ -826,8 +828,13 @@ class MainActivity : Activity() {
             return result
         }
 
+        private data class IconResult(val base64: String, val color: String?)
+
         @Suppress("DEPRECATION")
-        private fun drawableToBase64(drawable: Drawable): String {
+        private fun drawableToBase64(drawable: Drawable): String = processIcon(drawable).base64
+
+        @Suppress("DEPRECATION")
+        private fun processIcon(drawable: Drawable): IconResult {
             return try {
                 val maxDim = 96
                 val rawBitmap = if (drawable is BitmapDrawable && drawable.bitmap != null) {
@@ -846,6 +853,7 @@ class MainActivity : Activity() {
                     drawable.draw(canvas)
                     bmp
                 }
+                val dominantColor = extractDominantColor(rawBitmap)
                 val stream = ByteArrayOutputStream()
                 val fmt = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                     Bitmap.CompressFormat.WEBP_LOSSY
@@ -854,9 +862,55 @@ class MainActivity : Activity() {
                 }
                 rawBitmap.compress(fmt, 80, stream)
                 val byteArray = stream.toByteArray()
-                "data:image/webp;base64," + Base64.encodeToString(byteArray, Base64.NO_WRAP)
+                IconResult("data:image/webp;base64," + Base64.encodeToString(byteArray, Base64.NO_WRAP), dominantColor)
             } catch (e: Exception) {
-                ""
+                IconResult("", null)
+            }
+        }
+
+        private fun extractDominantColor(bitmap: Bitmap): String? {
+            return try {
+                val w = bitmap.width
+                val h = bitmap.height
+                if (w <= 0 || h <= 0) return null
+
+                val step = Math.max(1, Math.min(w, h) / 12)
+                var bestColor = 0
+                var maxScore = -1.0f
+
+                for (y in 0 until h step step) {
+                    for (x in 0 until w step step) {
+                        val pixel = bitmap.getPixel(x, y)
+                        val a = Color.alpha(pixel)
+                        if (a < 128) continue
+
+                        val r = Color.red(pixel)
+                        val g = Color.green(pixel)
+                        val b = Color.blue(pixel)
+
+                        val brightness = (r + g + b) / 3f
+                        if (brightness < 35f || brightness > 235f) continue
+
+                        val max = Math.max(r, Math.max(g, b)).toFloat()
+                        val min = Math.min(r, Math.min(g, b)).toFloat()
+                        if (max <= 0f) continue
+                        val saturation = (max - min) / max
+
+                        val score = saturation * (1f - Math.abs(brightness - 128f) / 128f)
+                        if (score > maxScore) {
+                            maxScore = score
+                            bestColor = pixel
+                        }
+                    }
+                }
+
+                if (maxScore > 0.15f) {
+                    String.format("#%02X%02X%02X", Color.red(bestColor), Color.green(bestColor), Color.blue(bestColor))
+                } else {
+                    null
+                }
+            } catch (e: Throwable) {
+                null
             }
         }
     }
