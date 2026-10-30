@@ -1067,11 +1067,68 @@
     });
   }
 
+  // Mengembalikan Date yang merefleksikan waktu zona lokal sesuai cuaca/lokasi aktif
+  function getLocationDate(epochMs){
+    const baseMs = (typeof epochMs === 'number') ? epochMs : Date.now();
+    let offsetSec = null;
+
+    if(weatherData && weatherData.data && typeof weatherData.data.utc_offset_seconds === 'number'){
+      offsetSec = weatherData.data.utc_offset_seconds;
+    }
+
+    if(offsetSec === null){
+      const sysOffsetMin = -new Date().getTimezoneOffset();
+      if(sysOffsetMin !== 0){
+        offsetSec = sysOffsetMin * 60;
+      } else {
+        // Fallback default Indonesia (WIB = UTC+7) jika jam sistem perangkat masih default GMT+0
+        offsetSec = 7 * 3600;
+      }
+    }
+
+    return new Date(baseMs + (offsetSec * 1000));
+  }
+
+  function formatLocationTime(epochMs){
+    const d = getLocationDate(epochMs);
+    const h = String(d.getUTCHours()).padStart(2, '0');
+    const m = String(d.getUTCMinutes()).padStart(2, '0');
+    return `${h}:${m}`;
+  }
+
   function updateTimezoneLabel(){
-    const off = -new Date().getTimezoneOffset();
-    const names = {420:'WIB', 480:'WITA', 540:'WIT'};
-    const tz = names[off] || ('UTC' + (off >= 0 ? '+' : '-') + Math.floor(Math.abs(off) / 60));
-    document.getElementById('placeSub').textContent = tz;
+    let tz = 'WIB';
+    let placeName = 'Indonesia';
+
+    if(weatherData && weatherData.place && weatherData.place.name){
+      placeName = weatherData.place.name;
+    } else if(weatherCity && weatherCity.name){
+      placeName = weatherCity.name;
+    }
+
+    if(weatherData && weatherData.data){
+      const offSec = weatherData.data.utc_offset_seconds;
+      const abbr = weatherData.data.timezone_abbreviation;
+      const tzName = weatherData.data.timezone;
+
+      if(offSec === 25200 || tzName === 'Asia/Jakarta' || tzName === 'Asia/Pontianak') tz = 'WIB';
+      else if(offSec === 28800 || tzName === 'Asia/Makassar' || tzName === 'Asia/Ujung_Pandang') tz = 'WITA';
+      else if(offSec === 32400 || tzName === 'Asia/Jayapura') tz = 'WIT';
+      else if(abbr && !abbr.startsWith('GMT')) tz = abbr;
+      else if(typeof offSec === 'number'){
+        const hours = offSec / 3600;
+        tz = 'UTC' + (hours >= 0 ? '+' : '') + hours;
+      }
+    } else {
+      const offMin = -new Date().getTimezoneOffset();
+      const names = {420:'WIB', 480:'WITA', 540:'WIT'};
+      tz = names[offMin] || 'WIB';
+    }
+
+    const nameEl = document.getElementById('placeName');
+    const subEl = document.getElementById('placeSub');
+    if(nameEl) nameEl.textContent = placeName;
+    if(subEl) subEl.textContent = tz;
   }
 
   // ============ CUACA (Open-Meteo lewat bridge native) ============
@@ -1200,6 +1257,8 @@
       weatherError = (res && res.error) || 'network';
     }
     renderWeather();
+    updateTimezoneLabel();
+    tick();
   };
 
   window.onLocationPermission = function(granted){
@@ -1241,6 +1300,7 @@
       tempEl.textContent = '--°';
       widget.title = weatherState === 'loading' ? 'Memuat cuaca…' : 'Cuaca belum tersedia — tekan untuk detail';
     }
+    updateTimezoneLabel();
     const m = activeModal();
     if(m && m.id === 'weatherModal') renderWxModal();
   }
@@ -1331,7 +1391,7 @@
     document.getElementById('wxPlace').textContent = (weatherData && weatherData.place && cur) ? weatherData.place.name : '';
     const upd = document.getElementById('wxUpdated');
     upd.textContent = (weatherData && weatherData.fetchedAt)
-      ? 'Diperbarui ' + new Date(weatherData.fetchedAt).toTimeString().slice(0, 5) + (weatherState === 'loading' ? ' • memuat…' : '')
+      ? 'Diperbarui ' + formatLocationTime(weatherData.fetchedAt) + (weatherState === 'loading' ? ' • memuat…' : '')
       : '';
 
     if(wxView === 'cities'){
@@ -1390,6 +1450,8 @@
     weatherState = 'idle';
     saveConfig();
     showWxView('detail');
+    updateTimezoneLabel();
+    tick();
     if(!wxMaybeAskPermission()) requestWeather(true);
     else renderWeather();
   }
@@ -1404,6 +1466,8 @@
     saveConfig();
     showToast(`Lokasi cuaca: ${c.name}`);
     showWxView('detail');
+    updateTimezoneLabel();
+    tick();
     requestWeather(true);
   }
 
@@ -1796,10 +1860,15 @@
 
   function tick(){
     if(document.hidden) return;
-    const d = new Date(); let h = d.getHours();
-    const ap = h < 12 ? 'am' : 'pm'; h = h % 12 || 12;
-    document.getElementById('clock').innerHTML =
-      `${h}:${String(d.getMinutes()).padStart(2,'0')} <small>${ap}</small>`;
+    const d = getLocationDate();
+    let h = d.getUTCHours();
+    const m = d.getUTCMinutes();
+    const ap = h < 12 ? 'am' : 'pm';
+    h = h % 12 || 12;
+    const clockEl = document.getElementById('clock');
+    if(clockEl){
+      clockEl.innerHTML = `${h}:${String(m).padStart(2,'0')} <small>${ap}</small>`;
+    }
   }
 
   loadSavedConfig();
@@ -1809,11 +1878,11 @@
   applyLaneOrderAndVisibility();
   renderInstalledApps();
   focusItem(1, 0, false);
-  tick();
+  wxLoadCache();
   updateTimezoneLabel();
+  tick();
   updateRamStatus();
   updateInputStatus();
-  wxLoadCache();
   renderWeather();
   // Cuaca: izin lokasi diminta sekali (mode otomatis); data dimuat setelahnya atau langsung bila tak perlu
   setTimeout(() => { if(!wxMaybeAskPermission()) requestWeather(false); }, 1500);

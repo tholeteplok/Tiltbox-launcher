@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityManager
+import android.app.AlarmManager
 import android.app.SearchManager
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -643,6 +644,17 @@ class MainActivity : Activity() {
                     WeatherService.load(context, mode, lat, lon, name)
                 } finally {
                     weatherBusy = false
+                }
+                try {
+                    val obj = JSONObject(json)
+                    if (obj.optBoolean("ok", false) && obj.has("data")) {
+                        val tz = obj.getJSONObject("data").optString("timezone", "")
+                        if (tz.isNotEmpty()) {
+                            val am = activity.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
+                            am?.setTimeZone(tz)
+                        }
+                    }
+                } catch (_: Throwable) {
                 }
                 activity.runJs("if(typeof onWeatherResult==='function') onWeatherResult($json);")
             }.start()
