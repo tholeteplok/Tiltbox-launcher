@@ -3,9 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tiltbox Launcher v1.6.2 (RT41 Full Customizer Edition)</title>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; font-src 'self' file:; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Tiltbox Launcher v1.7.0 (RT41 Full Customizer Edition)</title>
 <style>
+  @font-face {
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 400 800;
+    font-display: swap;
+    src: url('fonts/manrope.woff2') format('woff2');
+  }
   :root{
     --yellow:#f6c515;
     --teal-1:rgba(133,222,214,.78); --teal-2:rgba(38,128,132,.62); --teal-3:rgba(12,74,80,.82);
@@ -184,7 +191,38 @@
   .place span{font-size:10px;color:var(--muted);}
   .weather{display:flex;align-items:center;gap:7px;}
   .weather svg{width:32px;height:32px;}
-  .temp{font-size:13px;font-weight:700;opacity:.9;}
+  .temp{font-size:15px;font-weight:800;opacity:.95;min-width:34px;}
+
+  /* ============ CUACA ============ */
+  .wx-card{max-width:780px;}
+  .wx-now{display:flex;align-items:center;gap:22px;}
+  .wx-big svg{width:96px;height:96px;display:block;}
+  .wx-temp{font-size:54px;font-weight:800;line-height:1;}
+  .wx-desc{font-size:16px;font-weight:700;margin-top:4px;}
+  .wx-sub{font-size:11px;color:var(--muted);margin-top:3px;}
+  .wx-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+  .wx-stat{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:9px 12px;}
+  .wx-stat small{display:block;font-size:10px;color:var(--muted);letter-spacing:.04em;}
+  .wx-stat b{font-size:14.5px;font-weight:800;}
+  .wx-hours{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;}
+  .wx-hour{text-align:center;font-size:11px;background:rgba(255,255,255,.04);border-radius:12px;padding:7px 2px;}
+  .wx-hour svg{width:28px;height:28px;display:block;margin:3px auto;}
+  .wx-hour b{display:block;font-size:13px;font-weight:800;}
+  .wx-hour span{color:var(--muted);font-size:10px;}
+  .wx-days{display:flex;flex-direction:column;gap:5px;}
+  .wx-day{display:grid;grid-template-columns:84px 32px 1fr auto;align-items:center;gap:10px;
+    background:rgba(255,255,255,.04);border-radius:12px;padding:4px 12px;font-size:12px;}
+  .wx-day svg{width:26px;height:26px;display:block;}
+  .wx-day .wx-rain{color:var(--muted);font-size:10.5px;}
+  .wx-day b{font-weight:800;}
+  .wx-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:2px;}
+  .wx-btn{padding:9px 16px;border-radius:12px;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.12);font-size:12px;font-weight:700;}
+  .wx-btn:hover{border-color:var(--yellow);color:var(--yellow);}
+  .wx-cities{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .wx-city{display:block;width:100%;padding:11px 16px;}
+  .wx-msg{padding:26px 8px;text-align:center;font-size:14px;font-weight:600;color:var(--muted);}
+  .wx-note{font-size:11px;color:var(--yellow);}
 
   /* ============ MODALS (CUSTOMIZER, ALL APPS GRID, FAVORITE ORDER) ============ */
   .modal-overlay{position:fixed;inset:0;background:rgba(5,8,9,.90);
@@ -272,7 +310,7 @@
 <header>
   <div class="brand-pill">
     <div class="brand-logo">T</div>
-    <span>Tiltbox <b>RT41</b> <small>v1.6.2</small></span>
+    <span>Tiltbox <b>RT41</b> <small>v1.7.0</small></span>
   </div>
 
   <div class="logo-txt">play<span>box</span><sup>™</sup></div>
@@ -379,7 +417,11 @@
   <div class="status">
     <div class="time" id="clock">12:51 <small>am</small></div>
     <div class="divider"></div>
-    <div class="place"><b>Indonesia</b><span id="placeSub">TCL RT41</span></div>
+    <div class="place"><b id="placeName">Indonesia</b><span id="placeSub">TCL RT41</span></div>
+    <button type="button" class="shift weather" id="weatherWidget" title="Cuaca — tekan untuk detail">
+      <span id="weatherIcon"></span>
+      <span class="temp" id="weatherTemp">--°</span>
+    </button>
   </div>
 </footer>
 
@@ -462,6 +504,17 @@
 </div>
 
 <!-- ============ MODAL OVERLAY GRID SEMUA APLIKASI & KELOLA FAVORIT (MAKS 9) ============ -->
+<!-- ============ MODAL CUACA ============ -->
+<div class="modal-overlay" id="weatherModal">
+  <div class="modal-card wx-card">
+    <div class="modal-head">
+      <h3>Cuaca <span id="wxPlace"></span></h3>
+      <span class="wx-sub" id="wxUpdated"></span>
+    </div>
+    <div id="wxBody" data-view="detail" data-cols="1"></div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="allAppsModal">
   <div class="modal-card" style="max-width:880px;">
     <div class="modal-head">
@@ -546,6 +599,8 @@
   let toastTimer = null;
   let currentThemeIdx = 0;
   let autoWallpaperIdx = 0; // Default: Nonaktif (Manual)
+  let weatherMode = 'auto';   // 'auto' = lokasi perangkat (cadangan: IP); 'manual' = kota pilihan
+  let weatherCity = null;     // {name, lat, lon} bila manual
   let autoWallpaperTimer = null;
   let sourcesFirst = true;
   let showSourcesLane = true;
@@ -569,6 +624,12 @@
         const i = cfg.cfgRev === 2 ? cfg.autoWallpaperIdx : Math.max(0, cfg.autoWallpaperIdx - 1);
         autoWallpaperIdx = i % AUTO_WALLPAPER_INTERVALS.length;
       }
+      if(cfg.weatherMode === 'auto' || cfg.weatherMode === 'manual') weatherMode = cfg.weatherMode;
+      if(cfg.weatherCity && typeof cfg.weatherCity.name === 'string' &&
+         isFinite(cfg.weatherCity.lat) && isFinite(cfg.weatherCity.lon)){
+        weatherCity = {name: cfg.weatherCity.name, lat: +cfg.weatherCity.lat, lon: +cfg.weatherCity.lon};
+      }
+      if(weatherMode === 'manual' && !weatherCity) weatherMode = 'auto';
       if(typeof cfg.sourcesFirst === 'boolean') sourcesFirst = cfg.sourcesFirst;
       if(typeof cfg.showSourcesLane === 'boolean') showSourcesLane = cfg.showSourcesLane;
       if(typeof cfg.showSettingsLane === 'boolean') showSettingsLane = cfg.showSettingsLane;
@@ -586,7 +647,9 @@
         sourcesFirst,
         showSourcesLane,
         showSettingsLane,
-        beamEnabled
+        beamEnabled,
+        weatherMode,
+        weatherCity
       }));
     } catch(e){}
   }
@@ -901,7 +964,7 @@
     const header = [...document.querySelectorAll('header .ctrl')];
     const content = [...document.querySelectorAll('#mainContainer .lane:not(.lane-hidden)')]
       .map(l => [...l.querySelectorAll('.item')]);
-    const footer = [document.getElementById('btnFooterRam')].filter(Boolean);
+    const footer = [document.getElementById('btnFooterRam'), document.getElementById('weatherWidget')].filter(Boolean);
     lanes = [header, ...content, footer];
     lanes.forEach((lane, rI) => lane.forEach((el, cI) => {
       // Tombol header/footer sudah punya click listener sendiri; jangan didobel.
@@ -1027,6 +1090,356 @@
     document.getElementById('placeSub').textContent = `TCL RT41 • ${tz}`;
   }
 
+  // ============ CUACA (Open-Meteo lewat bridge native) ============
+  const WX_CACHE_KEY = 'tiltbox_weather_v1';
+  const WX_ASKED_KEY = 'tiltbox_wx_asked_v1';
+  const WX_REFRESH_MS = 30 * 60 * 1000;
+  const WX_STALE_MS = 3 * 60 * 60 * 1000;
+  const WX_CITIES = [
+    {name:'Jakarta', lat:-6.2088, lon:106.8456}, {name:'Surabaya', lat:-7.2575, lon:112.7521},
+    {name:'Bandung', lat:-6.9175, lon:107.6191}, {name:'Medan', lat:3.5952, lon:98.6722},
+    {name:'Semarang', lat:-6.9667, lon:110.4167}, {name:'Yogyakarta', lat:-7.7956, lon:110.3695},
+    {name:'Malang', lat:-7.9666, lon:112.6326}, {name:'Makassar', lat:-5.1477, lon:119.4327},
+    {name:'Denpasar', lat:-8.6705, lon:115.2126}, {name:'Palembang', lat:-2.9761, lon:104.7754},
+    {name:'Pekanbaru', lat:0.5071, lon:101.4478}, {name:'Balikpapan', lat:-1.2379, lon:116.8529},
+    {name:'Banjarmasin', lat:-3.3194, lon:114.5908}, {name:'Pontianak', lat:-0.0263, lon:109.3425},
+    {name:'Manado', lat:1.4748, lon:124.8421}, {name:'Jayapura', lat:-2.5337, lon:140.7181}
+  ];
+  const WX_TEXT = {
+    0:'Cerah', 1:'Cerah berawan', 2:'Berawan sebagian', 3:'Mendung', 45:'Berkabut', 48:'Kabut beku',
+    51:'Gerimis ringan', 53:'Gerimis', 55:'Gerimis lebat', 56:'Gerimis beku', 57:'Gerimis beku lebat',
+    61:'Hujan ringan', 63:'Hujan sedang', 65:'Hujan lebat', 66:'Hujan beku', 67:'Hujan beku lebat',
+    71:'Salju ringan', 73:'Salju', 75:'Salju lebat', 77:'Butiran salju',
+    80:'Hujan lokal ringan', 81:'Hujan lokal', 82:'Hujan lokal deras', 85:'Hujan salju', 86:'Hujan salju lebat',
+    95:'Badai petir', 96:'Badai petir & es', 99:'Badai petir & es lebat'
+  };
+  const WX_DAYS = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+  const WX_COMPASS = ['Utara','Timur Laut','Timur','Tenggara','Selatan','Barat Daya','Barat','Barat Laut'];
+
+  let weatherData = null;      // hasil sukses terakhir {ok, place, fetchedAt, data, locPermission}
+  let weatherState = 'idle';   // idle | loading | ok | error
+  let weatherError = '';
+  let wxView = 'detail';       // detail | cities
+  let wxPermDenied = false;
+
+  function wxText(code){ return WX_TEXT[code] || 'Tidak diketahui'; }
+
+  function wxGroup(code){
+    if(code === 0 || code === 1) return 'clear';
+    if(code === 2) return 'partly';
+    if(code === 3) return 'cloud';
+    if(code === 45 || code === 48) return 'fog';
+    if(code >= 51 && code <= 57) return 'drizzle';
+    if((code >= 61 && code <= 67) || (code >= 80 && code <= 82)) return 'rain';
+    if((code >= 71 && code <= 77) || code === 85 || code === 86) return 'snow';
+    if(code >= 95 && code <= 99) return 'thunder';
+    return 'cloud';
+  }
+
+  function wxCloud(tx, ty, sc, fill){
+    return `<path transform="translate(${tx},${ty}) scale(${sc})" d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" fill="${fill}"/>`;
+  }
+
+  function wxIcon(code, isDay){
+    const g = code == null ? 'na' : wxGroup(code);
+    const sunBig = '<circle cx="32" cy="32" r="11" fill="#f6c515"/><path d="M32 8v6M32 50v6M8 32h6M50 32h6M15 15l4 4M45 45l4 4M49 15l-4 4M19 45l-4 4" stroke="#f6c515" stroke-width="3.5" stroke-linecap="round"/>';
+    const moonBig = '<path transform="translate(8,8) scale(2.1)" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="#d9e2ea"/>';
+    const sunSmall = '<circle cx="23" cy="23" r="9" fill="#f6c515"/><path d="M23 6v4M6 23h4M11 11l3 3M35 11l-3 3" stroke="#f6c515" stroke-width="3" stroke-linecap="round"/>';
+    const moonSmall = '<path transform="translate(2,2) scale(1.5)" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="#d9e2ea"/>';
+    let inner;
+    if(g === 'clear') inner = isDay ? sunBig : moonBig;
+    else if(g === 'partly') inner = (isDay ? sunSmall : moonSmall) + wxCloud(14, 16, 1.8, '#fff');
+    else if(g === 'cloud') inner = wxCloud(6, 8, 2.2, '#cfd8dc');
+    else if(g === 'fog') inner = wxCloud(8, 4, 2, '#cfd8dc') + '<path d="M12 48h40M18 56h28" stroke="#b0bec5" stroke-width="3.5" stroke-linecap="round"/>';
+    else if(g === 'drizzle') inner = wxCloud(8, 4, 2, '#e6edf0') + '<path d="M22 49v4M34 51v4M46 49v4" stroke="#6ec1ff" stroke-width="3.5" stroke-linecap="round"/>';
+    else if(g === 'rain') inner = wxCloud(8, 2, 2, '#cfd8dc') + '<path d="M21 47l-3 9M33 47l-3 9M45 47l-3 9" stroke="#4aa8ff" stroke-width="3.5" stroke-linecap="round"/>';
+    else if(g === 'snow') inner = wxCloud(8, 2, 2, '#e6edf0') + '<circle cx="20" cy="51" r="3" fill="#fff"/><circle cx="32" cy="56" r="3" fill="#fff"/><circle cx="44" cy="51" r="3" fill="#fff"/>';
+    else if(g === 'thunder') inner = wxCloud(8, 0, 2, '#9fb0b8') + '<path d="M35 38l-10 14h8l-4 10 14-16h-8z" fill="#f6c515"/>';
+    else inner = wxCloud(6, 8, 2.2, '#fff').replace('fill="#fff"', 'fill="#fff" opacity=".28"'); // data belum ada
+    return `<svg viewBox="0 0 64 64" aria-hidden="true">${inner}</svg>`;
+  }
+
+  function wxNum(v, digits){
+    return (typeof v === 'number' && isFinite(v)) ? v.toFixed(digits || 0) : '--';
+  }
+
+  function wxHasPermission(){
+    if(!hasBridge('hasLocationPermission')) return false;
+    try { return !!window.TiltboxBridge.hasLocationPermission(); } catch(e){ return false; }
+  }
+
+  function wxSaveCache(){
+    try { localStorage.setItem(WX_CACHE_KEY, JSON.stringify({mode: weatherMode, city: weatherCity, res: weatherData})); } catch(e){}
+  }
+
+  function wxLoadCache(){
+    try {
+      const raw = localStorage.getItem(WX_CACHE_KEY);
+      if(!raw) return;
+      const c = JSON.parse(raw);
+      const sameCity = !weatherCity || (c.city && c.city.name === weatherCity.name);
+      if(c && c.res && c.res.ok && c.res.data && c.res.data.current && c.mode === weatherMode && sameCity){
+        weatherData = c.res;
+        weatherState = 'ok';
+      }
+    } catch(e){}
+  }
+
+  function requestWeather(force){
+    if(!hasBridge('refreshWeather')){
+      weatherState = 'error'; weatherError = 'nobridge';
+      renderWeather();
+      return;
+    }
+    if(!force && weatherData && (Date.now() - weatherData.fetchedAt) < WX_REFRESH_MS) return;
+    weatherState = 'loading';
+    renderWeather();
+    try {
+      const manual = weatherMode === 'manual' && weatherCity;
+      window.TiltboxBridge.refreshWeather(manual ? 'manual' : 'auto',
+        manual ? weatherCity.lat : 0, manual ? weatherCity.lon : 0, manual ? weatherCity.name : '');
+    } catch(e){
+      weatherState = 'error'; weatherError = 'network';
+      renderWeather();
+    }
+  }
+
+  // Dipanggil native setelah jaringan selesai
+  window.onWeatherResult = function(res){
+    if(res && res.ok && res.data && res.data.current){
+      weatherData = res;
+      weatherState = 'ok';
+      weatherError = '';
+      wxSaveCache();
+    } else {
+      weatherState = 'error';
+      weatherError = (res && res.error) || 'network';
+    }
+    renderWeather();
+  };
+
+  window.onLocationPermission = function(granted){
+    wxPermDenied = !granted;
+    if(granted){
+      showToast('Izin lokasi diberikan');
+    } else {
+      showToast('Izin lokasi ditolak — memakai perkiraan lokasi dari IP');
+    }
+    if(weatherMode === 'auto') requestWeather(true);
+    if(activeModal() && activeModal().id === 'weatherModal') renderWxModal();
+  };
+
+  // Minta izin lokasi sekali saat pertama kali (mode otomatis); setelah itu hanya lewat tombol di panel cuaca
+  function wxMaybeAskPermission(){
+    if(weatherMode !== 'auto' || !hasBridge('requestLocationPermission')) return false;
+    if(wxHasPermission()) return false;
+    let asked = false;
+    try { asked = localStorage.getItem(WX_ASKED_KEY) === '1'; } catch(e){}
+    if(asked) return false;
+    try { localStorage.setItem(WX_ASKED_KEY, '1'); } catch(e){}
+    try { window.TiltboxBridge.requestLocationPermission(); return true; } catch(e){ return false; }
+  }
+
+  // ---- widget di footer ----
+  function renderWeather(){
+    const cur = weatherData && weatherData.data && weatherData.data.current;
+    const iconEl = document.getElementById('weatherIcon');
+    const tempEl = document.getElementById('weatherTemp');
+    const nameEl = document.getElementById('placeName');
+    const widget = document.getElementById('weatherWidget');
+    if(cur){
+      iconEl.innerHTML = wxIcon(cur.weather_code, cur.is_day === 1);
+      tempEl.textContent = `${wxNum(cur.temperature_2m)}°`;
+      nameEl.textContent = (weatherData.place && weatherData.place.name) || 'Indonesia';
+      widget.title = `${wxText(cur.weather_code)} — tekan untuk detail`;
+    } else {
+      iconEl.innerHTML = wxIcon(null, true);
+      tempEl.textContent = '--°';
+      widget.title = weatherState === 'loading' ? 'Memuat cuaca…' : 'Cuaca belum tersedia — tekan untuk detail';
+    }
+    const m = activeModal();
+    if(m && m.id === 'weatherModal') renderWxModal();
+  }
+
+  // ---- panel detail ----
+  function wxSourceLabel(){
+    const src = weatherData && weatherData.place && weatherData.place.source;
+    if(src === 'device') return 'Lokasi perangkat';
+    if(src === 'manual') return 'Lokasi pilihan';
+    return 'Perkiraan lokasi dari IP';
+  }
+
+  function wxErrorMessage(){
+    if(weatherError === 'nolocation') return 'Lokasi tidak ditemukan. Pilih kota secara manual lewat "Ganti lokasi".';
+    if(weatherError === 'badlocation') return 'Koordinat lokasi tidak valid. Pilih kota lain.';
+    if(weatherError === 'nobridge') return 'Cuaca hanya tersedia saat dijalankan sebagai aplikasi di TV.';
+    return 'Tidak bisa terhubung ke layanan cuaca. Periksa koneksi internet TV.';
+  }
+
+  function wxDayLabel(iso, i){
+    if(i === 0) return 'Hari ini';
+    const p = String(iso || '').split('-');
+    if(p.length !== 3) return '--';
+    const dt = new Date(+p[0], +p[1] - 1, +p[2]);
+    return WX_DAYS[dt.getDay()] + ' ' + p[2];
+  }
+
+  function wxRenderDetailHtml(){
+    const d = weatherData.data, c = d.current, daily = d.daily || {}, hourly = d.hourly || {};
+    const isDay = c.is_day === 1;
+    const ageMs = Date.now() - (weatherData.fetchedAt || 0);
+    let html = '';
+
+    html += `<div class="wx-now"><div class="wx-big">${wxIcon(c.weather_code, isDay)}</div><div>
+      <div class="wx-temp">${wxNum(c.temperature_2m)}°C</div>
+      <div class="wx-desc">${esc(wxText(c.weather_code))}</div>
+      <div class="wx-sub">Terasa seperti ${wxNum(c.apparent_temperature)}° • ${esc(wxSourceLabel())}</div></div></div>`;
+
+    const dirIdx = (typeof c.wind_direction_10m === 'number') ? Math.round(c.wind_direction_10m / 45) % 8 : -1;
+    const uv = (daily.uv_index_max && daily.uv_index_max[0]);
+    const sunrise = daily.sunrise && daily.sunrise[0] ? String(daily.sunrise[0]).slice(11, 16) : '--';
+    const sunset = daily.sunset && daily.sunset[0] ? String(daily.sunset[0]).slice(11, 16) : '--';
+    html += `<div class="wx-stats">
+      <div class="wx-stat"><small>Kelembapan</small><b>${wxNum(c.relative_humidity_2m)}%</b></div>
+      <div class="wx-stat"><small>Angin</small><b>${wxNum(c.wind_speed_10m)} km/j${dirIdx >= 0 ? ' ' + esc(WX_COMPASS[dirIdx]) : ''}</b></div>
+      <div class="wx-stat"><small>Curah hujan</small><b>${wxNum(c.precipitation, 1)} mm</b></div>
+      <div class="wx-stat"><small>Indeks UV (maks)</small><b>${wxNum(uv, 0)}</b></div>
+      <div class="wx-stat"><small>Matahari terbit</small><b>${esc(sunrise)}</b></div>
+      <div class="wx-stat"><small>Matahari terbenam</small><b>${esc(sunset)}</b></div>
+    </div>`;
+
+    // 8 jam berikutnya
+    const times = hourly.time || [];
+    let hi = 0;
+    while(hi + 1 < times.length && String(times[hi + 1]) <= String(c.time)) hi++;
+    let hours = '';
+    for(let k = hi + 1; k <= hi + 8 && k < times.length; k++){
+      const hh = String(times[k]).slice(11, 13);
+      const hDay = (+hh >= 6 && +hh < 18) ? true : false;
+      const pp = hourly.precipitation_probability ? hourly.precipitation_probability[k] : null;
+      hours += `<div class="wx-hour">${esc(hh)}:00${wxIcon(hourly.weather_code ? hourly.weather_code[k] : null, hDay)}<b>${wxNum(hourly.temperature_2m ? hourly.temperature_2m[k] : null)}°</b><span>${wxNum(pp)}%</span></div>`;
+    }
+    if(hours) html += `<div class="modal-section-label">8 jam ke depan</div><div class="wx-hours">${hours}</div>`;
+
+    // 5 hari
+    const dt = daily.time || [];
+    let days = '';
+    for(let i = 0; i < dt.length && i < 5; i++){
+      days += `<div class="wx-day"><span>${esc(wxDayLabel(dt[i], i))}</span>${wxIcon(daily.weather_code ? daily.weather_code[i] : null, true)}
+        <span>${esc(wxText(daily.weather_code ? daily.weather_code[i] : -1))} <span class="wx-rain">• hujan ${wxNum(daily.precipitation_probability_max ? daily.precipitation_probability_max[i] : null)}%</span></span>
+        <span><b>${wxNum(daily.temperature_2m_max ? daily.temperature_2m_max[i] : null)}°</b> / ${wxNum(daily.temperature_2m_min ? daily.temperature_2m_min[i] : null)}°</span></div>`;
+    }
+    if(days) html += `<div class="modal-section-label">Prakiraan 5 hari</div><div class="wx-days">${days}</div>`;
+
+    if(weatherState === 'error') html += `<div class="wx-note">Gagal memperbarui — menampilkan data terakhir.</div>`;
+    else if(ageMs > WX_STALE_MS) html += `<div class="wx-note">Data sudah lama, tekan Perbarui.</div>`;
+    if(weatherMode === 'auto' && weatherData.place && weatherData.place.source === 'ip' && !wxHasPermission()){
+      html += `<div class="wx-note">Lokasi masih perkiraan. Izinkan lokasi agar kota lebih akurat.</div>`;
+    }
+    return html;
+  }
+
+  function renderWxModal(){
+    const body = document.getElementById('wxBody');
+    const savedKey = (activeModal() && modalFocusEl) ? mfKey(modalFocusEl) : null;
+    const cur = weatherData && weatherData.data && weatherData.data.current;
+
+    document.getElementById('wxPlace').textContent = (weatherData && weatherData.place && cur) ? weatherData.place.name : '';
+    const upd = document.getElementById('wxUpdated');
+    upd.textContent = (weatherData && weatherData.fetchedAt)
+      ? 'Diperbarui ' + new Date(weatherData.fetchedAt).toTimeString().slice(0, 5) + (weatherState === 'loading' ? ' • memuat…' : '')
+      : '';
+
+    if(wxView === 'cities'){
+      let html = '<div class="wx-sub">Pilih lokasi cuaca</div><div class="wx-cities">';
+      html += `<button type="button" class="wx-btn wx-city" data-wx="auto">Lokasi otomatis${weatherMode === 'auto' ? ' ✓' : ''}</button>`;
+      WX_CITIES.forEach((c, i) => {
+        const sel = weatherMode === 'manual' && weatherCity && weatherCity.name === c.name;
+        html += `<button type="button" class="wx-btn wx-city" data-wx="c${i}">${esc(c.name)}${sel ? ' ✓' : ''}</button>`;
+      });
+      html += '</div><div class="wx-actions"><button type="button" class="wx-btn" data-wx="back">Kembali</button></div>';
+      body.innerHTML = html;
+      body.dataset.view = 'cities';
+      body.dataset.cols = '2';
+    } else {
+      let html = '';
+      if(cur){
+        try { html += wxRenderDetailHtml(); }
+        catch(e){ html += '<div class="wx-msg">Data cuaca tidak dapat ditampilkan.</div>'; }
+      } else if(weatherState === 'loading' || weatherState === 'idle'){
+        html += '<div class="wx-msg">Memuat cuaca…</div>';
+      } else {
+        html += `<div class="wx-msg">${esc(wxErrorMessage())}</div>`;
+      }
+      const showPerm = weatherMode === 'auto' && !wxHasPermission() && hasBridge('requestLocationPermission');
+      html += '<div class="wx-actions">';
+      html += '<button type="button" class="wx-btn" data-wx="refresh">Perbarui</button>';
+      html += '<button type="button" class="wx-btn" data-wx="city">Ganti lokasi</button>';
+      if(showPerm) html += '<button type="button" class="wx-btn" data-wx="perm">Izinkan lokasi</button>';
+      html += '<button type="button" class="wx-btn" data-wx="close">Tutup</button></div>';
+      body.innerHTML = html;
+      body.dataset.view = 'detail';
+      body.dataset.cols = String(body.querySelectorAll('.wx-btn').length);
+    }
+    if(activeModal() && activeModal().id === 'weatherModal') restoreModalFocus(savedKey);
+  }
+
+  function showWxView(v){
+    wxView = v;
+    setModalFocus(null);
+    renderWxModal();
+  }
+
+  function openWeatherModal(){
+    wxView = 'detail';
+    document.getElementById('weatherModal').classList.add('active');
+    setModalFocus(null);
+    renderWxModal();
+    restoreModalFocus('');
+    if(!weatherData || (Date.now() - weatherData.fetchedAt) > 15 * 60 * 1000) requestWeather(true);
+  }
+
+  function wxChooseAuto(){
+    weatherMode = 'auto';
+    weatherCity = null;
+    weatherData = null;
+    weatherState = 'idle';
+    saveConfig();
+    showWxView('detail');
+    if(!wxMaybeAskPermission()) requestWeather(true);
+    else renderWeather();
+  }
+
+  function wxChooseCity(i){
+    const c = WX_CITIES[i];
+    if(!c) return;
+    weatherMode = 'manual';
+    weatherCity = {name: c.name, lat: c.lat, lon: c.lon};
+    weatherData = null;
+    weatherState = 'idle';
+    saveConfig();
+    showToast(`Lokasi cuaca: ${c.name}`);
+    showWxView('detail');
+    requestWeather(true);
+  }
+
+  function wxHandleAction(btn){
+    const a = btn.dataset.wx;
+    if(a === 'refresh'){ showToast('Memperbarui cuaca…'); requestWeather(true); renderWxModal(); }
+    else if(a === 'city') showWxView('cities');
+    else if(a === 'back') showWxView('detail');
+    else if(a === 'close') closeAllModals();
+    else if(a === 'auto') wxChooseAuto();
+    else if(a === 'perm'){
+      if(wxPermDenied && hasBridge('openAppSettings')){
+        if(!bridgeOK('openAppSettings')) showToast('Buka Pengaturan → Aplikasi → Tiltbox → Izin untuk mengaktifkan lokasi');
+      } else {
+        bridgeOK('requestLocationPermission', 'Tidak bisa meminta izin lokasi');
+      }
+    }
+    else if(a && a.charAt(0) === 'c') wxChooseCity(parseInt(a.slice(1), 10));
+  }
+
   function toggleRowOrder(){
     sourcesFirst = !sourcesFirst;
     saveConfig();
@@ -1117,7 +1530,7 @@
   function modalFocusables(){
     const m = activeModal();
     if(!m) return [];
-    return [...m.querySelectorAll('.close-btn, .set-opt, .grid-app-top, .pill-btn')]
+    return [...m.querySelectorAll('.close-btn, .set-opt, .grid-app-top, .pill-btn, .wx-btn')]
       .filter(el => el.getClientRects().length > 0);
   }
 
@@ -1137,6 +1550,7 @@
     if(d.launchPkg) return 'L:' + d.launchPkg;
     if(d.toggleFav) return 'T:' + d.toggleFav;
     if(d.moveFav) return 'M:' + d.moveFav + ':' + d.dir;
+    if(d.wx) return 'W:' + d.wx;
     if(el.id) return 'I:' + el.id;
     if(d.opt) return 'O:' + d.opt;
     return '';
@@ -1160,6 +1574,23 @@
     const list = modalFocusables();
     if(list.length === 0) return;
     if(!modalFocusEl || list.indexOf(modalFocusEl) === -1){ restoreModalFocus(''); return; }
+
+    // Modal cuaca: grid berindeks (jumlah kolom ditentukan tampilan yang sedang aktif)
+    if(m.id === 'weatherModal'){
+      const body = document.getElementById('wxBody');
+      const cols = Math.max(1, parseInt(body.dataset.cols, 10) || 1);
+      const n = list.length, i = list.indexOf(modalFocusEl);
+      let t = i;
+      if(dir === 'left'){ if(i % cols > 0) t = i - 1; }
+      else if(dir === 'right'){ if(i % cols < cols - 1 && i + 1 < n) t = i + 1; }
+      else if(dir === 'up'){ if(i - cols >= 0) t = i - cols; }
+      else if(dir === 'down'){
+        if(i + cols < n) t = i + cols;
+        else if(body.dataset.view === 'cities' && i < n - 1) t = n - 1; // ke tombol Kembali
+      }
+      if(t !== i) setModalFocus(list[t]);
+      return;
+    }
 
     // Modal kustomisasi: daftar vertikal
     if(m.id === 'customizerModal'){
@@ -1264,7 +1695,10 @@
   // Global D-Pad Handler called by MainActivity.kt or Keyboard
   window.handleDpad = function(dir){
     if(activeModal()){
-      if(dir === 'back') closeAllModals();
+      if(dir === 'back'){
+        if(activeModal().id === 'weatherModal' && wxView === 'cities') showWxView('detail');
+        else closeAllModals();
+      }
       else if(dir === 'enter'){
         if(modalFocusEl) modalFocusEl.click(); else restoreModalFocus('');
       } else modalMove(dir);
@@ -1351,6 +1785,11 @@
   document.getElementById('btnCustomizer').addEventListener('click', openCustomizerModal);
   document.getElementById('btnProfile').addEventListener('click', openAllAppsModal);
   document.getElementById('btnFooterRam').addEventListener('click', boostRamAction);
+  document.getElementById('weatherWidget').addEventListener('click', openWeatherModal);
+  document.getElementById('wxBody').addEventListener('click', e => {
+    const b = e.target.closest('.wx-btn');
+    if(b) wxHandleAction(b);
+  });
   document.getElementById('btnCloseCustomizer').addEventListener('click', closeAllModals);
   document.getElementById('btnCloseAllApps').addEventListener('click', closeAllModals);
 
@@ -1390,10 +1829,15 @@
   updateTimezoneLabel();
   updateRamStatus();
   updateInputStatus();
+  wxLoadCache();
+  renderWeather();
+  // Cuaca: izin lokasi diminta sekali (mode otomatis); data dimuat setelahnya atau langsung bila tak perlu
+  setTimeout(() => { if(!wxMaybeAskPermission()) requestWeather(false); }, 1500);
   // Segarkan jam & RAM segera saat kembali dari aplikasi lain
-  document.addEventListener('visibilitychange', () => { if(!document.hidden){ tick(); updateRamStatus(); updateInputStatus(); } });
+  document.addEventListener('visibilitychange', () => { if(!document.hidden){ tick(); updateRamStatus(); updateInputStatus(); requestWeather(false); } });
   setInterval(tick, 10000);
   setInterval(() => { updateRamStatus(); updateInputStatus(); }, 15000);
+  setInterval(() => { if(!document.hidden) requestWeather(false); }, 5 * 60 * 1000);
   setInterval(updateRamStatus, 8000);
   setTimeout(() => document.getElementById('hint').classList.add('hide'), 6000);
 </script>

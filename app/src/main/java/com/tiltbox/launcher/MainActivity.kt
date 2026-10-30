@@ -1,5 +1,6 @@
 package com.tiltbox.launcher
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityManager
@@ -9,6 +10,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -55,6 +57,7 @@ class MainActivity : Activity() {
     companion object {
         private const val TAG = "TiltboxMain"
         private const val WALLPAPER_PICK_REQUEST = 1002
+        private const val LOCATION_PERMISSION_REQUEST = 1003
         private const val WALLPAPER_MAX_W = 1280
         private const val WALLPAPER_MAX_H = 720
         const val WALLPAPER_FILE = "wallpaper.jpg"
@@ -175,6 +178,29 @@ class MainActivity : Activity() {
             val ok = saveWallpaper(uri)
             runOnUiThread { notifyWallpaperResult(ok, if (ok) "" else "error") }
         }.start()
+    }
+
+    // ============ Izin lokasi (untuk cuaca) ============
+
+    fun requestLocationPermissionUi() {
+        runOnUiThread {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || WeatherService.hasLocationPermission(this)) {
+                notifyLocationPermission(true)
+            } else {
+                requestPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), LOCATION_PERMISSION_REQUEST)
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == LOCATION_PERMISSION_REQUEST) {
+            notifyLocationPermission(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+        }
+    }
+
+    private fun notifyLocationPermission(granted: Boolean) {
+        webView.evaluateJavascript("if(typeof onLocationPermission==='function') onLocationPermission($granted);", null)
     }
 
     /** Dipanggil dari thread bridge; harus berjalan di UI thread. */
@@ -591,6 +617,47 @@ class MainActivity : Activity() {
                 }
             } catch (e: Exception) {
                 launchSettings()
+            }
+        }
+
+        // ---- Cuaca ----
+        @Volatile
+        private var weatherBusy = false
+
+        @JavascriptInterface
+        fun hasLocationPermission(): Boolean = WeatherService.hasLocationPermission(context)
+
+        @JavascriptInterface
+        fun requestLocationPermission(): Boolean {
+            activity.requestLocationPermissionUi()
+            return true
+        }
+
+        /** mode: "auto" (lokasi perangkat -> IP) atau "manual" (pakai lat/lon/name). Hasil lewat onWeatherResult(json). */
+        @JavascriptInterface
+        fun refreshWeather(mode: String, lat: Double, lon: Double, name: String): Boolean {
+            if (weatherBusy) return true
+            weatherBusy = true
+            Thread {
+                val json = try {
+                    WeatherService.load(context, mode, lat, lon, name)
+                } finally {
+                    weatherBusy = false
+                }
+                activity.runJs("if(typeof onWeatherResult==='function') onWeatherResult($json);")
+            }.start()
+            return true
+        }
+
+        @JavascriptInterface
+        fun openAppSettings(): Boolean {
+            return try {
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:${context.packageName}"))
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(intent)
+                true
+            } catch (e: Exception) {
+                false
             }
         }
 
