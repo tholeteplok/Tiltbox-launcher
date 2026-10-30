@@ -52,7 +52,11 @@ object WeatherService {
             } else {
                 resolveAuto(ctx, permission)
             }
-            val forecast = JSONObject(httpGet(forecastUrl(place.lat, place.lon)))
+            val resp = httpGetWithHeaders(forecastUrl(place.lat, place.lon))
+            val forecast = JSONObject(resp.body)
+            val serverDateMs = resp.serverDateMs
+            val driftMs = if (serverDateMs > 0) serverDateMs - System.currentTimeMillis() else 0L
+
             JSONObject()
                 .put("ok", true)
                 .put("place", JSONObject()
@@ -62,6 +66,8 @@ object WeatherService {
                     .put("source", place.source))
                 .put("locPermission", permission)
                 .put("fetchedAt", System.currentTimeMillis())
+                .put("serverTimeMs", if (serverDateMs > 0) serverDateMs else System.currentTimeMillis())
+                .put("timeDriftMs", driftMs)
                 .put("data", forecast)
                 .toString()
         } catch (e: WeatherException) {
@@ -180,7 +186,11 @@ object WeatherService {
         FORECAST_URL, lat, lon
     )
 
-    private fun httpGet(url: String): String {
+    private class HttpResult(val body: String, val serverDateMs: Long)
+
+    private fun httpGet(url: String): String = httpGetWithHeaders(url).body
+
+    private fun httpGetWithHeaders(url: String): HttpResult {
         if (!url.startsWith("https://")) throw WeatherException("network")
         val conn = URL(url).openConnection() as HttpURLConnection
         try {
@@ -191,6 +201,7 @@ object WeatherService {
             conn.setRequestProperty("User-Agent", "TiltboxLauncher/1.7")
             val code = conn.responseCode
             if (code !in 200..299) throw IOException("HTTP $code")
+            val serverDateMs = conn.date
             val sb = StringBuilder()
             conn.inputStream.bufferedReader().use { r ->
                 val buf = CharArray(8192)
@@ -201,7 +212,7 @@ object WeatherService {
                     if (sb.length > MAX_RESPONSE_CHARS) throw IOException("Respons terlalu besar")
                 }
             }
-            return sb.toString()
+            return HttpResult(sb.toString(), serverDateMs)
         } finally {
             conn.disconnect()
         }

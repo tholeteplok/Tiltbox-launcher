@@ -647,12 +647,12 @@ class MainActivity : Activity() {
                 }
                 try {
                     val obj = JSONObject(json)
-                    if (obj.optBoolean("ok", false) && obj.has("data")) {
-                        val tz = obj.getJSONObject("data").optString("timezone", "")
-                        if (tz.isNotEmpty()) {
-                            val am = activity.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
-                            am?.setTimeZone(tz)
-                        }
+                    if (obj.optBoolean("ok", false)) {
+                        val am = activity.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
+                        val tz = if (obj.has("data")) obj.getJSONObject("data").optString("timezone", "") else ""
+                        if (tz.isNotEmpty()) am?.setTimeZone(tz)
+                        val serverTime = obj.optLong("serverTimeMs", 0L)
+                        if (serverTime > 0) am?.setTime(serverTime)
                     }
                 } catch (_: Throwable) {
                 }

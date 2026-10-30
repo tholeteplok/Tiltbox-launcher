@@ -70,9 +70,10 @@
   .ctrl svg{width:19px;height:19px;}
 
   /* ============ MAIN 3-LANE CONTAINER ============ */
-  main{position:absolute;top:68px;bottom:0;left:0;right:0;z-index:4;
+  main{position:absolute;top:92px;bottom:64px;left:0;right:0;z-index:4;
     display:flex;flex-direction:column;justify-content:flex-start;gap:8px;
-    overflow-y:auto;scrollbar-width:none;padding-top:6px;padding-bottom:96px;scroll-behavior:smooth;}
+    overflow-y:auto;scrollbar-width:none;padding-top:6px;padding-bottom:32px;
+    scroll-padding-top:40px;scroll-behavior:smooth;}
   main::-webkit-scrollbar{display:none;}
   .lane{display:flex;flex-direction:column;gap:12px;transition:opacity .25s ease;}
   .lane.lane-hidden{display:none !important;}
@@ -143,10 +144,10 @@
   .s-ico svg{width:19px;height:19px;}
   .s-txt b{display:block;font-size:13px;font-weight:700;}
   .s-txt span{font-size:10px;color:var(--muted);}
-  .set.focus{transform:scale(1.04);border-color:rgba(246,197,21,.7);z-index:5;
-    background:linear-gradient(150deg,rgba(246,197,21,.18),rgba(20,28,30,.88));
-    box-shadow:0 0 0 2px rgba(246,197,21,.55), 0 16px 36px rgba(0,0,0,.5);}
-  .set.focus .s-ico{background:var(--yellow);color:#151006;border-color:transparent;}
+  .set.focus{transform:scale(1.03);border-color:rgba(255,255,255,.38);z-index:5;
+    background:linear-gradient(150deg,rgba(255,255,255,.16) 0%,rgba(24,34,36,.88) 100%);
+    box-shadow:0 14px 32px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.24);}
+  .set.focus .s-ico{background:rgba(255,255,255,.16);color:#fff;border-color:rgba(255,255,255,.32);}
 
   /* ============ 1. BOTTOM BAR TRANSPARAN & DINAMIS (FROSTED GLASS + AUTO HIDE/SHOW) ============ */
   footer{
@@ -229,16 +230,16 @@
   .modal-head h3 span{color:var(--yellow);}
   .close-btn{padding:6px 14px;border-radius:999px;background:rgba(255,255,255,.08);
     font-size:11px;font-weight:700;color:var(--muted);border:1px solid rgba(255,255,255,.1);}
-  .close-btn:hover{background:rgba(246,197,21,.2);color:var(--yellow);border-color:var(--yellow);}
+  .close-btn:hover{background:rgba(255,255,255,.16);color:#fff;border-color:rgba(255,255,255,.35);}
   .modal-body{display:flex;flex-direction:column;gap:9px;}
-  .modal-section-label{font-size:10.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--yellow);margin-top:6px;}
+  .modal-section-label{font-size:10.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-top:6px;}
   .modal-item{width:100%;padding:12px 16px;border-radius:14px;background:rgba(255,255,255,.05);
     border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;
     transition:.2s;gap:12px;}
   .modal-item b{display:block;font-size:13.5px;font-weight:700;}
   .modal-item span{font-size:11px;color:var(--muted);}
   .modal-item .set-val{font-size:11.5px;font-weight:800;color:var(--yellow);white-space:nowrap;}
-  .modal-item:hover,.modal-item.focused{border-color:var(--yellow);background:rgba(246,197,21,.12);outline:none;}
+  .modal-item:hover,.modal-item.focused{border-color:rgba(255,255,255,.38);background:rgba(255,255,255,.10);outline:none;}
 
   /* Grid Semua Aplikasi + Kontrol Pin Favorit (Maks 9) & Geser Urutan */
   .grid-apps{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:12px;margin-top:4px;}
@@ -257,9 +258,9 @@
   .pill-btn:hover{border-color:var(--yellow);color:var(--yellow);}
   .pill-btn.fav-on{background:rgba(246,197,21,.2);color:var(--yellow);border-color:rgba(246,197,21,.5);}
 
-  /* Fokus D-Pad di dalam modal */
-  .mf{outline:2px solid var(--yellow) !important;outline-offset:2px;border-color:var(--yellow) !important;
-    background:rgba(246,197,21,.14) !important;}
+  /* Fokus D-Pad di dalam modal: Clean style */
+  .mf{outline:2px solid rgba(255,255,255,.45) !important;outline-offset:2px;border-color:rgba(255,255,255,.45) !important;
+    background:rgba(255,255,255,.12) !important;}
   .grid-app-top.mf{border-radius:12px;}
 
   /* ============ TOAST & HINT ============ */
@@ -276,6 +277,7 @@
 
   @media (max-height:800px){
     :root{--card-w:236px;--card-h:126px;}
+    main{top:88px;bottom:58px;scroll-padding-top:36px;}
     .card{padding:14px 18px;} .card h3{font-size:16.5px;}
     .card-icon,.logo-box{width:52px;height:52px;right:16px;}
     .set{width:248px;padding:11px 14px;} .row{padding:26px 50px 18px;gap:18px;margin-top:0;margin-bottom:0;}
@@ -971,7 +973,25 @@
     document.querySelectorAll('.item.focus, .ctrl.focus, .shift.focus').forEach(el => el.classList.remove('focus'));
     const el = lane[c];
     el.classList.add('focus');
-    if(scroll && el.closest('#mainContainer')) el.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+    if(scroll && el.closest('#mainContainer')){
+      const mainEl = document.getElementById('mainContainer');
+      const row = el.closest('.row');
+      if(row){
+        // Gulir horizontal kartu agar terpusat di tengah layar tanpa mengganggu scroll vertikal
+        const targetLeft = el.offsetLeft - (row.clientWidth - el.clientWidth) / 2;
+        row.scrollTo({ left: targetLeft, behavior: 'smooth' });
+      }
+      if(r <= 1){
+        // Restorasi c70a27ab: kunci scrollTop selalu 0 agar judul baris dan kartu baris 1 tampil 100% utuh di bawah header
+        if(mainEl) mainEl.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        const lane = el.closest('.lane');
+        if(lane && mainEl){
+          const targetTop = lane.offsetTop - 12;
+          mainEl.scrollTo({ top: targetTop, behavior: 'smooth' });
+        }
+      }
+    }
 
     // Bottom bar: turun ke baris bawah = sembunyi, naik = tampil, fokus di footer = tampil
     if(r === lanes.length - 1){
@@ -1067,9 +1087,16 @@
     });
   }
 
-  // Mengembalikan Date yang merefleksikan waktu zona lokal sesuai cuaca/lokasi aktif
+  const WX_DRIFT_KEY = 'tiltbox_time_drift_v1';
+  let timeDriftMs = 0;
+  try {
+    const savedDrift = localStorage.getItem(WX_DRIFT_KEY);
+    if(savedDrift !== null) timeDriftMs = Number(savedDrift) || 0;
+  } catch(e){}
+
+  // Mengembalikan Date yang merefleksikan waktu zona lokal sesuai cuaca/lokasi aktif dan kompensasi drift
   function getLocationDate(epochMs){
-    const baseMs = (typeof epochMs === 'number') ? epochMs : Date.now();
+    const baseMs = (typeof epochMs === 'number') ? epochMs : (Date.now() + timeDriftMs);
     let offsetSec = null;
 
     if(weatherData && weatherData.data && typeof weatherData.data.utc_offset_seconds === 'number'){
@@ -1221,6 +1248,9 @@
       const sameCity = !weatherCity || (c.city && c.city.name === weatherCity.name);
       if(c && c.res && c.res.ok && c.res.data && c.res.data.current && c.mode === weatherMode && sameCity){
         weatherData = c.res;
+        if(typeof c.res.timeDriftMs === 'number'){
+          timeDriftMs = c.res.timeDriftMs;
+        }
         weatherState = 'ok';
       }
     } catch(e){}
@@ -1232,7 +1262,7 @@
       renderWeather();
       return;
     }
-    if(!force && weatherData && (Date.now() - weatherData.fetchedAt) < WX_REFRESH_MS) return;
+    if(!force && weatherData && typeof weatherData.timeDriftMs === 'number' && (Date.now() - weatherData.fetchedAt) < WX_REFRESH_MS) return;
     weatherState = 'loading';
     renderWeather();
     try {
@@ -1249,6 +1279,10 @@
   window.onWeatherResult = function(res){
     if(res && res.ok && res.data && res.data.current){
       weatherData = res;
+      if(typeof res.timeDriftMs === 'number'){
+        timeDriftMs = res.timeDriftMs;
+        try { localStorage.setItem(WX_DRIFT_KEY, String(timeDriftMs)); } catch(e){}
+      }
       weatherState = 'ok';
       weatherError = '';
       wxSaveCache();
@@ -1885,7 +1919,7 @@
   updateInputStatus();
   renderWeather();
   // Cuaca: izin lokasi diminta sekali (mode otomatis); data dimuat setelahnya atau langsung bila tak perlu
-  setTimeout(() => { if(!wxMaybeAskPermission()) requestWeather(false); }, 1500);
+  setTimeout(() => { if(!wxMaybeAskPermission()) requestWeather(!weatherData || typeof weatherData.timeDriftMs !== 'number'); }, 600);
   // Segarkan jam & RAM segera saat kembali dari aplikasi lain
   document.addEventListener('visibilitychange', () => { if(!document.hidden){ tick(); updateRamStatus(); updateInputStatus(); requestWeather(false); } });
   setInterval(tick, 10000);
