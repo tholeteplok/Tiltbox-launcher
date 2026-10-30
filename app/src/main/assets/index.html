@@ -56,27 +56,18 @@
     background:radial-gradient(120% 95% at 50% 40%, rgba(0,0,0,.18) 35%, rgba(0,0,0,.72) 100%);}
 
   /* ============ HEADER ============ */
-  header{position:absolute;top:0;left:0;right:0;z-index:6;padding:18px 46px;
-    display:flex;justify-content:space-between;align-items:center;gap:12px;}
-  .brand-pill{display:flex;align-items:center;gap:10px;padding:6px 14px 6px 8px;border-radius:999px;
-    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);}
-  .brand-logo{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--yellow),#d4a200);
-    display:grid;place-items:center;color:#111;font-weight:800;}
-  .brand-pill span{font-size:11.5px;font-weight:700;color:rgba(255,255,255,.85);}
-  .brand-pill small{font-size:10px;color:var(--yellow);font-weight:800;margin-left:4px;}
+  header{position:absolute;top:0;left:0;right:0;z-index:6;padding:20px 50px;
+    display:flex;justify-content:space-between;align-items:center;}
 
-  .logo-txt{position:absolute;left:50%;transform:translateX(-50%);font-size:25px;font-weight:800;
-    letter-spacing:-.5px;color:var(--txt);user-select:none;}
+  .logo-txt{font-size:26px;font-weight:800;letter-spacing:-.5px;color:var(--txt);user-select:none;}
   .logo-txt span{color:var(--yellow);} .logo-txt sup{font-size:9px;color:var(--muted);margin-left:2px;}
 
-  .header-actions{display:flex;align-items:center;gap:10px;}
+  .header-actions{display:flex;align-items:center;gap:12px;}
   .ctrl{width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.11);
     background:rgba(255,255,255,.07);display:grid;place-items:center;transition:transform .2s ease, background .2s ease, border-color .2s ease;color:#fff;}
   .ctrl:hover,.ctrl.focus{background:rgba(255,255,255,.16);border-color:var(--yellow);transform:scale(1.06);
     box-shadow:0 0 0 2px rgba(246,197,21,.45);}
   .ctrl svg{width:19px;height:19px;}
-  .avatar{background:radial-gradient(circle at 35% 28%, #ff6b5e, #a9241d 75%);overflow:hidden;}
-  .avatar svg{width:27px;height:27px;transform:translateY(3px);}
 
   /* ============ MAIN 3-LANE CONTAINER ============ */
   main{position:absolute;top:68px;bottom:0;left:0;right:0;z-index:4;
@@ -90,8 +81,9 @@
   .lane-head h2::before{content:"";display:inline-block;width:16px;height:3px;border-radius:2px;
     background:var(--yellow);margin-right:10px;vertical-align:middle;}
   .lane-head em{font-style:normal;font-size:10px;color:var(--muted);letter-spacing:.05em;}
-  .row{display:flex;gap:20px;overflow-x:auto;padding:18px 64px;width:100%;
-    align-items:center;scroll-snap-type:x proximity;scrollbar-width:none;}
+  .row{display:flex;gap:18px;overflow-x:auto;padding:26px 50px 18px;width:100%;
+    align-items:center;scroll-snap-type:x proximity;scrollbar-width:none;
+    margin-top:-10px;margin-bottom:-6px;}
   .row::-webkit-scrollbar{display:none;}
 
   .item{position:relative;flex:0 0 auto;scroll-snap-align:center;
@@ -286,7 +278,7 @@
     :root{--card-w:236px;--card-h:126px;}
     .card{padding:14px 18px;} .card h3{font-size:16.5px;}
     .card-icon,.logo-box{width:52px;height:52px;right:16px;}
-    .set{width:248px;padding:11px 14px;} .row{padding:14px 56px;gap:16px;}
+    .set{width:248px;padding:11px 14px;} .row{padding:26px 50px 18px;gap:18px;margin-top:-10px;margin-bottom:-6px;}
     .lane-head{padding:0 56px;}
   }
   @media (max-width:900px){
@@ -308,22 +300,14 @@
 <input type="file" id="wallpaperFileInput" accept="image/*" style="display:none;" />
 
 <header>
-  <div class="brand-pill">
-    <div class="brand-logo">T</div>
-    <span>Tiltbox <b>RT41</b> <small>v1.7.0</small></span>
-  </div>
-
-  <div class="logo-txt">play<span>box</span><sup>™</sup></div>
+  <div class="logo-txt">tilt<span>box</span><sup>®</sup></div>
 
   <div class="header-actions">
     <button type="button" class="ctrl" id="btnVoice" title="Pencarian Suara">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
     </button>
-    <button type="button" class="ctrl gear" id="btnCustomizer" title="Kustomisasi Baris, Favorit &amp; Wallpaper">
+    <button type="button" class="ctrl gear" id="btnCustomizer" title="Pengaturan &amp; Kustomisasi">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-    </button>
-    <button type="button" class="ctrl avatar" id="btnProfile" title="Overlay Semua Aplikasi &amp; Atur Favorit">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="4" fill="#40100d"/><path d="M4 22c1.6-5.4 5-7.5 8-7.5s6.4 2.1 8 7.5z" fill="#40100d"/></svg>
     </button>
   </div>
 </header>
@@ -331,7 +315,7 @@
 <main id="mainContainer">
   <!-- ===== BARIS 1 : SUMBER & INPUT ===== -->
   <section class="lane" id="laneSources">
-    <div class="lane-head"><h2>Sumber &amp; Input</h2><em>Live TV, Media, HDMI (TCL TV+ V5.2.0)</em></div>
+    <div class="lane-head"><h2>Sumber &amp; Input</h2><em>Siaran TV, Pemutar Media &amp; Port HDMI</em></div>
     <div class="row" id="rowSources">
       <button type="button" class="item card" data-action="livetv" data-name="Live TV's">
         <span class="tab"></span><h3>Live TV's</h3>
@@ -390,17 +374,17 @@
         <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span>
         <span class="s-txt"><b>Wallpaper Lokal</b><span id="subLocalWp">Pilih gambar dari TV / USB</span></span>
       </button>
-      <button type="button" class="item set" data-action="boost" data-name="RAM Booster RT41">
+      <button type="button" class="item set" data-action="boost" data-name="Penyegar TV">
         <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
-        <span class="s-txt"><b>Boost RAM RT41</b><span id="subRamBoost">Bersihkan aplikasi latar</span></span>
+        <span class="s-txt"><b>Penyegar TV</b><span id="subRamBoost">Bersihkan aplikasi latar</span></span>
       </button>
       <button type="button" class="item set" data-action="tcl_settings" data-name="Gambar & Suara TCL">
         <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></svg></span>
         <span class="s-txt"><b>Gambar &amp; Suara TCL</b><span>Setelan panel &amp; audio TV+</span></span>
       </button>
-      <button type="button" class="item set" data-action="settings" data-name="Pengaturan Android TV">
+      <button type="button" class="item set" data-action="settings" data-name="Pengaturan TV">
         <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="3"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
-        <span class="s-txt"><b>Setelan Sistem</b><span>Android TV 9 Pie (API 28)</span></span>
+        <span class="s-txt"><b>Setelan Sistem</b><span>Pengaturan sistem TV</span></span>
       </button>
     </div>
   </section>
@@ -412,12 +396,12 @@
 <footer id="bottomBar">
   <button type="button" class="shift" id="btnFooterRam" title="Percepat TV &amp; bersihkan memori">
     <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
-    <span>RAM Booster: <b id="ramBoosterText" style="color:var(--yellow);font-weight:800;">Memeriksa…</b></span>
+    <span>Penyegar TV: <b id="ramBoosterText" style="color:var(--yellow);font-weight:800;">Performa Siap</b></span>
   </button>
   <div class="status">
     <div class="time" id="clock">12:51 <small>am</small></div>
     <div class="divider"></div>
-    <div class="place"><b id="placeName">Indonesia</b><span id="placeSub">TCL RT41</span></div>
+    <div class="place"><b id="placeName">Indonesia</b><span id="placeSub">WIB</span></div>
     <button type="button" class="shift weather" id="weatherWidget" title="Cuaca — tekan untuk detail">
       <span id="weatherIcon"></span>
       <span class="temp" id="weatherTemp">--°</span>
@@ -1087,7 +1071,7 @@
     const off = -new Date().getTimezoneOffset();
     const names = {420:'WIB', 480:'WITA', 540:'WIT'};
     const tz = names[off] || ('UTC' + (off >= 0 ? '+' : '-') + Math.floor(Math.abs(off) / 60));
-    document.getElementById('placeSub').textContent = `TCL RT41 • ${tz}`;
+    document.getElementById('placeSub').textContent = tz;
   }
 
   // ============ CUACA (Open-Meteo lewat bridge native) ============
@@ -1783,7 +1767,7 @@
     bridgeOK('launchVoiceSearch', 'Pencarian suara tidak tersedia di TV ini');
   });
   document.getElementById('btnCustomizer').addEventListener('click', openCustomizerModal);
-  document.getElementById('btnProfile').addEventListener('click', openAllAppsModal);
+  // btnProfile removed
   document.getElementById('btnFooterRam').addEventListener('click', boostRamAction);
   document.getElementById('weatherWidget').addEventListener('click', openWeatherModal);
   document.getElementById('wxBody').addEventListener('click', e => {
