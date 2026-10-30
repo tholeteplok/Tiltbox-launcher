@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Huruf T di dalam safe zone adaptive icon (66dp tengah) -->
+    <path
+        android:fillColor="#F6C515"
+        android:pathData="M31,34 L77,34 L77,46 L60,46 L60,76 L48,76 L48,46 L31,46 Z" />
+</vector>

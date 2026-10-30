@@ -1,62 +1,40 @@
-# Tiltbox Launcher 📺
+# Tiltbox Launcher v1.6.2 — Full Customizer & RT41 Optimized
 
-**Tiltbox Launcher** adalah Android TV Launcher kustom berbobot ringan, berorientasi kinerja tinggi, dan berestetika modern yang dirancang khusus untuk Smart TV dan TV Box (dioptimalkan untuk TCL, Xiaomi, Android TV / Google TV).
+Versi lengkap yang mencakup seluruh fitur kustomisasi dan perbaikan audit untuk **TCL Chassis RT41** (`Realtek RTD2841 / RTD2851`, Android TV 9 Pie `V8-R41KT01-LF1V343`):
 
-![Tiltbox Launcher Preview](docs/playbox_concept_render.png)
+1. **Bottom Bar Transparan & Dinamis**:
+   - Menggunakan *Frosted Glass* semi-transparan (`rgba(28, 40, 44, 0.62)` + *specular border* `1px`).
+   - **Auto-Hide saat Scroll Down** (baik lewat navigasi D-Pad turun ke baris bawah maupun *scroll* vertikal/wheel) dan **Auto-Show saat Scroll Up**.
+2. **Kustomisasi Urutan & Grid**:
+   - **Susunan Baris**: Tukar posisi `Sumber & Input` vs `Aplikasi Favorit`, serta sembunyikan/tampilkan baris `Sumber & Input` atau `Pengaturan Cepat`.
+   - **Susunan Aplikasi Favorit (Maks 9) + Overlay Modal Grid Semua Aplikasi**: Batas tegas maksimal 9 aplikasi favorit di beranda dengan fitur Pin/Unpin (`★ Favorit`) dan geser urutan (`◀ ▶`) langsung dari modal Grid Semua Aplikasi.
+3. **Kustomisasi Wallpaper**:
+   - **5 Preset Sinematik** (`Obsidian Dark`, `Pure OLED Black`, `Emerald Cinema`, `Royal Midnight`, `Sunset Amber`).
+   - **Wallpaper Gambar Lokal**: Mendukung pemilih gambar lokal (`<input type="file" accept="image/*">` yang terhubung ke `WebChromeClient.onShowFileChooser` di `MainActivity.kt`) dengan kompresi kanvas otomatis (`1280×720` JPEG) agar hemat RAM dan tersimpan di `localStorage`.
 
----
+## Perubahan v1.6.2
 
-## ✨ Fitur Utama
+- **Input HDMI/AV nyata**: daftar port dan status (terhubung / standby / tidak ada sinyal / tidak terdeteksi) dibaca dari `TvInputManager`, termasuk nama kustom port dari pengguna. Pindah input memakai `TvContract` passthrough URI; cara lama (paket sumber TCL) tetap jadi cadangan.
+- **RAM Booster jujur**: hanya mematikan proses latar aplikasi yang bisa dibuka pengguna (paket sistem/TCL dilindungi), mengukur RAM ±1 detik sesudahnya, dan menampilkan angka sebenarnya. Tidak ada lagi angka karangan.
+- **Data palsu dihapus**: status statis di kartu sumber (+5000 Channels, USB-1, 1080p, dll.), widget cuaca 28°, titik "aktif" di semua aplikasi, dan aplikasi contoh saat bridge mengembalikan daftar kosong.
+- Kategori aplikasi dibaca dari sistem Android; daftar aplikasi diurutkan alfabet; label zona waktu (WIB/WITA/WIT) dinamis.
+- Wallpaper otomatis: opsi "15 detik (Demo)" dihapus dan default kini **Nonaktif** (pengaturan lama dimigrasikan otomatis).
 
-- **Karakter Visual Miring (-3.2°):** Kartu aktif yang disorot oleh remote kontrol mengalami rotasi halus `-3.2°` dan pembesaran skala (*zoom*), menciptakan identitas visual yang khas dan dinamis.
-- **Top Spotlight Beam & Tab:** Pendaran lampu sorot eksklusif di bagian atas tengah kartu yang sedang dipilih, memberikan indikasi fokus D-Pad yang sangat jelas di layar TV.
-- **Rasio Kartu 16:9 Borderless:** Struktur kartu 100% bebas border garis (*borderless*) dengan proporsi 16:9 yang proporsional dengan rasio layar televisi.
-- **Navigasi 3 Baris Intuitif:**
-  - **Baris 1 (Sumber & Input):** Akses langsung ke Siaran Live TV Digital (`com.tcl.tv`), Port HDMI 1/2/3, Media Player lokal (USB/Flashdisk), dan Wireless Screen Cast.
-  - **Baris 2 (Aplikasi Terpasang):** Grid aplikasi favorit (YouTube, Netflix, Spotify, Vidio, Prime Video, VLC, dll.) dengan akses cepat ke App Store.
-  - **Baris 3 (Pengaturan Cepat):** Manajemen kategori kustom, urutan baris, tema, dan setelan sistem TV.
-- **Performa Ringan (Ultra Low RAM):** Dirancang tanpa bloatware Google TV, mengonsumsi memori minimal (~40–80 MB RAM) sehingga Smart TV dengan RAM terbatas (1.5 GB) tetap berjalan lancar bebas jeda (*lag-free*).
-- **Cloud CI/CD Build:** Didukung oleh GitHub Actions untuk kompilasi APK otomatis di cloud tanpa membebani komputer lokal.
+## Perubahan v1.6.1 (hasil audit)
 
----
+- **Build**: perbaikan `Build.VERSION.SDK_INT`, ikon launcher (`@mipmap/ic_launcher`) dan banner TV 320×180 ditambahkan, Gradle wrapper (8.9) disertakan.
+- **Remote/D-Pad**: modal Kustomisasi & Semua Aplikasi kini bisa dioperasikan penuh dengan D-Pad (termasuk Pin/geser favorit); tombol header (mic, gear, avatar) dan tombol RAM di footer ikut terjangkau; fokus tidak lagi melompat saat menekan Atas/Bawah di baris paling ujung.
+- **Wallpaper lokal**: pemilih gambar kini native (tanpa `<input type="file">`), gambar di-downscale hemat memori lalu disimpan sebagai file di penyimpanan internal app, bukan di `localStorage`. *Wallpaper lokal dari versi lama perlu dipilih ulang.*
+- **Daftar aplikasi** otomatis diperbarui saat ada instal/hapus/update; favorit tidak lagi terhapus permanen ketika app sementara hilang saat update.
+- **Keamanan**: nama/ikon aplikasi di-escape (mencegah injeksi HTML/JS ke halaman yang punya akses bridge), navigasi WebView ke luar `file:///android_asset/` diblokir, akses file/content WebView dimatikan, `allowBackup` dimatikan.
+- **Stabilitas**: `launchMedia`/`launchVoiceSearch` tidak lagi bisa crash, renderer WebView yang mati dipulihkan otomatis, Enter/Back yang ditahan tidak memicu aksi berulang, tombol HOME saat sudah di launcher kembali ke posisi awal.
+- Toast kini memberi tahu bila aplikasi/fitur gagal dibuka.
 
-## 🛠️ Struktur Repositori
-
-```text
-tiltbox-launcher/
-├── .github/workflows/
-│   └── build-apk.yml          # Otomasi kompilasi APK via GitHub Actions
-├── app/
-│   ├── src/main/java/         # Kode sumber native Android / Leanback
-│   │   └── com/amazon/tv/leanbacklauncher/
-│   │       ├── animation/     # Mesin animasi fokus & rotasi -3.2°
-│   │       └── apps/          # Manajemen kartu aplikasi & baris input
-│   └── src/main/res/          # Sumber daya tata letak, string, dan tema
-├── docs/
-│   ├── playbox_consept.html   # Desain prototipe visual web interaktif
-│   └── playbox_concept_render.png # Tangkapan layar render 1920x1080
-└── build.gradle               # Konfigurasi Gradle
-```
-
----
-
-## 🚀 Pemasangan Cepat via ADB
-
-Untuk memasang APK langsung ke Android TV melalui jaringan lokal (LAN/Wi-Fi):
+## Memasang di TV
 
 ```bash
-# Hubungkan ke Android TV
-adb connect <IP_TV>:5555
-
-# Pasang APK Tiltbox Launcher
-adb install -r TiltboxLauncher_v1.63-debug.apk
-
-# Atur sebagai Default Home Launcher
-adb shell cmd package set-home-activity com.amazon.tv.leanbacklauncher/.MainActivity
+adb connect <IP-TV>:5555
+adb install -r TiltboxLauncher_v1.6.2-debug.apk
 ```
 
----
-
-## 📄 Lisensi
-Open-source under Apache-2.0 License.
-Didedikasikan untuk pengalaman menonton Smart TV yang bersih dan responsif.
+Lalu pilih Tiltbox sebagai launcher saat menekan tombol HOME (atau lewat Setelan → Aplikasi → Aplikasi default, tergantung firmware).

@@ -11,15 +11,16 @@ android {
         applicationId "com.tiltbox.launcher"
         minSdk 21
         targetSdk 34
-        versionCode 8
-        versionName "1.4.0"
+        versionCode 12
+        versionName "1.6.2"
 
         setProperty("archivesBaseName", "TiltboxLauncher_v" + versionName)
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
@@ -42,7 +43,4 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.13.1'
-    implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'com.google.android.material:material:1.12.0'
 }
