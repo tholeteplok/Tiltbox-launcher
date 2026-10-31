@@ -13,6 +13,9 @@
     <!-- Lokasi perkiraan (kota) untuk cuaca setempat; cukup COARSE, tidak butuh GPS -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+    <!-- In-App Updater: izin download & install APK via FileProvider -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
 
     <application
         android:allowBackup="false"
@@ -41,6 +44,18 @@
             </intent-filter>
 
         </activity>
+
+        <!-- FileProvider untuk In-App Updater: aman share APK ke installer Android TV -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_provider_paths" />
+        </provider>
+
     </application>
 
 </manifest>

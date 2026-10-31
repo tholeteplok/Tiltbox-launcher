@@ -43,11 +43,16 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.annotation.TargetApi
+import androidx.core.content.FileProvider
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.net.HttpURLConnection
+import java.net.URL
+import java.util.concurrent.Executors
 
 class MainActivity : Activity() {
 
@@ -64,7 +69,13 @@ class MainActivity : Activity() {
         const val WALLPAPER_FILE = "wallpaper.jpg"
         private const val ASSET_URL = "file:///android_asset/index.html"
         private const val ASSET_PREFIX = "file:///android_asset/"
+        // In-App Updater constants
+        private const val GITHUB_API_URL = "https://api.github.com/repos/tholeteplok/Tiltbox-launcher/releases/latest"
+        private const val UPDATE_APK_NAME = "tiltbox_update.apk"
+        private val updateExecutor = Executors.newSingleThreadExecutor()
     }
+
+    @Volatile private var pendingUpdateApkFile: File? = null
 
     // Daftar aplikasi dimuat ulang dengan jeda (debounce): satu update aplikasi memicu
     // beberapa broadcast berurutan (REMOVED -> ADDED -> REPLACED).
@@ -207,6 +218,28 @@ class MainActivity : Activity() {
     /** Dipanggil dari thread bridge; harus berjalan di UI thread. */
     fun runJs(script: String) {
         runOnUiThread { webView.evaluateJavascript(script, null) }
+    }
+
+    /** Buka installer Android dengan APK yang telah diunduh (FileProvider-safe) */
+    fun installUpdateApk(apkFile: File) {
+        runOnUiThread {
+            try {
+                val apkUri = FileProvider.getUriForFile(
+                    this,
+                    "${packageName}.fileprovider",
+                    apkFile
+                )
+                val intent = Intent(Intent.ACTION_VIEW).apply {
+                    setDataAndType(apkUri, "application/vnd.android.package-archive")
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                startActivity(intent)
+            } catch (e: Exception) {
+                Log.e(TAG, "Gagal membuka installer update", e)
+                runJs("if(typeof onUpdateInstallFailed==='function') onUpdateInstallFailed('${e.message?.take(80)}');")
+            }
+        }
     }
 
     private fun notifyWallpaperResult(ok: Boolean, reason: String) {
@@ -754,6 +787,158 @@ class MainActivity : Activity() {
             } catch (e: Exception) {
                 "RAM tidak terbaca"
             }
+        }
+
+        // ============ IN-APP UPDATER BRIDGE ============
+
+        @JavascriptInterface
+        fun getAppVersionInfo(): String {
+            return try {
+                val pm = context.packageManager
+                val pi = pm.getPackageInfo(context.packageName, 0)
+                val vName = pi.versionName ?: "1.0.0"
+                val vCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+                    pi.longVersionCode.toInt() else @Suppress("DEPRECATION") pi.versionCode
+                "{\"versionName\":\"$vName\",\"versionCode\":$vCode}"
+            } catch (e: Exception) {
+                "{\"versionName\":\"1.8.0\",\"versionCode\":14}"
+            }
+        }
+
+        @JavascriptInterface
+        fun checkForAppUpdates() {
+            updateExecutor.execute {
+                try {
+                    val url = URL(GITHUB_API_URL)
+                    val conn = (url.openConnection() as HttpURLConnection).apply {
+                        requestMethod = "GET"
+                        connectTimeout = 5000
+                        readTimeout = 5000
+                        setRequestProperty("Accept", "application/vnd.github.v3+json")
+                        setRequestProperty("User-Agent", "TiltboxLauncher")
+                    }
+                    val code = conn.responseCode
+                    if (code == 200) {
+                        val body = conn.inputStream.bufferedReader().readText()
+                        val json = JSONObject(body)
+                        val latestTag = json.optString("tag_name", "")
+                        val releaseName = json.optString("name", latestTag)
+                        val body2 = json.optString("body", "")
+                        val htmlUrl = json.optString("html_url", "")
+
+                        // Find APK download URL from assets
+                        var apkUrl = ""
+                        var apkSizeBytes = 0L
+                        val assets = json.optJSONArray("assets")
+                        if (assets != null) {
+                            for (i in 0 until assets.length()) {
+                                val asset = assets.getJSONObject(i)
+                                val name = asset.optString("name", "")
+                                if (name.endsWith(".apk")) {
+                                    apkUrl = asset.optString("browser_download_url", "")
+                                    apkSizeBytes = asset.optLong("size", 0L)
+                                    break
+                                }
+                            }
+                        }
+
+                        val safeReleaseName = releaseName.replace("\"", "'").replace("\n", " ")
+                        val safeBody = body2.take(300).replace("\"", "'").replace("\n", " ")
+                        val safeApkUrl = apkUrl.replace("\"", "")
+                        val safeMb = if (apkSizeBytes > 0) "%.1f".format(apkSizeBytes / 1024.0 / 1024.0) else "?"
+
+                        activity.runJs("""
+                            if(typeof onUpdateCheckResult==='function') onUpdateCheckResult({
+                                latestTag:"$latestTag",
+                                releaseName:"$safeReleaseName",
+                                body:"$safeBody",
+                                apkUrl:"$safeApkUrl",
+                                apkSizeMb:"$safeMb",
+                                htmlUrl:"$htmlUrl"
+                            });
+                        """.trimIndent())
+                    } else {
+                        activity.runJs("if(typeof onUpdateCheckFailed==='function') onUpdateCheckFailed('HTTP $code');")
+                    }
+                } catch (e: Exception) {
+                    val msg = (e.message ?: "Timeout").take(80).replace("\"", "'")
+                    activity.runJs("if(typeof onUpdateCheckFailed==='function') onUpdateCheckFailed('$msg');")
+                }
+            }
+        }
+
+        @JavascriptInterface
+        fun downloadAppUpdate(apkUrl: String) {
+            updateExecutor.execute {
+                try {
+                    val cacheDir = File(context.cacheDir, "updates").also { it.mkdirs() }
+                    val destFile = File(cacheDir, UPDATE_APK_NAME)
+                    if (destFile.exists()) destFile.delete()
+
+                    val url = URL(apkUrl)
+                    val conn = (url.openConnection() as HttpURLConnection).apply {
+                        requestMethod = "GET"
+                        connectTimeout = 10000
+                        readTimeout = 30000
+                        setRequestProperty("User-Agent", "TiltboxLauncher")
+                    }
+                    conn.connect()
+                    val totalBytes = conn.contentLength.toLong()
+
+                    var downloadedBytes = 0L
+                    var lastReportedPct = -1
+
+                    conn.inputStream.use { input ->
+                        FileOutputStream(destFile).use { output ->
+                            val buf = ByteArray(8192)
+                            var n: Int
+                            while (input.read(buf).also { n = it } != -1) {
+                                output.write(buf, 0, n)
+                                downloadedBytes += n
+                                val pct = if (totalBytes > 0)
+                                    ((downloadedBytes * 100) / totalBytes).toInt()
+                                else -1
+                                if (pct != lastReportedPct && pct % 5 == 0) {
+                                    lastReportedPct = pct
+                                    val dlMb = "%.1f".format(downloadedBytes / 1024.0 / 1024.0)
+                                    val totMb = if (totalBytes > 0) "%.1f".format(totalBytes / 1024.0 / 1024.0) else "?"
+                                    activity.runJs("""
+                                        if(typeof onUpdateDownloadProgress==='function')
+                                        onUpdateDownloadProgress($pct,"$dlMb","$totMb");
+                                    """.trimIndent())
+                                }
+                            }
+                        }
+                    }
+
+                    activity.pendingUpdateApkFile = destFile
+                    val sizeMb = "%.1f".format(destFile.length() / 1024.0 / 1024.0)
+                    activity.runJs("if(typeof onUpdateDownloadComplete==='function') onUpdateDownloadComplete('$sizeMb');")
+                } catch (e: Exception) {
+                    val msg = (e.message ?: "Download gagal").take(80).replace("\"", "'")
+                    activity.runJs("if(typeof onUpdateDownloadFailed==='function') onUpdateDownloadFailed('$msg');")
+                }
+            }
+        }
+
+        @JavascriptInterface
+        fun triggerInstallUpdate(): Boolean {
+            val apkFile = activity.pendingUpdateApkFile
+            return if (apkFile != null && apkFile.exists()) {
+                activity.installUpdateApk(apkFile)
+                true
+            } else {
+                false
+            }
+        }
+
+        @JavascriptInterface
+        fun clearUpdateCache() {
+            try {
+                val cacheDir = File(context.cacheDir, "updates")
+                cacheDir.listFiles()?.forEach { it.delete() }
+                activity.pendingUpdateApkFile = null
+            } catch (e: Exception) { /* silent */ }
         }
 
         @JavascriptInterface

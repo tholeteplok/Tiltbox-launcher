@@ -738,6 +738,56 @@
         </div>
         <span class="set-val" id="valBeam">Aktif</span>
       </button>
+      <div class="modal-section-label">3. Pembaruan Aplikasi</div>
+      <button type="button" class="set-opt modal-item" data-opt="check_update" id="btnCheckUpdate">
+        <div>
+          <b>Periksa Pembaruan Launcher</b>
+          <span>Versi saat ini: <span id="valCurrentVersion">…</span></span>
+        </div>
+        <span class="set-val" id="valUpdateStatus">Periksa</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ UPDATE NOTIFICATION MODAL ============ -->
+<div class="modal-overlay" id="updateModal">
+  <div class="modal-card" style="max-width:600px;">
+    <div class="modal-head">
+      <div>
+        <h3>🚀 Pembaruan <span id="updateVersionTitle">Tersedia</span></h3>
+        <p style="font-size:11.5px;color:var(--muted);margin-top:2px;" id="updateSubtitle">Versi baru Tiltbox Launcher siap diunduh</p>
+      </div>
+      <button type="button" class="close-btn" id="btnCloseUpdate">✕ Nanti (BACK)</button>
+    </div>
+    <div class="modal-body" style="padding:16px 20px;">
+      <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:14px;">
+        <div style="text-align:center;padding:10px 18px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);">
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;margin-bottom:2px;">Terpasang</div>
+          <div style="font-size:17px;font-weight:800;" id="updateCurrentVer">v1.8.0</div>
+        </div>
+        <div style="font-size:20px;color:var(--yellow);">→</div>
+        <div style="text-align:center;padding:10px 18px;border-radius:10px;background:rgba(246,197,21,.1);border:1px solid rgba(246,197,21,.35);">
+          <div style="font-size:10px;color:var(--yellow);text-transform:uppercase;margin-bottom:2px;">Terbaru</div>
+          <div style="font-size:17px;font-weight:800;color:var(--yellow);" id="updateLatestVer">v1.9.0</div>
+        </div>
+      </div>
+      <div id="updateChangelog" style="font-size:11.5px;color:var(--muted);line-height:1.6;padding:10px 12px;background:rgba(255,255,255,.04);border-radius:8px;margin-bottom:14px;max-height:120px;overflow-y:auto;"></div>
+      <div id="updateProgressWrap" style="display:none;margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+          <span style="font-size:11px;color:var(--muted);" id="updateProgressLabel">Mengunduh...</span>
+          <span style="font-size:11px;color:var(--yellow);font-weight:700;" id="updateProgressPct">0%</span>
+        </div>
+        <div style="height:6px;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden;">
+          <div id="updateProgressBar" style="height:100%;width:0%;background:var(--yellow);border-radius:3px;transition:width .3s;"></div>
+        </div>
+        <div style="font-size:10.5px;color:var(--muted);margin-top:4px;" id="updateProgressSize"></div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button type="button" id="btnDownloadUpdate" class="pill-btn store-btn primary" style="flex:1;padding:10px 16px;font-size:13px;">⬇ Unduh &amp; Pasang</button>
+        <button type="button" id="btnInstallNow" class="pill-btn store-btn primary" style="flex:1;padding:10px 16px;font-size:13px;display:none;">📦 Pasang Sekarang</button>
+        <button type="button" id="btnDismissUpdate" class="pill-btn store-btn" style="padding:10px 20px;font-size:13px;">Nanti</button>
+      </div>
     </div>
   </div>
 </div>
@@ -2807,7 +2857,7 @@
   function modalFocusables(){
     const m = activeModal();
     if(!m) return [];
-    return [...m.querySelectorAll('.close-btn, .set-opt, .grid-app-top, .pill-btn, .wx-btn, .store-chip, .store-btn, .store-btn-del, #licenseCodeInput')]
+    return [...m.querySelectorAll('.close-btn, .set-opt, .grid-app-top, .pill-btn, .wx-btn, .store-chip, .store-btn, .store-btn-del, #licenseCodeInput, #btnDownloadUpdate, #btnInstallNow, #btnDismissUpdate')]
       .filter(el => el.getClientRects().length > 0);
   }
 
@@ -2924,6 +2974,19 @@
         else if(dir === 'up' || dir === 'left') setModalFocus(qList[Math.max(0, qIdx - 1)]);
       } else {
         setModalFocus(qList[0]);
+      }
+      return;
+    }
+
+    if(m.id === 'updateModal'){
+      const uList = list;
+      const uIdx = uList.indexOf(modalFocusEl);
+      if(uIdx !== -1){
+        if(dir === 'down' || dir === 'right') setModalFocus(uList[Math.min(uList.length - 1, uIdx + 1)]);
+        else if(dir === 'up' || dir === 'left') setModalFocus(uList[Math.max(0, uIdx - 1)]);
+      } else if(uList.length > 0){
+        const mainAction = uList.find(el => el.id === 'btnDownloadUpdate' || el.id === 'btnInstallNow') || uList[0];
+        setModalFocus(mainAction);
       }
       return;
     }
@@ -3113,6 +3176,152 @@
     reader.readAsDataURL(file);
   });
 
+  // ============ IN-APP UPDATER ENGINE ============
+  let pendingUpdateApkUrl = '';
+  let pendingUpdateApkSizeMb = '?';
+
+  function initUpdaterVersionDisplay(){
+    try {
+      if(hasBridge('getAppVersionInfo')){
+        const info = JSON.parse(window.TiltboxBridge.getAppVersionInfo());
+        const ver = info.versionName || '1.8.0';
+        const elV = document.getElementById('valCurrentVersion');
+        if(elV) elV.textContent = 'v' + ver;
+        const elCur = document.getElementById('updateCurrentVer');
+        if(elCur) elCur.textContent = 'v' + ver;
+      }
+    } catch(e){}
+  }
+
+  window.onUpdateCheckResult = function(info){
+    const latestTag = info.latestTag || '';
+    const releaseName = info.releaseName || latestTag;
+    const body = info.body || '';
+    const apkUrl = info.apkUrl || '';
+    const apkSizeMb = info.apkSizeMb || '?';
+
+    pendingUpdateApkUrl = apkUrl;
+    pendingUpdateApkSizeMb = apkSizeMb;
+
+    const valStatus = document.getElementById('valUpdateStatus');
+    if(valStatus) valStatus.textContent = latestTag;
+
+    if(!latestTag){
+      showToast('Tidak ada informasi rilis dari server');
+      return;
+    }
+
+    const titleEl = document.getElementById('updateVersionTitle');
+    if(titleEl) titleEl.textContent = releaseName;
+    const latestEl = document.getElementById('updateLatestVer');
+    if(latestEl) latestEl.textContent = latestTag;
+    const changelogEl = document.getElementById('updateChangelog');
+    if(changelogEl) changelogEl.textContent = body || 'Versi baru Tiltbox Launcher tersedia dengan peningkatan performa dan fitur terbaru.';
+    const subtitleEl = document.getElementById('updateSubtitle');
+    if(subtitleEl) subtitleEl.textContent = 'Ukuran unduhan: ' + apkSizeMb + ' MB';
+
+    // Reset progress area
+    const pw = document.getElementById('updateProgressWrap');
+    if(pw) pw.style.display = 'none';
+    const dlBtn = document.getElementById('btnDownloadUpdate');
+    if(dlBtn){ dlBtn.style.display = ''; dlBtn.disabled = false; dlBtn.textContent = '⬇ Unduh & Pasang'; }
+    const insBtn = document.getElementById('btnInstallNow');
+    if(insBtn) insBtn.style.display = 'none';
+
+    // Close customizer and open update modal
+    closeAllModals();
+    const updateModal = document.getElementById('updateModal');
+    if(updateModal){
+      updateModal.classList.add('active');
+      setModalFocus(null);
+      restoreModalFocus('');
+    }
+  };
+
+  window.onUpdateCheckFailed = function(msg){
+    const valStatus = document.getElementById('valUpdateStatus');
+    if(valStatus) valStatus.textContent = 'Gagal';
+    showToast('⚠️ Periksa pembaruan gagal: ' + (msg || 'Timeout'));
+  };
+
+  window.onUpdateDownloadProgress = function(pct, dlMb, totMb){
+    const pw = document.getElementById('updateProgressWrap');
+    if(pw) pw.style.display = 'block';
+    const pctEl = document.getElementById('updateProgressPct');
+    if(pctEl) pctEl.textContent = (pct >= 0 ? pct + '%' : '...');
+    const bar = document.getElementById('updateProgressBar');
+    if(bar && pct >= 0) bar.style.width = pct + '%';
+    const sizeEl = document.getElementById('updateProgressSize');
+    if(sizeEl) sizeEl.textContent = dlMb + ' MB / ' + totMb + ' MB';
+  };
+
+  window.onUpdateDownloadComplete = function(sizeMb){
+    const pw = document.getElementById('updateProgressWrap');
+    if(pw) pw.style.display = 'none';
+    const dlBtn = document.getElementById('btnDownloadUpdate');
+    if(dlBtn) dlBtn.style.display = 'none';
+    const insBtn = document.getElementById('btnInstallNow');
+    if(insBtn){ insBtn.style.display = ''; insBtn.disabled = false; }
+    showToast('✅ Unduhan selesai (' + sizeMb + ' MB). Siap dipasang!');
+  };
+
+  window.onUpdateDownloadFailed = function(msg){
+    const dlBtn = document.getElementById('btnDownloadUpdate');
+    if(dlBtn){ dlBtn.disabled = false; dlBtn.textContent = '⬇ Coba Lagi'; }
+    showToast('❌ Unduhan gagal: ' + (msg || 'Error'));
+  };
+
+  window.onUpdateInstallFailed = function(msg){
+    showToast('❌ Gagal membuka installer: ' + (msg || 'Error'));
+  };
+
+  function checkForUpdates(){
+    const valStatus = document.getElementById('valUpdateStatus');
+    if(valStatus) valStatus.textContent = 'Memeriksa…';
+    if(hasBridge('checkForAppUpdates')){
+      window.TiltboxBridge.checkForAppUpdates();
+    } else {
+      showToast('🌐 Update check tersedia di TV asli');
+      if(valStatus) valStatus.textContent = 'Periksa';
+    }
+  }
+
+  function startDownloadUpdate(){
+    if(!pendingUpdateApkUrl){ showToast('URL unduhan tidak tersedia'); return; }
+    const dlBtn = document.getElementById('btnDownloadUpdate');
+    if(dlBtn){ dlBtn.disabled = true; dlBtn.textContent = 'Mengunduh…'; }
+    const pw = document.getElementById('updateProgressWrap');
+    if(pw) pw.style.display = 'block';
+    const pctEl = document.getElementById('updateProgressPct');
+    if(pctEl) pctEl.textContent = '0%';
+    const bar = document.getElementById('updateProgressBar');
+    if(bar) bar.style.width = '0%';
+    const lbl = document.getElementById('updateProgressLabel');
+    if(lbl) lbl.textContent = 'Mengunduh ' + pendingUpdateApkSizeMb + ' MB…';
+    if(hasBridge('downloadAppUpdate')){
+      window.TiltboxBridge.downloadAppUpdate(pendingUpdateApkUrl);
+    } else {
+      showToast('🌐 Download tersedia di TV asli');
+    }
+  }
+
+  function installDownloadedUpdate(){
+    if(hasBridge('triggerInstallUpdate')){
+      const ok = window.TiltboxBridge.triggerInstallUpdate();
+      if(!ok) showToast('❌ File installer tidak ditemukan. Coba unduh ulang.');
+    } else {
+      showToast('🌐 Install tersedia di TV asli');
+    }
+  }
+
+  // Auto-check update on boot (once, silently after 8 seconds)
+  setTimeout(function(){
+    initUpdaterVersionDisplay();
+    if(hasBridge('checkForAppUpdates')){
+      window.TiltboxBridge.checkForAppUpdates();
+    }
+  }, 8000);
+
   // Wire Header, Footer & Modal Controls
   document.getElementById('btnVoice').addEventListener('click', () => {
     showToast('Membuka Pencarian Suara…');
@@ -3127,6 +3336,14 @@
     if(b) wxHandleAction(b);
   });
   document.getElementById('btnCloseCustomizer').addEventListener('click', closeAllModals);
+  const btnCloseUpdateEl = document.getElementById('btnCloseUpdate');
+  if(btnCloseUpdateEl) btnCloseUpdateEl.addEventListener('click', closeAllModals);
+  const btnDismissEl = document.getElementById('btnDismissUpdate');
+  if(btnDismissEl) btnDismissEl.addEventListener('click', closeAllModals);
+  const btnDownloadEl = document.getElementById('btnDownloadUpdate');
+  if(btnDownloadEl) btnDownloadEl.addEventListener('click', startDownloadUpdate);
+  const btnInstallEl = document.getElementById('btnInstallNow');
+  if(btnInstallEl) btnInstallEl.addEventListener('click', installDownloadedUpdate);
   const btnCloseStoreEl = document.getElementById('btnCloseThemeStore');
   if(btnCloseStoreEl) btnCloseStoreEl.addEventListener('click', closeAllModals);
   const btnCloseQrEl = document.getElementById('btnCloseQrPayment');
@@ -3146,6 +3363,7 @@
       else if(opt === 'toggle_settings') toggleSettingsVisibility();
       else if(opt === 'toggle_themes') toggleThemesLaneVisibility();
       else if(opt === 'toggle_seasonal_mode') toggleSeasonalTheme();
+      else if(opt === 'check_update') checkForUpdates();
       else if(opt === 'manage_favs'){
         closeAllModals();
         openAllAppsModal();
