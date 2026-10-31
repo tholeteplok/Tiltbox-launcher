@@ -66,7 +66,6 @@ object WeatherService {
                     .put("source", place.source))
                 .put("locPermission", permission)
                 .put("fetchedAt", System.currentTimeMillis())
-                .put("serverTimeMs", if (serverDateMs > 0) serverDateMs else System.currentTimeMillis())
                 .put("timeDriftMs", driftMs)
                 .put("data", forecast)
                 .toString()

@@ -25,7 +25,7 @@
   button{background:none;border:none;color:inherit;cursor:pointer;text-align:left;}
 
   /* ============ BACKGROUND (PRESET SINEMATIK + WALLPAPER LOKAL) ============ */
-  .bg{position:fixed;inset:0;background:
+  .bg{position:fixed;top:0;right:0;bottom:0;left:0;background:
       radial-gradient(550px 420px at 82% 52%, rgba(0,0,0,.58), transparent 70%),
       radial-gradient(880px 480px at 68% 16%, #162221 0%, transparent 62%),
       linear-gradient(180deg,#0c1112,#080b0c 55%,#050708);
@@ -38,7 +38,7 @@
   body.has-custom-wp .collage{display:none;}
 
   .collage{position:absolute;left:6%;top:9%;width:34%;height:46%;display:grid;
-    grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px;
+    grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;grid-gap:10px;gap:10px;
     opacity:.22;transform:rotate(-2deg);pointer-events:none;}
   .collage div{border-radius:16px;}
   .collage div:nth-child(1){background:radial-gradient(circle at 30% 30%,#3a423f,transparent 75%);}
@@ -46,13 +46,13 @@
   .collage div:nth-child(3){background:radial-gradient(circle at 30% 70%,#252c2a,transparent 75%);}
   .collage div:nth-child(4){background:radial-gradient(circle at 70% 70%,#363d3a,transparent 75%);}
 
-  .beam{position:absolute;inset:0;pointer-events:none;
+  .beam{position:absolute;top:0;right:0;bottom:0;left:0;pointer-events:none;
     background:
       linear-gradient(164deg, transparent 22%, rgba(255,255,255,.045) 36%, transparent 50%),
       radial-gradient(650px 260px at 65% 22%, rgba(246,197,21,.06), transparent 70%);
     transition:opacity .35s ease;}
   .beam.off{opacity:0;}
-  .vignette{position:absolute;inset:0;pointer-events:none;
+  .vignette{position:absolute;top:0;right:0;bottom:0;left:0;pointer-events:none;
     background:radial-gradient(120% 95% at 50% 40%, rgba(0,0,0,.18) 35%, rgba(0,0,0,.72) 100%);}
 
   /* ============ HEADER ============ */
@@ -62,7 +62,7 @@
   .logo-txt{font-size:26px;font-weight:800;letter-spacing:-.5px;color:var(--txt);user-select:none;}
   .logo-txt span{color:var(--yellow);} .logo-txt sup{font-size:9px;color:var(--muted);margin-left:2px;}
 
-  .header-actions{display:flex;align-items:center;gap:12px;}
+  .header-actions{display:flex;align-items:center;} .header-actions > * + *{margin-left:12px;}
   .ctrl{width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.11);
     background:rgba(255,255,255,.07);display:grid;place-items:center;transition:transform .2s ease, background .2s ease, border-color .2s ease;color:#fff;}
   .ctrl:hover,.ctrl.focus{background:rgba(255,255,255,.16);border-color:var(--yellow);transform:scale(1.06);
@@ -70,19 +70,19 @@
   .ctrl svg{width:19px;height:19px;}
 
   /* ============ MAIN 3-LANE CONTAINER ============ */
-  main{position:absolute;top:92px;bottom:64px;left:0;right:0;z-index:4;
-    display:flex;flex-direction:column;justify-content:flex-start;gap:8px;
-    overflow-y:auto;scrollbar-width:none;padding-top:6px;padding-bottom:32px;
+  main{position:absolute;top:92px;bottom:92px;left:0;right:0;z-index:4;
+    display:flex;flex-direction:column;justify-content:flex-start;
+    overflow-y:auto;scrollbar-width:none;padding-top:6px;padding-bottom:36px;
     scroll-padding-top:40px;scroll-behavior:smooth;}
   main::-webkit-scrollbar{display:none;}
-  .lane{display:flex;flex-direction:column;gap:12px;transition:opacity .25s ease;}
+  .lane{display:flex;flex-direction:column;transition:opacity .25s ease;} .lane > * + *{margin-top:12px;} main > * + *{margin-top:8px;}
   .lane.lane-hidden{display:none !important;}
-  .lane-head{padding:0 64px;display:flex;align-items:baseline;gap:12px;}
+  .lane-head{padding:0 64px;display:flex;align-items:baseline;} .lane-head > * + *{margin-left:12px;}
   .lane-head h2{font-size:11.5px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.88);}
   .lane-head h2::before{content:"";display:inline-block;width:16px;height:3px;border-radius:2px;
     background:var(--yellow);margin-right:10px;vertical-align:middle;}
   .lane-head em{font-style:normal;font-size:10px;color:var(--muted);letter-spacing:.05em;}
-  .row{display:flex;gap:18px;overflow-x:auto;padding:26px 50px 18px;width:100%;
+  .row{display:flex;overflow-x:auto;padding:26px 50px 18px;width:100%;} .row > * + *{margin-left:18px;
     align-items:center;scroll-snap-type:x proximity;scrollbar-width:none;
     margin-top:0;margin-bottom:0;}
   .row::-webkit-scrollbar{display:none;}
@@ -103,7 +103,7 @@
     box-shadow:0 14px 32px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.14);}
   .card h3{font-size:18px;font-weight:700;max-width:146px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .card .count{font-size:12px;font-weight:600;opacity:.92;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .card .stat{margin-top:3px;font-size:10px;color:var(--muted);display:flex;align-items:center;gap:6px;}
+  .card .stat{margin-top:3px;font-size:10px;color:var(--muted);display:flex;align-items:center;} .card .stat > * + *{margin-left:6px;}
   .dot{width:6px;height:6px;border-radius:50%;background:#42d77d;box-shadow:0 0 6px #42d77d;}
   .dot.off{background:rgba(255,255,255,.25);box-shadow:none;}
 
@@ -127,7 +127,7 @@
     box-shadow:0 24px 52px rgba(0,0,0,.6), 0 0 36px var(--card-glow,rgba(64,190,185,.22)), inset 0 1px 0 rgba(255,255,255,.32);}
   .card.focus .tab{opacity:1;transform:translate(-50%,-50%) scale(1);}
 
-  .card.add{align-items:center;justify-content:center;gap:6px;text-align:center;
+  .card.add{align-items:center;justify-content:center;text-align:center;} .card.add > * + *{margin-top:6px;
     background:rgba(255,255,255,.04);border:1.5px dashed rgba(255,255,255,.3);}
   .card.add .plus{font-size:30px;font-weight:300;color:rgba(255,255,255,.75);line-height:1;}
   .card.add p{font-size:11px;color:var(--muted);max-width:155px;}
@@ -180,8 +180,9 @@
     width:42px;height:9px;
   }
   #rowApps.size-s .card.add{
-    flex-direction:column;gap:4px;padding:8px;
+    flex-direction:column;padding:8px;
   }
+  #rowApps.size-s .card.add > * + *{margin-top:4px;}
   #rowApps.size-s .card.add .plus{
     font-size:28px;
   }
@@ -190,7 +191,7 @@
   }
 
   /* ============ BARIS 3 : PENGATURAN CEPAT ============ */
-  .set{display:flex;align-items:center;gap:14px;width:276px;padding:13px 16px;border-radius:18px;color:var(--txt);
+  .set{display:flex;align-items:center;width:276px;} .set > * + *{margin-left:14px;padding:13px 16px;border-radius:18px;color:var(--txt);
     background:linear-gradient(150deg,rgba(255,255,255,.11),rgba(18,26,28,.82));
     border:1px solid rgba(255,255,255,.13);
     box-shadow:0 10px 24px rgba(0,0,0,.4);}
@@ -225,60 +226,60 @@
     opacity:0;
     pointer-events:none;
   }
-  .shift{display:flex;align-items:center;gap:12px;font-size:12.5px;font-weight:600;padding:4px 12px 4px 4px;
+  .shift{display:flex;align-items:center;font-size:12.5px;font-weight:600;padding:4px 12px 4px 4px;} .shift > * + *{margin-left:12px;
     border-radius:999px;transition:.2s;}
   .shift:hover,.shift.focus{background:rgba(246,197,21,.14);box-shadow:0 0 0 1.5px var(--yellow);}
   .shift .ico{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.09);
     border:1px solid rgba(255,255,255,.12);display:grid;place-items:center;}
   .shift .ico svg{width:17px;height:17px;}
-  .status{display:flex;align-items:center;gap:16px;}
+  .status{display:flex;align-items:center;} .status > * + *{margin-left:16px;}
   .time{font-size:19px;font-weight:800;letter-spacing:.4px;}
   .time small{font-size:10.5px;font-weight:600;opacity:.65;margin-left:3px;}
   .divider{width:1px;height:28px;background:rgba(255,255,255,.16);}
   .place b{display:block;font-size:13.5px;font-weight:700;max-width:145px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .place span{display:block;font-size:10px;color:var(--muted);max-width:145px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .weather{display:flex;align-items:center;gap:7px;}
+  .weather{display:flex;align-items:center;} .weather > * + *{margin-left:7px;}
   .weather svg{width:32px;height:32px;}
   .temp{font-size:15px;font-weight:800;opacity:.95;min-width:34px;}
 
   /* ============ CUACA ============ */
   .wx-card{max-width:780px;}
-  .wx-now{display:flex;align-items:center;gap:22px;}
+  .wx-now{display:flex;align-items:center;} .wx-now > * + *{margin-left:22px;}
   .wx-big svg{width:96px;height:96px;display:block;}
   .wx-temp{font-size:54px;font-weight:800;line-height:1;}
   .wx-desc{font-size:16px;font-weight:700;margin-top:4px;}
   .wx-sub{font-size:11px;color:var(--muted);margin-top:3px;}
-  .wx-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+  .wx-stats{display:grid;grid-template-columns:repeat(4,1fr);grid-gap:10px;gap:10px;}
   .wx-stat{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:9px 12px;}
   .wx-stat small{display:block;font-size:10px;color:var(--muted);letter-spacing:.04em;}
   .wx-stat b{font-size:14.5px;font-weight:800;}
-  .wx-hours{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;}
+  .wx-hours{display:grid;grid-template-columns:repeat(8,1fr);grid-gap:6px;gap:6px;}
   .wx-hour{text-align:center;font-size:11px;background:rgba(255,255,255,.04);border-radius:12px;padding:7px 2px;}
   .wx-hour svg{width:28px;height:28px;display:block;margin:3px auto;}
   .wx-hour b{display:block;font-size:13px;font-weight:800;}
   .wx-hour span{color:var(--muted);font-size:10px;}
-  .wx-days{display:flex;flex-direction:column;gap:5px;}
-  .wx-day{display:grid;grid-template-columns:84px 32px 1fr auto;align-items:center;gap:10px;
+  .wx-days{display:flex;flex-direction:column;} .wx-days > * + *{margin-top:5px;}
+  .wx-day{display:grid;grid-template-columns:84px 32px 1fr auto;align-items:center;grid-gap:10px;gap:10px;
     background:rgba(255,255,255,.04);border-radius:12px;padding:4px 12px;font-size:12px;}
   .wx-day svg{width:26px;height:26px;display:block;}
   .wx-day .wx-rain{color:var(--muted);font-size:10.5px;}
   .wx-day b{font-weight:800;}
-  .wx-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:2px;}
+  .wx-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;margin-top:2px;} .wx-actions > *{margin-left:10px;margin-top:4px;}
   .wx-btn{padding:9px 16px;border-radius:12px;background:rgba(255,255,255,.08);
     border:1px solid rgba(255,255,255,.12);font-size:12px;font-weight:700;}
   .wx-btn:hover{border-color:var(--yellow);color:var(--yellow);}
-  .wx-cities{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .wx-cities{display:grid;grid-template-columns:1fr 1fr;grid-gap:8px;gap:8px;}
   .wx-city{display:block;width:100%;padding:11px 16px;}
   .wx-msg{padding:26px 8px;text-align:center;font-size:14px;font-weight:600;color:var(--muted);}
   .wx-note{font-size:11px;color:var(--yellow);}
 
   /* ============ MODALS (CUSTOMIZER, ALL APPS GRID, FAVORITE ORDER) ============ */
-  .modal-overlay{position:fixed;inset:0;background:rgba(5,8,9,.90);
+  .modal-overlay{position:fixed;top:0;right:0;bottom:0;left:0;background:rgba(5,8,9,.90);
     z-index:100;display:none;place-items:center;padding:20px;}
   .modal-overlay.active{display:grid;}
   .modal-card{width:100%;max-width:680px;max-height:88vh;overflow-y:auto;background:#101618;
     border:1px solid rgba(255,255,255,.16);border-radius:24px;padding:24px 28px;
-    display:flex;flex-direction:column;gap:14px;box-shadow:0 28px 70px rgba(0,0,0,.85);}
+    display:flex;flex-direction:column;box-shadow:0 28px 70px rgba(0,0,0,.85);}
   .modal-head{display:flex;justify-content:space-between;align-items:center;
     border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:12px;}
   .modal-head h3{font-size:19px;font-weight:800;}
@@ -286,29 +287,29 @@
   .close-btn{padding:6px 14px;border-radius:999px;background:rgba(255,255,255,.08);
     font-size:11px;font-weight:700;color:var(--muted);border:1px solid rgba(255,255,255,.1);}
   .close-btn:hover{background:rgba(255,255,255,.16);color:#fff;border-color:rgba(255,255,255,.35);}
-  .modal-body{display:flex;flex-direction:column;gap:9px;}
+  .modal-body{display:flex;flex-direction:column;} .modal-body > * + *{margin-top:9px;}
   .modal-section-label{font-size:10.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-top:6px;}
   .modal-item{width:100%;padding:12px 16px;border-radius:14px;background:rgba(255,255,255,.05);
     border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;
-    transition:.2s;gap:12px;}
+    transition:.2s;} .modal-item > * + *{margin-left:12px;}
   .modal-item b{display:block;font-size:13.5px;font-weight:700;}
   .modal-item span{font-size:11px;color:var(--muted);}
   .modal-item .set-val{font-size:11.5px;font-weight:800;color:var(--yellow);white-space:nowrap;}
   .modal-item:hover,.modal-item.focused{border-color:rgba(255,255,255,.38);background:rgba(255,255,255,.10);outline:none;}
 
   /* Grid Semua Aplikasi + Kontrol Pin Favorit (Maks 9) & Geser Urutan */
-  .grid-apps{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:12px;margin-top:4px;}
+  .grid-apps{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));grid-gap:12px;gap:12px;margin-top:4px;}
   .grid-app-card{padding:12px;border-radius:16px;background:rgba(255,255,255,.05);
     border:1px solid rgba(255,255,255,.1);display:flex;flex-direction:column;justify-content:space-between;
-    gap:10px;transition:.2s;}
+    transition:.2s;} .grid-app-card > * + *{margin-top:10px;}
   .grid-app-card.is-fav{border-color:rgba(246,197,21,.45);background:rgba(246,197,21,.06);}
-  .grid-app-top{display:flex;align-items:center;gap:10px;cursor:pointer;}
+  .grid-app-top{display:flex;align-items:center;cursor:pointer;} .grid-app-top > * + *{margin-left:10px;}
   .grid-app-top .tile-ico{width:44px;height:44px;border-radius:11px;overflow:hidden;flex:0 0 auto;display:grid;place-items:center;background:#0c1112;}
   .grid-app-top .tile-ico svg,.grid-app-top .tile-ico img{width:100%;height:100%;object-fit:cover;}
   .grid-app-info{overflow:hidden;}
   .grid-app-info b{display:block;font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .grid-app-info small{display:block;font-size:10px;color:var(--muted);}
-  .grid-app-actions{display:flex;align-items:center;justify-content:space-between;gap:6px;border-top:1px solid rgba(255,255,255,.07);padding-top:8px;}
+  .grid-app-actions{display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,.07);padding-top:8px;} .grid-app-actions > * + *{margin-left:6px;}
   .pill-btn{padding:4px 9px;border-radius:8px;font-size:10.5px;font-weight:700;background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.1);}
   .pill-btn:hover{border-color:var(--yellow);color:var(--yellow);}
   .pill-btn.fav-on{background:rgba(246,197,21,.2);color:var(--yellow);border-color:rgba(246,197,21,.5);}
@@ -320,7 +321,8 @@
 
   /* ============ TOAST & HINT ============ */
   .toast{position:fixed;left:50%;bottom:88px;transform:translate(-50%,16px);z-index:200;
-    display:flex;align-items:center;gap:10px;padding:11px 22px;border-radius:999px;
+    display:flex;align-items:center;padding:11px 22px;border-radius:999px;}
+  .toast > * + *{margin-left:10px;
     background:#141c1e;border:1px solid var(--yellow);
     box-shadow:0 16px 40px rgba(0,0,0,.75);
     font-size:12.5px;font-weight:700;color:#fff;opacity:0;pointer-events:none;transition:.3s;}
@@ -332,14 +334,14 @@
 
   @media (max-height:800px){
     :root{--card-w:236px;--card-h:126px;}
-    main{top:88px;bottom:58px;scroll-padding-top:36px;}
+    main{top:88px;bottom:92px;scroll-padding-top:36px;padding-bottom:36px;}
     .card{padding:14px 18px;}
     #rowApps.size-m .card{width:176px;height:98px;padding:10px 12px;}
     #rowApps.size-m .logo-box{width:44px;height:44px;}
     #rowApps.size-s .card{width:102px;height:102px;}
     #rowApps.size-s .logo-box{width:54px;height:54px;} .card h3{font-size:16.5px;}
     .card-icon,.logo-box{width:52px;height:52px;right:16px;}
-    .set{width:248px;padding:11px 14px;} .row{padding:26px 50px 18px;gap:18px;margin-top:0;margin-bottom:0;}
+    .set{width:248px;padding:11px 14px;} .row{padding:26px 50px 18px;margin-top:0;margin-bottom:0;}
     .lane-head{padding:0 56px;}
   }
   @media (max-width:900px){
@@ -361,7 +363,7 @@
 <input type="file" id="wallpaperFileInput" accept="image/*" style="display:none;" />
 
 <header>
-  <div class="logo-txt">tilt<span>box</span><sup>®</sup></div>
+  <div class="logo-txt">tilt<span>box</span><sup>&trade;</sup></div>
 
   <div class="header-actions">
     <button type="button" class="ctrl" id="btnVoice" title="Pencarian Suara">
@@ -457,7 +459,7 @@
 <footer id="bottomBar">
   <button type="button" class="shift" id="btnFooterRam" title="Percepat TV &amp; bersihkan memori">
     <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
-    <span>Penyegar TV: <b id="ramBoosterText" style="color:var(--yellow);font-weight:800;">Performa Siap</b></span>
+    <span>Penyegar TV: <b id="ramBoosterText" style="color:var(--yellow);font-weight:800;">Memeriksa…</b></span>
   </button>
   <div class="status">
     <div class="time" id="clock">--:-- <small>WIB</small></div>
@@ -903,54 +905,54 @@
   }
 
   // ============ BRAND COLOR PALETTE & ADAPTIVE CARD SILHOUETTES ============
+  // Exact package mapping untuk app populer dengan warna ikonik
   const APP_BRAND_COLORS = {
-    // Video & Streaming
-    youtube: '#FF0033',
-    smarttube: '#FF0033',
-    newpipe: '#FF0033',
-    spotify: '#1DB954',
-    netflix: '#E50914',
-    amazon: '#00A8E1',
-    prime: '#00A8E1',
-    hotstar: '#0A448C',
-    disney: '#0A448C',
-    vidio: '#E52320',
-    twitch: '#9146FF',
-    apple: '#333336',
-    hbo: '#5822B4',
-    max: '#002BE7',
-    iqiyi: '#00C853',
-    wetv: '#FF5722',
-    viu: '#FAAC18',
-    vision: '#0095DA',
-    catchplay: '#FF6D00',
-    mola: '#0E1724',
-
-    // Media, Tools & Games
-    kodi: '#17B2E7',
-    vlc: '#FF8800',
-    plex: '#E5A00D',
-    emby: '#52B54B',
-    jellyfin: '#AA5CC3',
-    browser: '#2979FF',
-    chrome: '#4285F4',
-    playstore: '#01875F',
-    vending: '#01875F',
-    google: '#4285F4',
-    retroarch: '#D32F2F',
-    steam: '#171A21'
+    // YouTube & TV Clients
+    'com.google.android.youtube': '#FF0033',
+    'com.google.android.youtube.tv': '#FF0033',
+    'com.teamsmart.videomanager.tv': '#FF0033', // SmartTube
+    'org.schabi.newpipe': '#FF0033',
+    // Musik & Audio
+    'com.spotify.music': '#1DB954',
+    'com.spotify.tv.android': '#1DB954',
+    // Video Streaming Populer
+    'com.netflix.ninja': '#E50914',
+    'com.netflix.mediaclient': '#E50914',
+    'com.amazon.amazonvideo.livingroom': '#00A8E1',
+    'in.startv.hotstar': '#0A448C',
+    'com.vidio.android.tv': '#E52320',
+    'com.vidio.android': '#E52320',
+    'com.mptv.android': '#0095DA', // Vision+
+    'tv.twitch.android.app': '#9146FF',
+    'com.apple.atve.androidtv.appletv': '#333336',
+    'com.wbd.stream': '#002BE7', // Max
+    'com.hbo.hbonow': '#5822B4',
+    'com.iqiyi.i18n.tv': '#00C853',
+    'com.tencent.qqlivei18n': '#FF5722', // WeTV
+    'com.vuclip.viu': '#FAAC18',
+    // Media Player & Server
+    'org.xbmc.kodi': '#17B2E7',
+    'org.videolan.vlc': '#FF8800',
+    'com.plexapp.android': '#E5A00D',
+    'com.mb.android': '#52B54B', // Emby
+    'org.jellyfin.androidtv': '#AA5CC3',
+    'com.mxtech.videoplayer.ad': '#2979FF',
+    'com.mxtech.videoplayer.pro': '#2979FF',
+    // Toko & Game
+    'com.android.vending': '#01875F',
+    'com.google.android.play.games': '#01875F',
+    'com.valvesoftware.steamlink': '#171A21',
+    'com.retroarch': '#D32F2F',
+    'com.retroarch.aarch64': '#D32F2F'
   };
 
   function getAppBrandColor(app){
     if(!app) return null;
-    const pkg = (app.packageName || '').toLowerCase();
-    const name = (app.name || '').toLowerCase();
+    const pkg = (app.packageName || '').trim();
+    if(pkg && APP_BRAND_COLORS[pkg]) return APP_BRAND_COLORS[pkg];
 
-    for(const [key, color] of Object.entries(APP_BRAND_COLORS)){
-      if(pkg.includes(key) || name.includes(key)) return color;
-    }
-
-    if(app.color && typeof app.color === 'string') return app.color;
+    // Fallback utama ke ekstraksi warna ikon native
+    if(app.color && typeof app.color === 'string' && app.color.startsWith('#')) return app.color;
     return null;
   }
 
@@ -1056,7 +1058,7 @@
           <button type="button" class="pill-btn ${isFav ? 'fav-on' : ''}" data-toggle-fav="${esc(app.packageName)}">
             ${isFav ? '★ Favorit' : '☆ Pin Favorit'}
           </button>
-          <div style="display:flex;gap:4px;">
+          <div style="display:flex;" class="grid-app-nav-btns"><style>.grid-app-nav-btns > * + *{margin-left:4px;}</style>
             ${isFav ? `<button type="button" class="pill-btn" data-move-fav="${esc(app.packageName)}" data-dir="-1" title="Geser Kiri">◀</button>` : ''}
             ${isFav ? `<button type="button" class="pill-btn" data-move-fav="${esc(app.packageName)}" data-dir="1" title="Geser Kanan">▶</button>` : ''}
           </div>
@@ -1176,7 +1178,8 @@
     const subTitleEl = document.getElementById('favCountSubtitle');
     if(subTitleEl){
       if(appCardSize === 's' && el.closest('#rowApps') && el.dataset.name){
-        const cat = el.querySelector('.count')?.textContent || 'Aplikasi Favorit';
+        const cntEl = el.querySelector('.count');
+        const cat = (cntEl && cntEl.textContent) ? cntEl.textContent : 'Aplikasi Favorit';
         subTitleEl.innerHTML = `<span style="color:var(--yellow);font-weight:700;">${esc(el.dataset.name)}</span> &bull; <span style="color:var(--txt);opacity:.85;">${esc(cat)}</span>`;
       } else {
         subTitleEl.innerHTML = `Menampilkan ${favoritePackages.length}/${MAX_FAVORITES} favorit &bull; Klik + untuk Semua Aplikasi`;
@@ -1277,19 +1280,21 @@
     });
   }
 
-  const WX_DRIFT_KEY = 'tiltbox_time_drift_v1';
+  // Kompensasi drift jam in-memory (tidak disimpan di localStorage)
   let timeDriftMs = 0;
-  try {
-    const savedDrift = localStorage.getItem(WX_DRIFT_KEY);
-    if(savedDrift !== null) timeDriftMs = Number(savedDrift) || 0;
-  } catch(e){}
 
-  // Mengembalikan Date yang merefleksikan waktu zona lokal sesuai cuaca/lokasi aktif dan kompensasi drift
+  // Mengembalikan Date yang merefleksikan waktu zona pengguna dengan kompensasi drift
   function getLocationDate(epochMs){
-    const baseMs = (typeof epochMs === 'number') ? epochMs : (Date.now() + timeDriftMs);
+    // Sinkronkan basis waktu: drift diterapkan konsisten baik ke Date.now() maupun epochMs
+    const rawMs = (typeof epochMs === 'number') ? epochMs : Date.now();
+    const baseMs = rawMs + timeDriftMs;
     let offsetSec = null;
 
-    if(weatherData && weatherData.data && typeof weatherData.data.utc_offset_seconds === 'number'){
+    // Offset cuaca HANYA dipakai bila lokasi bersumber otomatis dari perangkat atau IP (bukan kota manual)
+    const isAutoLocation = weatherData && weatherData.place &&
+      (weatherData.place.source === 'device' || weatherData.place.source === 'ip');
+
+    if(isAutoLocation && weatherData.data && typeof weatherData.data.utc_offset_seconds === 'number'){
       offsetSec = weatherData.data.utc_offset_seconds;
     }
 
@@ -1298,8 +1303,13 @@
       if(sysOffsetMin !== 0){
         offsetSec = sysOffsetMin * 60;
       } else {
-        // Fallback default Indonesia (WIB = UTC+7) jika jam sistem perangkat masih default GMT+0
-        offsetSec = 7 * 3600;
+        // Jika sistem disetel GMT+0: cek apakah locale menunjukkan Indonesia
+        const lang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+        if(lang.startsWith('id') || lang === 'in'){
+          offsetSec = 7 * 3600; // Default WIB
+        } else {
+          offsetSec = 0; // Tetap UTC/GMT bagi pengguna internasional
+        }
       }
     }
 
@@ -1323,7 +1333,11 @@
       placeName = weatherCity.name;
     }
 
-    if(weatherData && weatherData.data){
+    // Jam launcher adalah jam pengguna: hanya ikuti cuaca bila mode deteksi otomatis
+    const isAutoLocation = weatherData && weatherData.place &&
+      (weatherData.place.source === 'device' || weatherData.place.source === 'ip');
+
+    if(isAutoLocation && weatherData && weatherData.data){
       const offSec = weatherData.data.utc_offset_seconds;
       const abbr = weatherData.data.timezone_abbreviation;
       const tzName = weatherData.data.timezone;
@@ -1339,7 +1353,15 @@
     } else {
       const offMin = -new Date().getTimezoneOffset();
       const names = {420:'WIB', 480:'WITA', 540:'WIT'};
-      tz = names[offMin] || 'WIB';
+      if(names[offMin]){
+        tz = names[offMin];
+      } else if(offMin === 0){
+        const lang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+        tz = (lang.startsWith('id') || lang === 'in') ? 'WIB' : 'GMT';
+      } else {
+        const h = offMin / 60;
+        tz = 'UTC' + (h >= 0 ? '+' : '') + h;
+      }
     }
 
     currentTimezoneAbbr = tz;
@@ -1451,9 +1473,7 @@
       const sameCity = !weatherCity || (c.city && c.city.name === weatherCity.name);
       if(c && c.res && c.res.ok && c.res.data && c.res.data.current && c.mode === weatherMode && sameCity){
         weatherData = c.res;
-        if(typeof c.res.timeDriftMs === 'number'){
-          timeDriftMs = c.res.timeDriftMs;
-        }
+        // drift tidak dimuat dari cache masa lalu
         weatherState = 'ok';
       }
     } catch(e){}
@@ -1483,8 +1503,12 @@
     if(res && res.ok && res.data && res.data.current){
       weatherData = res;
       if(typeof res.timeDriftMs === 'number'){
-        timeDriftMs = res.timeDriftMs;
-        try { localStorage.setItem(WX_DRIFT_KEY, String(timeDriftMs)); } catch(e){}
+        // Abaikan selisih di bawah 2 menit agar jitter jaringan tidak menggeser jam
+        if(Math.abs(res.timeDriftMs) >= 120000){
+          timeDriftMs = res.timeDriftMs;
+        } else {
+          timeDriftMs = 0;
+        }
       }
       weatherState = 'ok';
       weatherError = '';

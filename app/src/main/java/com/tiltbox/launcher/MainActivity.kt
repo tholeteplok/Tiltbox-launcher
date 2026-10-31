@@ -4,7 +4,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ActivityManager
-import android.app.AlarmManager
 import android.app.SearchManager
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -646,17 +645,6 @@ class MainActivity : Activity() {
                 } finally {
                     weatherBusy = false
                 }
-                try {
-                    val obj = JSONObject(json)
-                    if (obj.optBoolean("ok", false)) {
-                        val am = activity.getSystemService(Context.ALARM_SERVICE) as? AlarmManager
-                        val tz = if (obj.has("data")) obj.getJSONObject("data").optString("timezone", "") else ""
-                        if (tz.isNotEmpty()) am?.setTimeZone(tz)
-                        val serverTime = obj.optLong("serverTimeMs", 0L)
-                        if (serverTime > 0) am?.setTime(serverTime)
-                    }
-                } catch (_: Throwable) {
-                }
                 activity.runJs("if(typeof onWeatherResult==='function') onWeatherResult($json);")
             }.start()
             return true
@@ -829,9 +817,6 @@ class MainActivity : Activity() {
         }
 
         private data class IconResult(val base64: String, val color: String?)
-
-        @Suppress("DEPRECATION")
-        private fun drawableToBase64(drawable: Drawable): String = processIcon(drawable).base64
 
         @Suppress("DEPRECATION")
         private fun processIcon(drawable: Drawable): IconResult {

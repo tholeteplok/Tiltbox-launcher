@@ -41,7 +41,7 @@ Launcher Android TV modern dengan antarmuka hybrid Kotlin + WebView, dirancang k
    - **Susunan Aplikasi Favorit (Maks 9) + Overlay Modal Grid Semua Aplikasi**: Batas tegas maksimal 9 aplikasi favorit di beranda dengan fitur Pin/Unpin (`★ Favorit`) dan geser urutan (`◀ ▶`) langsung dari modal Grid Semua Aplikasi.
 3. **Kustomisasi Wallpaper**:
    - **5 Preset Sinematik** (`Obsidian Dark`, `Pure OLED Black`, `Emerald Cinema`, `Royal Midnight`, `Sunset Amber`).
-   - **Wallpaper Gambar Lokal**: Mendukung pemilih gambar lokal yang terhubung ke `WebChromeClient.onShowFileChooser` di `MainActivity.kt` dengan kompresi kanvas otomatis (`1280×720` JPEG) agar hemat RAM dan tersimpan di `localStorage`.
+   - **Wallpaper Gambar Lokal**: Pemilih gambar native tanpa beban RAM berlebih, gambar otomatis di-downscale hemat memori lalu disimpan sebagai file di penyimpanan internal aplikasi.
 
 ---
 
