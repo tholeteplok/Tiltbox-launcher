@@ -11,8 +11,8 @@ android {
         applicationId "com.tiltbox.launcher"
         minSdk 21
         targetSdk 34
-        versionCode 13
-        versionName "1.7.0"
+        versionCode 14
+        versionName "1.8.0"
 
         setProperty("archivesBaseName", "TiltboxLauncher_v" + versionName)
     }

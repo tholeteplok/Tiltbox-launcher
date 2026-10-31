@@ -7,7 +7,8 @@
 /.idea/libraries
 /.idea/misc.xml
 /.idea/*
-/build
+build/
+app/build/
 /captures
 .externalNativeBuild
 all_files.txt

@@ -3,12 +3,13 @@ name: Build Tiltbox Launcher APK
 on:
   push:
     branches: [ main, development ]
+    tags: [ 'v*' ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -38,3 +39,14 @@ jobs:
           name: TiltboxLauncher-debug
           path: app/build/outputs/apk/debug/*.apk
           retention-days: 14
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: "Tiltbox Launcher ${{ github.ref_name }}"
+          generate_release_notes: true
+          files: app/build/outputs/apk/debug/*.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
