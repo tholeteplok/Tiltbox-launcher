@@ -15,6 +15,14 @@
   }
   :root{
     --yellow:#f6c515;
+    --tab-color:var(--yellow);
+    --tab-glow:rgba(246,197,21,.75);
+    --bg-base:#050708;
+    --bg-grad-1:#162221;
+    --card-fallback-c1:rgba(133,222,214,.78);
+    --card-fallback-c2:rgba(38,128,132,.62);
+    --card-fallback-c3:rgba(12,74,80,.82);
+    --brand-accent:var(--yellow);
     --teal-1:rgba(133,222,214,.78); --teal-2:rgba(38,128,132,.62); --teal-3:rgba(12,74,80,.82);
     --glass-1:rgba(255,255,255,.15); --glass-2:rgba(255,255,255,.05);
     --txt:#fff; --muted:rgba(255,255,255,.58);
@@ -27,10 +35,11 @@
   /* ============ BACKGROUND (PRESET SINEMATIK + WALLPAPER LOKAL) ============ */
   .bg{position:fixed;top:0;right:0;bottom:0;left:0;background:
       radial-gradient(550px 420px at 82% 52%, rgba(0,0,0,.58), transparent 70%),
-      radial-gradient(880px 480px at 68% 16%, #162221 0%, transparent 62%),
-      linear-gradient(180deg,#0c1112,#080b0c 55%,#050708);
+      radial-gradient(880px 480px at 68% 16%, var(--bg-grad-1, #162221) 0%, transparent 62%),
+      linear-gradient(180deg,#0c1112,#080b0c 55%, var(--bg-base, #050708));
       background-size:cover;background-position:center;
       transition:background 1.2s ease;}
+  .theme-silhouette{position:absolute;left:0;right:0;bottom:0;width:100%;height:45%;pointer-events:none;z-index:1;transition:opacity .6s;}
   body.theme-oled .bg{background:radial-gradient(700px 420px at 50% 18%, #0c1213 0%, #000000 78%);}
   body.theme-emerald .bg{background:radial-gradient(880px 500px at 68% 16%, #0f2c29 0%, #040908 78%);}
   body.theme-royal .bg{background:radial-gradient(880px 500px at 68% 16%, #162038 0%, #060911 78%);}
@@ -117,12 +126,12 @@
   .logo-box svg,.logo-box img{width:100%;height:100%;object-fit:cover;display:block;}
 
   .tab{position:absolute;top:0;left:50%;transform:translate(-50%,-50%) scale(.5);width:76px;height:14px;
-    border-radius:7px;background:var(--yellow);opacity:0;
-    box-shadow:0 0 24px rgba(246,197,21,.75);
+    border-radius:7px;background:var(--tab-color, var(--yellow));opacity:0;
+    box-shadow:0 0 24px var(--tab-glow, rgba(246,197,21,.75));
     transition:transform .26s cubic-bezier(.22,1,.36,1), opacity .26s ease;}
 
   .card.focus{transform:rotate(-3.2deg) translateY(-9px) scale(1.05);z-index:5;
-    background:linear-gradient(155deg,var(--card-c1,var(--teal-1)),var(--card-c2,var(--teal-2)) 45%,var(--card-c3,var(--teal-3)));
+    background:linear-gradient(155deg,var(--card-c1,var(--card-fallback-c1,var(--teal-1))),var(--card-c2,var(--card-fallback-c2,var(--teal-2))) 45%,var(--card-c3,var(--card-fallback-c3,var(--teal-3))));
     border-color:rgba(255,255,255,.32);
     box-shadow:0 24px 52px rgba(0,0,0,.6), 0 0 36px var(--card-glow,rgba(64,190,185,.22)), inset 0 1px 0 rgba(255,255,255,.32);}
   .card.focus .tab{opacity:1;transform:translate(-50%,-50%) scale(1);}
@@ -268,6 +277,28 @@
   }
   #rowApps.size-xl .card.add p{
     font-size:11.5px;max-width:150px;line-height:1.35;
+  }
+
+    /* ============ BARIS TEMA & SUASANA ============ */
+  #rowThemes .card{
+    width:184px;height:102px;padding:12px 14px;border-radius:18px;
+    display:flex;flex-direction:column;justify-content:space-between;align-items:stretch;
+    background:linear-gradient(150deg,rgba(255,255,255,.08),rgba(15,20,22,.85));
+    border:1px solid rgba(255,255,255,.12);
+  }
+  #rowThemes .card h3{
+    font-size:13.5px;max-width:145px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  #rowThemes .theme-preview-bar{
+    width:100%;height:5px;border-radius:3px;margin-top:6px;
+  }
+  #rowThemes .card.active-theme{
+    border-color:var(--tab-color, var(--yellow));
+    box-shadow:0 0 0 1.5px var(--tab-color, var(--yellow)), 0 12px 28px rgba(0,0,0,.55);
+  }
+  #rowThemes .theme-icon-box{
+    width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,.08);
+    display:grid;place-items:center;border:1px solid rgba(255,255,255,.1);
   }
 
   /* ============ BARIS 3 : PENGATURAN CEPAT ============ */
@@ -424,7 +455,7 @@
     #rowSources.size-s .card-icon{width:50px;height:50px;}
     #rowApps.size-xl .card, #rowSources.size-xl .card{width:190px;height:246px;padding:18px 16px;}
     #rowSources.size-xl .card-icon{width:58px;height:58px;}
-    #rowApps.size-xl .logo-box{width:64px;height:64px;} .card h3{font-size:16.5px;}
+    #rowApps.size-xl .logo-box{width:64px;height:64px;} #rowThemes .card{width:176px;height:98px;padding:10px 12px;} .card h3{font-size:16.5px;}
     .card-icon,.logo-box{width:52px;height:52px;right:16px;}
     .set{width:248px;padding:11px 14px;} .row{padding:26px 50px 18px;margin-top:0;margin-bottom:0;}
     .lane-head{padding:0 56px;}
@@ -441,6 +472,7 @@
 <div class="bg" id="bgLayer">
   <div class="collage"><div></div><div></div><div></div><div></div></div>
   <div class="beam" id="beamBg"></div>
+  <svg id="themeSilhouette" class="theme-silhouette" viewBox="0 0 960 540" preserveAspectRatio="none" style="display:none;"></svg>
   <div class="vignette"></div>
 </div>
 
@@ -506,7 +538,15 @@
     </div>
   </section>
 
-  <!-- ===== BARIS 3 : PENGATURAN CEPAT ===== -->
+  <!-- ===== BARIS 3 : TEMA & SUASANA ===== -->
+  <section class="lane" id="laneThemes">
+    <div class="lane-head"><h2>Tema &amp; Suasana</h2><em id="themeSubtitle">Ganti suasana TV &amp; tema perayaan otomatis</em></div>
+    <div class="row" id="rowThemes">
+      <!-- Dirender dinamis oleh renderThemesLane() -->
+    </div>
+  </section>
+
+  <!-- ===== BARIS 4 : PENGATURAN CEPAT ===== -->
   <section class="lane" id="laneSettings">
     <div class="lane-head"><h2>Pengaturan Cepat</h2><em>kustomisasi baris, wallpaper lokal, memori RT41</em></div>
     <div class="row" id="rowSettings">
@@ -580,10 +620,24 @@
         </div>
         <span class="set-val" id="valShowSources">Tampil</span>
       </button>
+      <button type="button" class="set-opt modal-item" data-opt="toggle_themes">
+        <div>
+          <b>Visibilitas Baris Tema &amp; Suasana</b>
+          <span>Tampilkan atau sembunyikan baris tema di beranda</span>
+        </div>
+        <span class="set-val" id="valShowThemes">Tampil</span>
+      </button>
+      <button type="button" class="set-opt modal-item" data-opt="toggle_seasonal_mode">
+        <div>
+          <b>Tema Hari Raya Otomatis</b>
+          <span>Beralih tema otomatis saat Natal, Lebaran &amp; hari raya</span>
+        </div>
+        <span class="set-val" id="valSeasonalMode">Aktif (Kalender)</span>
+      </button>
       <button type="button" class="set-opt modal-item" data-opt="toggle_settings">
         <div>
           <b>Visibilitas Baris Pengaturan Cepat</b>
-          <span>Tampilkan atau sembunyikan baris ke-3 di bawah</span>
+          <span>Tampilkan atau sembunyikan baris ke-4 di bawah</span>
         </div>
         <span class="set-val" id="valShowSettings">Tampil</span>
       </button>
@@ -802,6 +856,248 @@
   }
   let showSourcesLane = true;
   let showSettingsLane = true;
+  let showThemesLane = true;
+
+  // ============ THEME ENGINE & SEASONAL STORE ============
+  const BUILTIN_THEMES = {
+    'default_obsidian': {
+      name: 'Obsidian Dark',
+      category: 'Standar',
+      tokens: {
+        '--bg-base': '#050708',
+        '--bg-grad-1': '#162221',
+        '--card-fallback-c1': 'rgba(133,222,214,.78)',
+        '--card-fallback-c2': 'rgba(38,128,132,.62)',
+        '--card-fallback-c3': 'rgba(12,74,80,.82)',
+        '--tab-color': '#f6c515',
+        '--tab-glow': 'rgba(246,197,21,.75)',
+        '--brand-accent': '#f6c515'
+      },
+      silhouette: null
+    },
+    'festive_christmas': {
+      name: 'Malam Natal & Salju',
+      category: 'Hari Raya',
+      season: { start: '12-15', end: '01-05' },
+      tokens: {
+        '--bg-base': '#050a0f',
+        '--bg-grad-1': '#220b12',
+        '--card-fallback-c1': 'rgba(255,56,68,.78)',
+        '--card-fallback-c2': 'rgba(122,21,27,.62)',
+        '--card-fallback-c3': 'rgba(13,40,30,.82)',
+        '--tab-color': '#ff3844',
+        '--tab-glow': 'rgba(255,56,68,.75)',
+        '--brand-accent': '#ff3844'
+      },
+      silhouette: '<path d="M0 500 L80 460 L160 480 L280 430 L420 470 L580 420 L720 460 L860 430 L960 460 L960 540 L0 540 Z" fill="rgba(255,255,255,0.045)"/><path d="M0 515 L120 485 L240 500 L380 465 L520 495 L680 455 L820 490 L960 475 L960 540 L0 540 Z" fill="rgba(0,0,0,0.5)"/>'
+    },
+    'festive_eid': {
+      name: 'Lentera Fitri',
+      category: 'Hari Raya',
+      season: { start: '03-15', end: '04-15' },
+      tokens: {
+        '--bg-base': '#040b08',
+        '--bg-grad-1': '#092419',
+        '--card-fallback-c1': 'rgba(66,215,125,.78)',
+        '--card-fallback-c2': 'rgba(11,61,46,.62)',
+        '--card-fallback-c3': 'rgba(4,31,34,.82)',
+        '--tab-color': '#f5a623',
+        '--tab-glow': 'rgba(245,166,35,.75)',
+        '--brand-accent': '#f5a623'
+      },
+      silhouette: '<path d="M0 510 Q120 470 240 510 T480 500 T720 510 T960 495 L960 540 L0 540 Z" fill="rgba(66,215,125,0.04)"/><circle cx="840" cy="440" r="26" fill="none" stroke="rgba(245,166,35,0.18)" stroke-width="4"/>'
+    },
+    'pure_oled': {
+      name: 'Pure OLED Black',
+      category: 'Minimalis',
+      tokens: {
+        '--bg-base': '#000000',
+        '--bg-grad-1': '#000000',
+        '--card-fallback-c1': 'rgba(255,255,255,.25)',
+        '--card-fallback-c2': 'rgba(40,40,40,.62)',
+        '--card-fallback-c3': 'rgba(15,15,15,.82)',
+        '--tab-color': '#ffffff',
+        '--tab-glow': 'rgba(255,255,255,.6)',
+        '--brand-accent': '#ffffff'
+      },
+      silhouette: null
+    },
+    'emerald_cinema': {
+      name: 'Emerald Cinema',
+      category: 'Sinematik',
+      tokens: {
+        '--bg-base': '#050c0a',
+        '--bg-grad-1': '#0a2e23',
+        '--card-fallback-c1': 'rgba(78,205,160,.78)',
+        '--card-fallback-c2': 'rgba(24,84,65,.62)',
+        '--card-fallback-c3': 'rgba(8,36,28,.82)',
+        '--tab-color': '#4ecd9f',
+        '--tab-glow': 'rgba(78,205,160,.75)',
+        '--brand-accent': '#4ecd9f'
+      },
+      silhouette: null
+    }
+  };
+
+  let activeThemeId = 'default_obsidian';
+  let seasonalThemeEnabled = true;
+  let showThemesLane = true;
+
+  function applyTheme(themeId, showToastNotice){
+    if(!themeId || !BUILTIN_THEMES[themeId]) themeId = 'default_obsidian';
+    activeThemeId = themeId;
+    const theme = BUILTIN_THEMES[themeId];
+    const root = document.documentElement;
+
+    if(theme.tokens){
+      for(const [prop, val] of Object.entries(theme.tokens)){
+        root.style.setProperty(prop, val);
+      }
+    }
+
+    const silEl = document.getElementById('themeSilhouette');
+    if(silEl){
+      if(theme.silhouette){
+        silEl.innerHTML = theme.silhouette;
+        silEl.style.display = 'block';
+      } else {
+        silEl.innerHTML = '';
+        silEl.style.display = 'none';
+      }
+    }
+
+    renderThemesLane();
+    saveConfig();
+
+    if(showToastNotice){
+      showToast(`🎨 Tema Aktif: ${theme.name}`);
+    }
+  }
+
+  function checkSeasonalTheme(){
+    if(!seasonalThemeEnabled) return;
+    const now = new Date();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    const mmdd = `${mm}-${dd}`;
+
+    for(const [tid, th] of Object.entries(BUILTIN_THEMES)){
+      if(th.season && th.season.start && th.season.end){
+        const start = th.season.start;
+        const end = th.season.end;
+        let inSeason = false;
+        if(start <= end){
+          inSeason = (mmdd >= start && mmdd <= end);
+        } else {
+          inSeason = (mmdd >= start || mmdd <= end);
+        }
+        if(inSeason){
+          if(activeThemeId !== tid){
+            applyTheme(tid, false);
+            showToast(`🎉 Menyambut ${th.name}!`);
+          }
+          return;
+        }
+      }
+    }
+  }
+
+  function toggleSeasonalTheme(){
+    seasonalThemeEnabled = !seasonalThemeEnabled;
+    const valEl = document.getElementById('valSeasonalMode');
+    if(valEl) valEl.textContent = seasonalThemeEnabled ? 'Aktif (Kalender)' : 'Nonaktif (Terkunci)';
+    renderThemesLane();
+    saveConfig();
+    showToast(seasonalThemeEnabled ? 'Tema Hari Raya Otomatis diaktifkan' : 'Tema Hari Raya Otomatis dinonaktifkan');
+    if(seasonalThemeEnabled) checkSeasonalTheme();
+  }
+
+  function toggleThemesLaneVisibility(){
+    showThemesLane = !showThemesLane;
+    applyLaneOrderAndVisibility();
+    saveConfig();
+    rebuildLanes();
+    focusItem(1, 0, false);
+    showToast(showThemesLane ? 'Baris Tema & Suasana ditampilkan' : 'Baris Tema & Suasana disembunyikan');
+  }
+
+  function renderThemesLane(){
+    const row = document.getElementById('rowThemes');
+    if(!row) return;
+    row.innerHTML = '';
+
+    // 1. Kartu Kontrol Musiman
+    const btnSeasonal = document.createElement('button');
+    btnSeasonal.type = 'button';
+    btnSeasonal.className = 'item card theme-card';
+    btnSeasonal.dataset.action = 'toggle_seasonal';
+    btnSeasonal.dataset.name = 'Tema Musiman';
+    btnSeasonal.innerHTML = `
+      <span class="tab"></span>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <span class="theme-icon-box"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 16l2 2 4-4" stroke="var(--yellow)"/></svg></span>
+        <span class="stat" style="font-size:10px;color:var(--yellow);font-weight:700;">${seasonalThemeEnabled ? 'AUTO' : 'MANUAL'}</span>
+      </div>
+      <div>
+        <h3 style="font-size:13.5px;">Tema Musiman</h3>
+        <p class="stat">${seasonalThemeEnabled ? 'Otomatis (Kalender)' : 'Manual (Terkunci)'}</p>
+      </div>
+    `;
+    btnSeasonal.onclick = () => { toggleSeasonalTheme(); };
+    row.appendChild(btnSeasonal);
+
+    // 2. Kartu Tema Built-in
+    for(const [tid, th] of Object.entries(BUILTIN_THEMES)){
+      const isActive = (activeThemeId === tid);
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = `item card theme-card ${isActive ? 'active-theme' : ''}`;
+      btn.dataset.action = 'select_theme';
+      btn.dataset.themeId = tid;
+      btn.dataset.name = th.name;
+
+      const gradPreview = th.tokens && th.tokens['--card-fallback-c2']
+        ? `linear-gradient(90deg, ${th.tokens['--card-fallback-c1'] || '#fff'}, ${th.tokens['--card-fallback-c2'] || '#888'}, ${th.tokens['--tab-color'] || '#f6c515'})`
+        : 'linear-gradient(90deg, #f6c515, #1db954)';
+
+      btn.innerHTML = `
+        <span class="tab" style="background:${th.tokens['--tab-color'] || 'var(--yellow)'};"></span>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:9.5px;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;">${esc(th.category || 'Tema')}</span>
+          ${isActive ? '<span style="font-size:10.5px;color:var(--yellow);font-weight:800;">✓ Aktif</span>' : ''}
+        </div>
+        <div>
+          <h3 style="font-size:13px;">${esc(th.name)}</h3>
+          <div class="theme-preview-bar" style="background:${gradPreview};"></div>
+        </div>
+      `;
+      btn.onclick = () => { applyTheme(tid, true); };
+      row.appendChild(btn);
+    }
+
+    // 3. Kartu "+ Toko Tema Cloud"
+    const btnStore = document.createElement('button');
+    btnStore.type = 'button';
+    btnStore.className = 'item card theme-card';
+    btnStore.dataset.action = 'theme_store';
+    btnStore.dataset.name = 'Toko Tema Cloud';
+    btnStore.innerHTML = `
+      <span class="tab"></span>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <span class="theme-icon-box"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+        <span class="stat" style="font-size:10px;color:var(--muted);font-weight:700;">ONLINE</span>
+      </div>
+      <div>
+        <h3 style="font-size:13.5px;color:var(--yellow);">+ Toko Tema</h3>
+        <p class="stat">Katalog Cloud Komunitas</p>
+      </div>
+    `;
+    btnStore.onclick = () => {
+      showToast('🌐 Toko Tema Cloud: Siap di Tahap 2!');
+    };
+    row.appendChild(btnStore);
+  }
+
   let beamEnabled = true;
   let customWallpaperDataUrl = '';  // hanya di memori; file aslinya disimpan native (filesDir)
   const WP_FALLBACK_KEY = 'tiltbox_wp_v1'; // dipakai hanya saat berjalan tanpa bridge (preview browser)
@@ -832,6 +1128,9 @@
       if(['s','m','l','xl'].includes(cfg.inputCardSize)) inputCardSize = cfg.inputCardSize;
       if(typeof cfg.showSourcesLane === 'boolean') showSourcesLane = cfg.showSourcesLane;
       if(typeof cfg.showSettingsLane === 'boolean') showSettingsLane = cfg.showSettingsLane;
+      if(typeof cfg.showThemesLane === 'boolean') showThemesLane = cfg.showThemesLane;
+      if(typeof cfg.seasonalThemeEnabled === 'boolean') seasonalThemeEnabled = cfg.seasonalThemeEnabled;
+      if(cfg.activeThemeId && BUILTIN_THEMES[cfg.activeThemeId]) activeThemeId = cfg.activeThemeId;
       if(typeof cfg.beamEnabled === 'boolean') beamEnabled = cfg.beamEnabled;
     } catch(e){}
   }
@@ -847,7 +1146,10 @@
         appCardSize,
         inputCardSize,
         showSourcesLane,
+        showThemesLane,
         showSettingsLane,
+        activeThemeId,
+        seasonalThemeEnabled,
         beamEnabled,
         weatherMode,
         weatherCity
@@ -959,12 +1261,18 @@
     mainEl.appendChild(laneSettings);
 
     laneSources.classList.toggle('lane-hidden', !showSourcesLane);
+    const laneThemes = document.getElementById('laneThemes');
+    if(laneThemes) laneThemes.classList.toggle('lane-hidden', !showThemesLane);
     laneSettings.classList.toggle('lane-hidden', !showSettingsLane);
 
     const orderLabel = sourcesFirst ? 'Sumber → Aplikasi' : 'Aplikasi → Sumber';
     document.getElementById('valRowOrder').textContent = orderLabel;
     document.getElementById('subRowOrder').textContent = orderLabel;
     document.getElementById('valShowSources').textContent = showSourcesLane ? 'Tampil' : 'Disembunyikan';
+    const valThemesEl = document.getElementById('valShowThemes');
+    if(valThemesEl) valThemesEl.textContent = showThemesLane ? 'Tampil' : 'Disembunyikan';
+    const valSeasonEl = document.getElementById('valSeasonalMode');
+    if(valSeasonEl) valSeasonEl.textContent = seasonalThemeEnabled ? 'Aktif (Kalender)' : 'Nonaktif (Terkunci)';
     document.getElementById('valShowSettings').textContent = showSettingsLane ? 'Tampil' : 'Disembunyikan';
   }
 
@@ -2236,6 +2544,8 @@
       if(opt === 'order') toggleRowOrder();
       else if(opt === 'toggle_sources') toggleSourcesVisibility();
       else if(opt === 'toggle_settings') toggleSettingsVisibility();
+      else if(opt === 'toggle_themes') toggleThemesLaneVisibility();
+      else if(opt === 'toggle_seasonal_mode') toggleSeasonalTheme();
       else if(opt === 'manage_favs'){
         closeAllModals();
         openAllAppsModal();
@@ -2267,6 +2577,9 @@
   applyLaneOrderAndVisibility();
   applyCardSize();
   renderInstalledApps();
+  renderThemesLane();
+  applyTheme(activeThemeId, false);
+  checkSeasonalTheme();
   focusItem(1, 0, false);
   wxLoadCache();
   updateTimezoneLabel();
