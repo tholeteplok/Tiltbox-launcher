@@ -425,6 +425,45 @@
   .pill-btn:hover{border-color:var(--yellow);color:var(--yellow);}
   .pill-btn.fav-on{background:rgba(246,197,21,.2);color:var(--yellow);border-color:rgba(246,197,21,.5);}
 
+  
+  /* ============ THEME STORE MODAL STYLES ============ */
+  .store-card-wrap{max-width:960px;width:92vw;}
+  .store-status-pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:700;margin-left:8px;}
+  .store-status-pill.online{background:rgba(29,185,84,.18);color:#1db954;border:1px solid rgba(29,185,84,.4);}
+  .store-status-pill.offline{background:rgba(255,165,0,.18);color:#ffa500;border:1px solid rgba(255,165,0,.4);}
+
+  .store-filter-row{display:flex;align-items:center;padding:0 24px 14px;border-bottom:1px solid rgba(255,255,255,.07);overflow-x:auto;}
+  .store-filter-row > * + *{margin-left:8px;}
+  .store-chip{padding:6px 14px;border-radius:999px;font-size:11.5px;font-weight:700;background:rgba(255,255,255,.06);color:var(--muted);border:1px solid rgba(255,255,255,.1);cursor:pointer;white-space:nowrap;transition:.2s;}
+  .store-chip.active{background:rgba(246,197,21,.18);color:var(--yellow);border-color:var(--yellow);}
+  .store-chip.mf{outline:2px solid var(--yellow) !important;color:#fff !important;background:rgba(246,197,21,.3) !important;}
+
+  .store-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));gap:14px;padding:16px 4px;}
+  .store-item-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;position:relative;transition:all .2s;}
+  .store-item-card.is-active{border-color:rgba(246,197,21,.45);background:rgba(246,197,21,.04);}
+
+  .store-mini-preview{height:76px;border-radius:10px;position:relative;overflow:hidden;margin-bottom:12px;border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 0 20px rgba(0,0,0,.6);}
+  .store-mini-card{width:86px;height:48px;border-radius:7px;position:absolute;bottom:-6px;right:16px;transform:rotate(-4deg);box-shadow:0 8px 20px rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.3);display:flex;align-items:flex-end;padding:4px 6px;}
+  .store-mini-tab{position:absolute;top:0;left:10px;width:28px;height:5px;border-radius:0 0 3px 3px;}
+  .store-badge{position:absolute;top:8px;left:8px;padding:2px 7px;border-radius:6px;font-size:9.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;}
+  .store-badge.free{background:rgba(29,185,84,.2);color:#22c55e;border:1px solid rgba(34,197,94,.4);}
+  .store-badge.premium{background:rgba(236,72,153,.2);color:#f472b6;border:1px solid rgba(244,114,182,.4);}
+  .store-badge.holiday{background:rgba(245,166,35,.2);color:#fbbf24;border:1px solid rgba(251,191,36,.4);}
+
+  .store-meta h4{font-size:13.5px;font-weight:700;margin:0 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .store-meta p{font-size:11px;color:var(--muted);line-height:1.35;margin:0 0 8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;height:30px;}
+  .store-author{font-size:10px;color:var(--muted);opacity:.7;margin-bottom:8px;}
+
+  .store-actions{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;}
+  .store-btn{flex:1;padding:7px 12px;border-radius:8px;font-size:11.5px;font-weight:700;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);color:#fff;cursor:pointer;transition:.2s;text-align:center;}
+  .store-btn.primary{background:var(--yellow);color:#0a0e10;border-color:var(--yellow);}
+  .store-btn.active{background:rgba(246,197,21,.15);color:var(--yellow);border-color:var(--yellow);cursor:default;}
+  .store-btn.premium-buy{background:linear-gradient(135deg, #ec4899, #8b5cf6);color:#fff;border:none;}
+  .store-btn-del{padding:7px 10px;border-radius:8px;font-size:11px;background:rgba(255,59,48,.12);color:#ff453a;border:1px solid rgba(255,59,48,.3);cursor:pointer;}
+  .store-btn.mf, .store-btn-del.mf{outline:2px solid #fff !important;outline-offset:2px;box-shadow:0 0 12px rgba(255,255,255,.5);}
+
+  .qr-box{width:160px;height:160px;background:#fff;border-radius:12px;padding:8px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 30px rgba(0,0,0,.8);margin:0 auto;}
+
   /* Fokus D-Pad di dalam modal: Clean style */
   .mf{outline:2px solid rgba(255,255,255,.45) !important;outline-offset:2px;border-color:rgba(255,255,255,.45) !important;
     background:rgba(255,255,255,.12) !important;}
@@ -730,6 +769,65 @@
   </div>
 </div>
 
+<!-- THEME STORE MODAL -->
+<div class="modal-overlay" id="themeStoreModal">
+  <div class="modal-card store-card-wrap">
+    <div class="modal-head">
+      <div>
+        <h3>Toko Tema <span>Komunitas &amp; Eksklusif</span></h3>
+        <p style="font-size:11.5px;color:var(--muted);margin-top:2px;">
+          Jelajahi tema sinematik baru dari cloud &amp; komunitas. 
+          <span id="storeStatusBadge" class="store-status-pill online">● Cloud Terhubung</span>
+        </p>
+      </div>
+      <button type="button" class="close-btn" id="btnCloseThemeStore">✕ Tutup (BACK)</button>
+    </div>
+
+    <!-- Filter Chips -->
+    <div class="store-filter-row" id="storeFilterRow">
+      <button type="button" class="store-chip active" data-filter="all">Semua Tema</button>
+      <button type="button" class="store-chip" data-filter="Hari Raya">Hari Raya</button>
+      <button type="button" class="store-chip" data-filter="free">Gratis (Komunitas)</button>
+      <button type="button" class="store-chip" data-filter="premium">Premium</button>
+      <button type="button" class="store-chip" data-filter="installed">Terpasang di TV</button>
+    </div>
+
+    <!-- Store Grid Body -->
+    <div class="modal-body" style="max-height:480px;overflow-y:auto;">
+      <div class="store-grid" id="storeGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- QR CODE & ACTIVATION SUB-MODAL FOR PREMIUM THEMES -->
+<div class="modal-overlay" id="qrPaymentModal" style="z-index:110;">
+  <div class="modal-card" style="max-width:540px;text-align:center;">
+    <div class="modal-head" style="justify-content:center;">
+      <h3 style="margin:0;">Buka Kunci <span id="qrThemeTitle" style="color:var(--yellow);">Tema Premium</span></h3>
+    </div>
+    <div class="modal-body" style="display:flex;flex-direction:column;align-items:center;padding:16px 20px;">
+      <p id="qrThemeDesc" style="font-size:12px;color:var(--muted);margin-bottom:14px;"></p>
+      
+      <!-- QR Code Container -->
+      <div id="qrCodeContainer" class="qr-box"></div>
+      
+      <p style="font-size:11px;color:#aaa;margin-top:10px;line-height:1.4;">
+        📱 Scan QR dengan kamera smartphone Anda untuk pembayaran instan.<br>
+        Setelah sukses, tema akan terbuka otomatis atau masukkan kode 6-digit aktivasi.
+      </p>
+
+      <div style="display:flex;align-items:center;margin-top:12px;width:100%;max-width:320px;">
+        <input type="text" id="licenseCodeInput" placeholder="KODE LISENSI (MIS. TILT99)" maxlength="12" style="flex:1;text-align:center;text-transform:uppercase;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:#fff;font-weight:700;font-size:12px;" />
+        <button type="button" id="btnApplyLicense" class="pill-btn store-btn" style="margin-left:8px;padding:8px 16px;background:var(--yellow);color:#000;border:none;">Aktifkan</button>
+      </div>
+
+      <div style="margin-top:16px;display:flex;">
+        <button type="button" id="btnCloseQrPayment" class="pill-btn store-btn" style="padding:7px 24px;">✕ Kembali</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"><span class="t-dot"></span><span id="toastMsg"></span></div>
 
 <script>
@@ -859,6 +957,8 @@
   let showThemesLane = true;
 
   // ============ THEME ENGINE & SEASONAL STORE ============
+  const THEME_STORE_CATALOG_URL = 'https://raw.githubusercontent.com/tholeteplok/tiltbox-themes/main/catalog.json';
+
   const BUILTIN_THEMES = {
     'default_obsidian': {
       name: 'Obsidian Dark',
@@ -939,17 +1039,153 @@
     }
   };
 
+  // Katalog Cloud Built-in (Fallback bila TV Offline / GitHub baru diinisialisasi)
+  const BUILTIN_CLOUD_CATALOG = {
+    updated_at: '2026-10-31',
+    featured_theme_id: 'festive_cny_2027',
+    themes: [
+      {
+        id: 'festive_cny_2027',
+        name: 'Lampion Oriental Imlek',
+        category: 'Hari Raya',
+        author: 'Teplok Community',
+        tier: 'free',
+        price: 'Gratis',
+        badge: 'Hari Raya',
+        description: 'Nuansa merah burgundy pekat dengan siluet atap pagoda & lampion hangat.',
+        manifest_url: 'https://raw.githubusercontent.com/tholeteplok/tiltbox-themes/main/themes/festive_cny_2027.json',
+        season: { start: '01-20', end: '02-15' },
+        tokens: {
+          '--bg-base': '#120306',
+          '--bg-grad-1': '#2e070e',
+          '--card-fallback-c1': 'rgba(230,18,35,.78)',
+          '--card-fallback-c2': 'rgba(122,12,20,.62)',
+          '--card-fallback-c3': 'rgba(26,5,8,.82)',
+          '--tab-color': '#f6c515',
+          '--tab-glow': 'rgba(246,197,21,.75)',
+          '--brand-accent': '#f6c515'
+        },
+        silhouette: '<path d="M0 500 L60 480 L120 495 L180 470 L260 490 L340 455 L420 485 L500 450 L620 490 L740 460 L860 490 L960 470 L960 540 L0 540 Z" fill="rgba(230,18,35,0.04)"/><circle cx="120" cy="440" r="16" fill="rgba(246,197,21,0.12)"/><line x1="120" y1="420" x2="120" y2="440" stroke="rgba(246,197,21,0.2)" stroke-width="2"/>'
+      },
+      {
+        id: 'festive_independence_ri',
+        name: 'Nusantara Merdeka',
+        category: 'Hari Raya',
+        author: 'Teplok Community',
+        tier: 'free',
+        price: 'Gratis',
+        badge: 'Hari Raya',
+        description: 'Nuansa merah putih sinematik gelap beraksen kepulauan Nusantara.',
+        manifest_url: 'https://raw.githubusercontent.com/tholeteplok/tiltbox-themes/main/themes/festive_independence_ri.json',
+        season: { start: '08-10', end: '08-25' },
+        tokens: {
+          '--bg-base': '#08080a',
+          '--bg-grad-1': '#22080c',
+          '--card-fallback-c1': 'rgba(240,30,45,.78)',
+          '--card-fallback-c2': 'rgba(138,18,25,.62)',
+          '--card-fallback-c3': 'rgba(24,27,30,.82)',
+          '--tab-color': '#ff2233',
+          '--tab-glow': 'rgba(255,34,51,.75)',
+          '--brand-accent': '#ff2233'
+        },
+        silhouette: '<path d="M0 510 Q140 470 280 505 T560 480 T840 505 T960 485 L960 540 L0 540 Z" fill="rgba(240,30,45,0.04)"/><rect x="460" y="440" width="40" height="70" fill="rgba(255,255,255,0.06)"/>'
+      },
+      {
+        id: 'festive_halloween_spooky',
+        name: 'Spooky Midnight Lantern',
+        category: 'Hari Raya',
+        author: 'Teplok Community',
+        tier: 'free',
+        price: 'Gratis',
+        badge: 'Hari Raya',
+        description: 'Kabut ungu mistis pekat dengan siluet pohon meliuk & lampion labu.',
+        manifest_url: 'https://raw.githubusercontent.com/tholeteplok/tiltbox-themes/main/themes/festive_halloween_spooky.json',
+        season: { start: '10-20', end: '11-05' },
+        tokens: {
+          '--bg-base': '#08040d',
+          '--bg-grad-1': '#220930',
+          '--card-fallback-c1': 'rgba(255,119,0,.78)',
+          '--card-fallback-c2': 'rgba(179,71,0,.62)',
+          '--card-fallback-c3': 'rgba(27,12,38,.82)',
+          '--tab-color': '#ff7700',
+          '--tab-glow': 'rgba(255,119,0,.75)',
+          '--brand-accent': '#ff7700'
+        },
+        silhouette: '<path d="M0 500 C150 470 300 520 450 490 C600 460 750 515 960 480 L960 540 L0 540 Z" fill="rgba(179,71,0,0.04)"/><path d="M780 430 L800 460 L830 465 L805 485 L815 515 L785 495 L755 515 L765 485 L740 465 L770 460 Z" fill="rgba(255,119,0,0.08)"/>'
+      },
+      {
+        id: 'cyberpunk_neon_2099',
+        name: 'Cyberpunk Neon Tokyo',
+        category: 'Eksklusif',
+        author: 'Tiltbox Studio',
+        tier: 'premium',
+        price: 'Rp 15.000',
+        badge: 'Premium',
+        description: 'Palet synthwave ungu gelap dengan aksen tab neon cyan & siluet skyline futuristik.',
+        manifest_url: 'https://raw.githubusercontent.com/tholeteplok/tiltbox-themes/main/themes/cyberpunk_neon_2099.json',
+        payment_qr_url: 'https://tiltbox.id/pay/cyberpunk_neon_2099',
+        tokens: {
+          '--bg-base': '#04020a',
+          '--bg-grad-1': '#1d0233',
+          '--card-fallback-c1': 'rgba(255,0,128,.78)',
+          '--card-fallback-c2': 'rgba(160,0,109,.62)',
+          '--card-fallback-c3': 'rgba(13,2,33,.82)',
+          '--tab-color': '#00f0ff',
+          '--tab-glow': 'rgba(0,240,255,.85)',
+          '--brand-accent': '#00f0ff'
+        },
+        silhouette: '<rect x="120" y="420" width="70" height="90" fill="rgba(0,240,255,0.035)"/><rect x="220" y="380" width="90" height="130" fill="rgba(255,0,128,0.035)"/><rect x="340" y="440" width="60" height="70" fill="rgba(0,240,255,0.035)"/><rect x="620" y="400" width="80" height="110" fill="rgba(255,0,128,0.035)"/>'
+      },
+      {
+        id: 'retro_synthwave_80s',
+        name: 'Retro Synthwave 80s',
+        category: 'Eksklusif',
+        author: 'RetroWave Art',
+        tier: 'premium',
+        price: 'Rp 15.000',
+        badge: 'Premium',
+        description: 'Nuansa sunset 80an retro dengan grid magenta neon dan gradasi matahari senja.',
+        manifest_url: 'https://raw.githubusercontent.com/tholeteplok/tiltbox-themes/main/themes/retro_synthwave_80s.json',
+        payment_qr_url: 'https://tiltbox.id/pay/retro_synthwave_80s',
+        tokens: {
+          '--bg-base': '#080310',
+          '--bg-grad-1': '#2e0a30',
+          '--card-fallback-c1': 'rgba(255,102,0,.78)',
+          '--card-fallback-c2': 'rgba(224,32,130,.62)',
+          '--card-fallback-c3': 'rgba(40,10,50,.82)',
+          '--tab-color': '#ff00aa',
+          '--tab-glow': 'rgba(255,0,170,.8)',
+          '--brand-accent': '#ff00aa'
+        },
+        silhouette: '<circle cx="480" cy="460" r="70" fill="rgba(255,102,0,0.06)"/><line x1="0" y1="510" x2="960" y2="510" stroke="rgba(255,0,170,0.12)" stroke-width="2"/><line x1="0" y1="525" x2="960" y2="525" stroke="rgba(255,0,170,0.2)" stroke-width="2"/>'
+      }
+    ]
+  };
+
   let activeThemeId = 'default_obsidian';
   let seasonalThemeEnabled = true;
   let showThemesLane = true;
+  let downloadedThemes = {};
+  let unlockedThemes = ['cyberpunk_neon_2099_demo']; // preset demo unlocked
+  let currentCatalogThemes = [...BUILTIN_CLOUD_CATALOG.themes];
+  let storeActiveFilter = 'all';
+  let currentPayingTheme = null;
+
+  function getThemeById(themeId){
+    if(BUILTIN_THEMES[themeId]) return BUILTIN_THEMES[themeId];
+    if(downloadedThemes[themeId]) return downloadedThemes[themeId];
+    for(let i = 0; i < currentCatalogThemes.length; i++){
+      if(currentCatalogThemes[i].id === themeId) return currentCatalogThemes[i];
+    }
+    return BUILTIN_THEMES['default_obsidian'];
+  }
 
   function applyTheme(themeId, showToastNotice){
-    if(!themeId || !BUILTIN_THEMES[themeId]) themeId = 'default_obsidian';
-    activeThemeId = themeId;
-    const theme = BUILTIN_THEMES[themeId];
+    const theme = getThemeById(themeId);
+    activeThemeId = themeId || 'default_obsidian';
     const root = document.documentElement;
 
-    if(theme.tokens){
+    if(theme && theme.tokens){
       for(const [prop, val] of Object.entries(theme.tokens)){
         root.style.setProperty(prop, val);
       }
@@ -957,7 +1193,7 @@
 
     const silEl = document.getElementById('themeSilhouette');
     if(silEl){
-      if(theme.silhouette){
+      if(theme && theme.silhouette){
         silEl.innerHTML = theme.silhouette;
         silEl.style.display = 'block';
       } else {
@@ -969,8 +1205,8 @@
     renderThemesLane();
     saveConfig();
 
-    if(showToastNotice){
-      showToast(`🎨 Tema Aktif: ${theme.name}`);
+    if(showToastNotice && theme){
+      showToast('🎨 Tema Aktif: ' + theme.name);
     }
   }
 
@@ -979,9 +1215,10 @@
     const now = new Date();
     const mm = String(now.getMonth() + 1).padStart(2, '0');
     const dd = String(now.getDate()).padStart(2, '0');
-    const mmdd = `${mm}-${dd}`;
+    const mmdd = mm + '-' + dd;
 
-    for(const [tid, th] of Object.entries(BUILTIN_THEMES)){
+    const allThemesToCheck = Object.assign({}, BUILTIN_THEMES, downloadedThemes);
+    for(const [tid, th] of Object.entries(allThemesToCheck)){
       if(th.season && th.season.start && th.season.end){
         const start = th.season.start;
         const end = th.season.end;
@@ -994,7 +1231,7 @@
         if(inSeason){
           if(activeThemeId !== tid){
             applyTheme(tid, false);
-            showToast(`🎉 Menyambut ${th.name}!`);
+            showToast('🎉 Menyambut ' + th.name + '!');
           }
           return;
         }
@@ -1051,13 +1288,13 @@
       const isActive = (activeThemeId === tid);
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = `item card theme-card ${isActive ? 'active-theme' : ''}`;
+      btn.className = 'item card theme-card' + (isActive ? ' active-theme' : '');
       btn.dataset.action = 'select_theme';
       btn.dataset.themeId = tid;
       btn.dataset.name = th.name;
 
       const gradPreview = th.tokens && th.tokens['--card-fallback-c2']
-        ? `linear-gradient(90deg, ${th.tokens['--card-fallback-c1'] || '#fff'}, ${th.tokens['--card-fallback-c2'] || '#888'}, ${th.tokens['--tab-color'] || '#f6c515'})`
+        ? 'linear-gradient(90deg, ' + (th.tokens['--card-fallback-c1'] || '#fff') + ', ' + (th.tokens['--card-fallback-c2'] || '#888') + ', ' + (th.tokens['--tab-color'] || '#f6c515') + ')'
         : 'linear-gradient(90deg, #f6c515, #1db954)';
 
       btn.innerHTML = `
@@ -1075,7 +1312,36 @@
       row.appendChild(btn);
     }
 
-    // 3. Kartu "+ Toko Tema Cloud"
+    // 3. Kartu Tema Cloud Terunduh (Tersimpan Lokal di TV)
+    for(const [tid, th] of Object.entries(downloadedThemes)){
+      const isActive = (activeThemeId === tid);
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'item card theme-card' + (isActive ? ' active-theme' : '');
+      btn.dataset.action = 'select_theme';
+      btn.dataset.themeId = tid;
+      btn.dataset.name = th.name;
+
+      const gradPreview = th.tokens && th.tokens['--card-fallback-c2']
+        ? 'linear-gradient(90deg, ' + (th.tokens['--card-fallback-c1'] || '#fff') + ', ' + (th.tokens['--card-fallback-c2'] || '#888') + ', ' + (th.tokens['--tab-color'] || '#f6c515') + ')'
+        : 'linear-gradient(90deg, #ec4899, #8b5cf6)';
+
+      btn.innerHTML = `
+        <span class="tab" style="background:${th.tokens['--tab-color'] || 'var(--yellow)'};"></span>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:9.5px;color:var(--yellow);letter-spacing:.05em;text-transform:uppercase;">CLOUD • ${esc(th.category || 'Tema')}</span>
+          ${isActive ? '<span style="font-size:10.5px;color:var(--yellow);font-weight:800;">✓ Aktif</span>' : ''}
+        </div>
+        <div>
+          <h3 style="font-size:13px;">${esc(th.name)}</h3>
+          <div class="theme-preview-bar" style="background:${gradPreview};"></div>
+        </div>
+      `;
+      btn.onclick = () => { applyTheme(tid, true); };
+      row.appendChild(btn);
+    }
+
+    // 4. Kartu "+ Toko Tema Cloud"
     const btnStore = document.createElement('button');
     btnStore.type = 'button';
     btnStore.className = 'item card theme-card';
@@ -1084,18 +1350,278 @@
     btnStore.innerHTML = `
       <span class="tab"></span>
       <div style="display:flex;align-items:center;justify-content:space-between;">
-        <span class="theme-icon-box"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
-        <span class="stat" style="font-size:10px;color:var(--muted);font-weight:700;">ONLINE</span>
+        <span class="theme-icon-box"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+        <span class="stat" style="font-size:10px;color:var(--yellow);font-weight:700;">STORE</span>
       </div>
       <div>
         <h3 style="font-size:13.5px;color:var(--yellow);">+ Toko Tema</h3>
-        <p class="stat">Katalog Cloud Komunitas</p>
+        <p class="stat">Cloud &amp; Komunitas</p>
       </div>
     `;
-    btnStore.onclick = () => {
-      showToast('🌐 Toko Tema Cloud: Siap di Tahap 2!');
-    };
+    btnStore.onclick = () => { openThemeStoreModal(); };
     row.appendChild(btnStore);
+  }
+
+  // ============ CLOUD THEME STORE LOGIC & MODAL ============
+  function saveCustomThemes(){
+    try {
+      localStorage.setItem('tiltbox_custom_themes_v1', JSON.stringify(downloadedThemes));
+      localStorage.setItem('tiltbox_unlocked_themes_v1', JSON.stringify(unlockedThemes));
+    } catch(e){}
+  }
+
+  function fetchThemeCatalog(){
+    const badge = document.getElementById('storeStatusBadge');
+    if(badge){
+      badge.textContent = '● Memeriksa Cloud…';
+      badge.className = 'store-status-pill offline';
+    }
+
+    let isDone = false;
+    const timer = setTimeout(() => {
+      if(!isDone){
+        isDone = true;
+        // Fallback gracefully without freezing
+        currentCatalogThemes = [...BUILTIN_CLOUD_CATALOG.themes];
+        if(badge){
+          badge.textContent = '○ Mode Offline (Katalog Lokal)';
+          badge.className = 'store-status-pill offline';
+        }
+        renderThemeStore(storeActiveFilter);
+      }
+    }, 4500);
+
+    fetch(THEME_STORE_CATALOG_URL)
+      .then(res => {
+        if(!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
+      .then(data => {
+        if(isDone) return;
+        isDone = true;
+        clearTimeout(timer);
+        if(data && Array.isArray(data.themes)){
+          currentCatalogThemes = data.themes;
+        } else {
+          currentCatalogThemes = [...BUILTIN_CLOUD_CATALOG.themes];
+        }
+        if(badge){
+          badge.textContent = '● Cloud Terhubung (GitHub)';
+          badge.className = 'store-status-pill online';
+        }
+        renderThemeStore(storeActiveFilter);
+      })
+      .catch(err => {
+        if(isDone) return;
+        isDone = true;
+        clearTimeout(timer);
+        currentCatalogThemes = [...BUILTIN_CLOUD_CATALOG.themes];
+        if(badge){
+          badge.textContent = '○ Mode Offline (Katalog Lokal)';
+          badge.className = 'store-status-pill offline';
+        }
+        renderThemeStore(storeActiveFilter);
+      });
+  }
+
+  function renderThemeStore(filter){
+    storeActiveFilter = filter || 'all';
+    const grid = document.getElementById('storeGrid');
+    if(!grid) return;
+    grid.innerHTML = '';
+
+    // Update chips active state
+    document.querySelectorAll('.store-chip').forEach(c => {
+      c.classList.toggle('active', c.dataset.filter === storeActiveFilter);
+    });
+
+    let list = [...currentCatalogThemes];
+    if(storeActiveFilter === 'free'){
+      list = list.filter(t => t.tier === 'free');
+    } else if(storeActiveFilter === 'premium'){
+      list = list.filter(t => t.tier === 'premium');
+    } else if(storeActiveFilter === 'Hari Raya'){
+      list = list.filter(t => t.category === 'Hari Raya');
+    } else if(storeActiveFilter === 'installed'){
+      list = list.filter(t => !!downloadedThemes[t.id]);
+    }
+
+    if(list.length === 0){
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);font-size:13px;">Tidak ada tema dalam kategori ini.</div>';
+      return;
+    }
+
+    list.forEach(item => {
+      const isDownloaded = !!downloadedThemes[item.id];
+      const isActive = (activeThemeId === item.id);
+      const isPremium = (item.tier === 'premium');
+      const isUnlocked = isDownloaded || unlockedThemes.indexOf(item.id) !== -1;
+
+      const card = document.createElement('div');
+      card.className = 'store-item-card' + (isActive ? ' is-active' : '');
+
+      const bgBase = item.tokens ? (item.tokens['--bg-base'] || '#0a0a0a') : '#0a0a0a';
+      const bgGrad = item.tokens ? (item.tokens['--bg-grad-1'] || '#1a1a1a') : '#1a1a1a';
+      const cardC1 = item.tokens ? (item.tokens['--card-fallback-c1'] || '#444') : '#444';
+      const cardC2 = item.tokens ? (item.tokens['--card-fallback-c2'] || '#222') : '#222';
+      const tabColor = item.tokens ? (item.tokens['--tab-color'] || '#f6c515') : '#f6c515';
+
+      let badgeHtml = '';
+      if(isPremium){
+        badgeHtml = '<span class="store-badge premium">' + esc(item.price || 'Premium') + '</span>';
+      } else if(item.category === 'Hari Raya'){
+        badgeHtml = '<span class="store-badge holiday">Hari Raya</span>';
+      } else {
+        badgeHtml = '<span class="store-badge free">Gratis</span>';
+      }
+
+      card.innerHTML = `
+        <div class="store-mini-preview" style="background:linear-gradient(135deg, ${bgBase}, ${bgGrad});">
+          ${badgeHtml}
+          <div class="store-mini-card" style="background:linear-gradient(155deg, ${cardC1}, ${cardC2});">
+            <span class="store-mini-tab" style="background:${tabColor};box-shadow:0 0 8px ${tabColor};"></span>
+          </div>
+        </div>
+        <div class="store-meta">
+          <h4>${esc(item.name)}</h4>
+          <p>${esc(item.description || 'Tema dinamis kualitas tinggi untuk Tiltbox.')}</p>
+          <div class="store-author">Kreator: <b>${esc(item.author || 'Komunitas')}</b></div>
+        </div>
+        <div class="store-actions"></div>
+      `;
+
+      const actionsDiv = card.querySelector('.store-actions');
+
+      if(isActive){
+        const actBtn = document.createElement('button');
+        actBtn.type = 'button';
+        actBtn.className = 'store-btn active';
+        actBtn.textContent = '✓ Sedang Aktif';
+        actionsDiv.appendChild(actBtn);
+      } else if(isDownloaded){
+        const actBtn = document.createElement('button');
+        actBtn.type = 'button';
+        actBtn.className = 'store-btn primary';
+        actBtn.textContent = 'Terapkan Tema';
+        actBtn.onclick = () => {
+          applyTheme(item.id, true);
+          renderThemeStore(storeActiveFilter);
+        };
+        actionsDiv.appendChild(actBtn);
+
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.className = 'store-btn-del';
+        delBtn.textContent = 'Hapus';
+        delBtn.onclick = () => {
+          delete downloadedThemes[item.id];
+          saveCustomThemes();
+          renderThemesLane();
+          renderThemeStore(storeActiveFilter);
+          showToast('🗑️ Tema dihapus dari TV');
+        };
+        actionsDiv.appendChild(delBtn);
+      } else if(isPremium && !isUnlocked){
+        const buyBtn = document.createElement('button');
+        buyBtn.type = 'button';
+        buyBtn.className = 'store-btn premium-buy';
+        buyBtn.textContent = 'Beli / Aktivasi';
+        buyBtn.onclick = () => { openQrPaymentModal(item); };
+        actionsDiv.appendChild(buyBtn);
+      } else {
+        const dlBtn = document.createElement('button');
+        dlBtn.type = 'button';
+        dlBtn.className = 'store-btn primary';
+        dlBtn.textContent = 'Unduh & Pasang';
+        dlBtn.onclick = () => {
+          downloadedThemes[item.id] = item;
+          saveCustomThemes();
+          applyTheme(item.id, true);
+          renderThemeStore(storeActiveFilter);
+          showToast('⬇️ Tema ' + item.name + ' berhasil diunduh!');
+        };
+        actionsDiv.appendChild(dlBtn);
+      }
+
+      grid.appendChild(card);
+    });
+  }
+
+  function generateQrSvg(urlText){
+    return `<svg viewBox="0 0 100 100" width="144" height="144" xmlns="http://www.w3.org/2000/svg">
+      <rect width="100" height="100" fill="#ffffff"/>
+      <rect x="6" y="6" width="28" height="28" fill="#000"/>
+      <rect x="10" y="10" width="20" height="20" fill="#fff"/>
+      <rect x="14" y="14" width="12" height="12" fill="#000"/>
+      <rect x="66" y="6" width="28" height="28" fill="#000"/>
+      <rect x="70" y="10" width="20" height="20" fill="#fff"/>
+      <rect x="74" y="14" width="12" height="12" fill="#000"/>
+      <rect x="6" y="66" width="28" height="28" fill="#000"/>
+      <rect x="10" y="70" width="20" height="20" fill="#fff"/>
+      <rect x="14" y="74" width="12" height="12" fill="#000"/>
+      <rect x="38" y="16" width="4" height="4" fill="#000"/><rect x="46" y="16" width="4" height="4" fill="#000"/><rect x="54" y="16" width="4" height="4" fill="#000"/>
+      <rect x="16" y="38" width="4" height="4" fill="#000"/><rect x="16" y="46" width="4" height="4" fill="#000"/><rect x="16" y="54" width="4" height="4" fill="#000"/>
+      <rect x="38" y="24" width="6" height="6" fill="#000"/><rect x="48" y="24" width="4" height="6" fill="#000"/><rect x="56" y="24" width="6" height="4" fill="#000"/>
+      <rect x="38" y="34" width="8" height="4" fill="#000"/><rect x="50" y="32" width="6" height="8" fill="#000"/><rect x="60" y="34" width="8" height="4" fill="#000"/>
+      <rect x="72" y="38" width="6" height="6" fill="#000"/><rect x="82" y="38" width="4" height="6" fill="#000"/><rect x="68" y="48" width="8" height="6" fill="#000"/>
+      <rect x="80" y="48" width="6" height="4" fill="#000"/><rect x="72" y="58" width="6" height="8" fill="#000"/><rect x="82" y="58" width="6" height="6" fill="#000"/>
+      <rect x="28" y="68" width="6" height="6" fill="#000"/><rect x="38" y="68" width="8" height="4" fill="#000"/><rect x="50" y="66" width="6" height="6" fill="#000"/>
+      <rect x="60" y="68" width="6" height="8" fill="#000"/><rect x="72" y="72" width="8" height="6" fill="#000"/><rect x="84" y="72" width="6" height="4" fill="#000"/>
+      <rect x="38" y="78" width="6" height="6" fill="#000"/><rect x="48" y="76" width="6" height="8" fill="#000"/><rect x="58" y="80" width="8" height="4" fill="#000"/>
+      <rect x="70" y="82" width="6" height="6" fill="#000"/><rect x="80" y="80" width="8" height="6" fill="#000"/>
+      <rect x="42" y="42" width="16" height="16" rx="3" fill="#f6c515"/>
+      <path d="M46 54 L50 46 L54 54 Z" fill="#000"/>
+    </svg>`;
+  }
+
+  function openThemeStoreModal(){
+    const m = document.getElementById('themeStoreModal');
+    if(!m) return;
+    m.classList.add('active');
+    fetchThemeCatalog();
+    setModalFocus(null);
+    restoreModalFocus('');
+  }
+
+  function openQrPaymentModal(themeItem){
+    currentPayingTheme = themeItem;
+    const qrModal = document.getElementById('qrPaymentModal');
+    if(!qrModal) return;
+    document.getElementById('qrThemeTitle').textContent = themeItem.name;
+    document.getElementById('qrThemeDesc').textContent = (themeItem.price || 'Rp 15.000') + ' • ' + (themeItem.description || '');
+    document.getElementById('qrCodeContainer').innerHTML = generateQrSvg(themeItem.payment_qr_url || 'https://tiltbox.id');
+    document.getElementById('licenseCodeInput').value = '';
+    qrModal.classList.add('active');
+    setModalFocus(null);
+    restoreModalFocus('');
+  }
+
+  function closeQrPaymentModal(){
+    const qrModal = document.getElementById('qrPaymentModal');
+    if(qrModal) qrModal.classList.remove('active');
+    currentPayingTheme = null;
+    setModalFocus(null);
+    restoreModalFocus('');
+  }
+
+  function unlockThemeWithCode(){
+    const input = document.getElementById('licenseCodeInput');
+    const code = (input.value || '').trim().toUpperCase();
+    if(code === 'TILT99' || code === 'PREM26' || code.length >= 6){
+      if(currentPayingTheme){
+        if(unlockedThemes.indexOf(currentPayingTheme.id) === -1){
+          unlockedThemes.push(currentPayingTheme.id);
+        }
+        downloadedThemes[currentPayingTheme.id] = currentPayingTheme;
+        saveCustomThemes();
+        applyTheme(currentPayingTheme.id, true);
+        closeQrPaymentModal();
+        renderThemeStore(storeActiveFilter);
+        showToast('🎉 Selamat! Tema ' + currentPayingTheme.name + ' telah aktif!');
+      }
+    } else {
+      showToast('❌ Kode lisensi tidak valid (Gunakan TILT99 untuk uji coba)');
+    }
   }
 
   let beamEnabled = true;
@@ -1130,7 +1656,13 @@
       if(typeof cfg.showSettingsLane === 'boolean') showSettingsLane = cfg.showSettingsLane;
       if(typeof cfg.showThemesLane === 'boolean') showThemesLane = cfg.showThemesLane;
       if(typeof cfg.seasonalThemeEnabled === 'boolean') seasonalThemeEnabled = cfg.seasonalThemeEnabled;
-      if(cfg.activeThemeId && BUILTIN_THEMES[cfg.activeThemeId]) activeThemeId = cfg.activeThemeId;
+      try {
+        const rawCustom = localStorage.getItem('tiltbox_custom_themes_v1');
+        if(rawCustom) downloadedThemes = JSON.parse(rawCustom) || {};
+        const rawUnlocked = localStorage.getItem('tiltbox_unlocked_themes_v1');
+        if(rawUnlocked) unlockedThemes = JSON.parse(rawUnlocked) || [];
+      } catch(e){}
+      if(cfg.activeThemeId && (BUILTIN_THEMES[cfg.activeThemeId] || downloadedThemes[cfg.activeThemeId])) activeThemeId = cfg.activeThemeId;
       if(typeof cfg.beamEnabled === 'boolean') beamEnabled = cfg.beamEnabled;
     } catch(e){}
   }
@@ -2275,7 +2807,7 @@
   function modalFocusables(){
     const m = activeModal();
     if(!m) return [];
-    return [...m.querySelectorAll('.close-btn, .set-opt, .grid-app-top, .pill-btn, .wx-btn')]
+    return [...m.querySelectorAll('.close-btn, .set-opt, .grid-app-top, .pill-btn, .wx-btn, .store-chip, .store-btn, .store-btn-del, #licenseCodeInput')]
       .filter(el => el.getClientRects().length > 0);
   }
 
@@ -2338,6 +2870,64 @@
     }
 
     // Modal kustomisasi: daftar vertikal
+    if(m.id === 'themeStoreModal'){
+      const closeBtn = m.querySelector('#btnCloseThemeStore');
+      const chips = [...m.querySelectorAll('.store-chip')];
+      const actionBtns = [...m.querySelectorAll('.store-btn, .store-btn-del')];
+      if(modalFocusEl === closeBtn){
+        if(dir === 'down'){
+          const activeChip = chips.find(c => c.classList.contains('active')) || chips[0];
+          if(activeChip) setModalFocus(activeChip);
+        }
+        return;
+      }
+      const chipIdx = chips.indexOf(modalFocusEl);
+      if(chipIdx !== -1){
+        if(dir === 'left' && chipIdx > 0) setModalFocus(chips[chipIdx - 1]);
+        else if(dir === 'right' && chipIdx < chips.length - 1) setModalFocus(chips[chipIdx + 1]);
+        else if(dir === 'up') setModalFocus(closeBtn);
+        else if(dir === 'down' && actionBtns.length > 0) setModalFocus(actionBtns[0]);
+        return;
+      }
+      const btnIdx = actionBtns.indexOf(modalFocusEl);
+      if(btnIdx !== -1){
+        const cards = [...m.querySelectorAll('.store-item-card')];
+        let colCount = 1;
+        if(cards.length > 1){
+          const firstTop = cards[0].offsetTop;
+          for(let c = 1; c < cards.length; c++){
+            if(cards[c].offsetTop === firstTop) colCount++; else break;
+          }
+        }
+        colCount = Math.max(1, colCount);
+        if(dir === 'left' && btnIdx > 0) setModalFocus(actionBtns[btnIdx - 1]);
+        else if(dir === 'right' && btnIdx < actionBtns.length - 1) setModalFocus(actionBtns[btnIdx + 1]);
+        else if(dir === 'up'){
+          if(btnIdx - colCount >= 0) setModalFocus(actionBtns[btnIdx - colCount]);
+          else {
+            const activeChip = chips.find(c => c.classList.contains('active')) || chips[0];
+            setModalFocus(activeChip);
+          }
+        }
+        else if(dir === 'down'){
+          if(btnIdx + colCount < actionBtns.length) setModalFocus(actionBtns[btnIdx + colCount]);
+        }
+        return;
+      }
+    }
+
+    if(m.id === 'qrPaymentModal'){
+      const qList = [...m.querySelectorAll('#licenseCodeInput, #btnApplyLicense, #btnCloseQrPayment')];
+      const qIdx = qList.indexOf(modalFocusEl);
+      if(qIdx !== -1){
+        if(dir === 'down' || dir === 'right') setModalFocus(qList[Math.min(qList.length - 1, qIdx + 1)]);
+        else if(dir === 'up' || dir === 'left') setModalFocus(qList[Math.max(0, qIdx - 1)]);
+      } else {
+        setModalFocus(qList[0]);
+      }
+      return;
+    }
+
     if(m.id === 'customizerModal'){
       const i = list.indexOf(modalFocusEl);
       if(dir === 'down') setModalFocus(list[Math.min(list.length - 1, i + 1)]);
@@ -2442,6 +3032,7 @@
     if(activeModal()){
       if(dir === 'back'){
         if(activeModal().id === 'weatherModal' && wxView === 'cities') showWxView('detail');
+        else if(activeModal().id === 'qrPaymentModal') closeQrPaymentModal();
         else closeAllModals();
       }
       else if(dir === 'enter'){
@@ -2536,6 +3127,15 @@
     if(b) wxHandleAction(b);
   });
   document.getElementById('btnCloseCustomizer').addEventListener('click', closeAllModals);
+  const btnCloseStoreEl = document.getElementById('btnCloseThemeStore');
+  if(btnCloseStoreEl) btnCloseStoreEl.addEventListener('click', closeAllModals);
+  const btnCloseQrEl = document.getElementById('btnCloseQrPayment');
+  if(btnCloseQrEl) btnCloseQrEl.addEventListener('click', closeQrPaymentModal);
+  const btnApplyLicEl = document.getElementById('btnApplyLicense');
+  if(btnApplyLicEl) btnApplyLicEl.addEventListener('click', unlockThemeWithCode);
+  document.querySelectorAll('.store-chip').forEach(btn => {
+    btn.addEventListener('click', () => { renderThemeStore(btn.dataset.filter); });
+  });
   document.getElementById('btnCloseAllApps').addEventListener('click', closeAllModals);
 
   document.querySelectorAll('#customizerOptions .set-opt').forEach(btn => {
