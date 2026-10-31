@@ -134,24 +134,35 @@
   .card.add.focus{background:rgba(246,197,21,.14);border-color:var(--yellow);}
   .card.add.focus .plus{color:var(--yellow);}
 
-  /* ============ CARD SIZE MODIFIERS (KHUSUS APLIKASI FAVORIT) ============ */
-  /* Ukuran M (Sedang - Kompak) */
-  #rowApps.size-m .card{
+  /* ============ CARD SIZE MODIFIERS (SUMBER & INPUT + APLIKASI FAVORIT) ============ */
+  /* --- Ukuran M (Sedang - Kompak) --- */
+  #rowApps.size-m .card,
+  #rowSources.size-m .card{
     width:184px;height:102px;padding:12px 14px;border-radius:18px;
   }
-  #rowApps.size-m .card h3{
+  #rowApps.size-m .card h3,
+  #rowSources.size-m .card h3{
     font-size:14px;max-width:105px;
   }
   #rowApps.size-m .logo-box{
     right:14px;width:48px;height:48px;border-radius:12px;
   }
-  #rowApps.size-m .card .count{
+  #rowSources.size-m .card-icon{
+    right:14px;width:44px;height:44px;
+  }
+  #rowSources.size-m .card-icon svg{
+    width:26px;height:26px;
+  }
+  #rowApps.size-m .card .count,
+  #rowSources.size-m .card .count{
     font-size:10.5px;max-width:105px;
   }
-  #rowApps.size-m .card .stat{
+  #rowApps.size-m .card .stat,
+  #rowSources.size-m .card .stat{
     font-size:9px;margin-top:2px;
   }
-  #rowApps.size-m .tab{
+  #rowApps.size-m .tab,
+  #rowSources.size-m .tab{
     width:56px;height:11px;
   }
   #rowApps.size-m .card.add .plus{
@@ -161,14 +172,18 @@
     font-size:10px;max-width:130px;
   }
 
-  /* Ukuran S (Kecil - Pure Icon Square 1:1) */
-  #rowApps.size-s .card{
+  /* --- Ukuran S (Kecil - Pure Icon Square 1:1) --- */
+  #rowApps.size-s .card,
+  #rowSources.size-s .card{
     width:108px;height:108px;padding:0;border-radius:20px;
     align-items:center;justify-content:center;
   }
   #rowApps.size-s .card h3,
   #rowApps.size-s .card .count,
-  #rowApps.size-s .card .stat{
+  #rowApps.size-s .card .stat,
+  #rowSources.size-s .card h3,
+  #rowSources.size-s .card .count,
+  #rowSources.size-s .card .stat{
     display:none !important;
   }
   #rowApps.size-s .logo-box{
@@ -176,7 +191,16 @@
     width:58px;height:58px;border-radius:15px;
     box-shadow:0 8px 20px rgba(0,0,0,.5);
   }
-  #rowApps.size-s .tab{
+  #rowSources.size-s .card-icon{
+    position:static;transform:none;right:auto;top:auto;
+    width:54px;height:54px;border-radius:14px;
+    background:rgba(255,255,255,.08);display:grid;place-items:center;
+  }
+  #rowSources.size-s .card-icon svg{
+    width:32px;height:32px;
+  }
+  #rowApps.size-s .tab,
+  #rowSources.size-s .tab{
     width:42px;height:9px;
   }
   #rowApps.size-s .card.add{
@@ -188,6 +212,62 @@
   }
   #rowApps.size-s .card.add p{
     font-size:9.5px;max-width:90px;line-height:1.2;
+  }
+
+  /* --- Ukuran XL (Hero Portrait Poster 200 × 260 px - Style Mi IPTV) --- */
+  #rowApps.size-xl .card,
+  #rowSources.size-xl .card{
+    width:200px;height:260px;padding:22px 18px;border-radius:24px;
+    display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;
+    overflow:visible;
+  }
+  #rowApps.size-xl .tab,
+  #rowSources.size-xl .tab{
+    width:72px;height:12px;top:-6px;
+  }
+  #rowSources.size-xl .card-icon{
+    position:static;transform:none;right:auto;top:auto;
+    width:64px;height:64px;border-radius:18px;
+    background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);
+    display:grid;place-items:center;
+    box-shadow:0 8px 24px rgba(0,0,0,.35);
+    margin-top:6px;
+  }
+  #rowSources.size-xl .card-icon svg{
+    width:36px;height:36px;
+  }
+  #rowApps.size-xl .logo-box{
+    position:static;transform:none;right:auto;top:auto;
+    width:72px;height:72px;border-radius:18px;
+    box-shadow:0 12px 28px rgba(0,0,0,.5);
+    margin-top:4px;
+  }
+  #rowApps.size-xl .logo-box img,
+  #rowApps.size-xl .logo-box svg{
+    width:100%;height:100%;border-radius:18px;
+  }
+  #rowApps.size-xl .card h3,
+  #rowSources.size-xl .card h3{
+    font-size:19px;font-weight:800;max-width:164px;line-height:1.2;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  #rowApps.size-xl .card .count,
+  #rowSources.size-xl .card .count{
+    font-size:11.5px;max-width:164px;margin-top:4px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  #rowApps.size-xl .card .stat,
+  #rowSources.size-xl .card .stat{
+    font-size:10.5px;margin-top:3px;
+  }
+  #rowApps.size-xl .card.add{
+    flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:24px 16px;
+  }
+  #rowApps.size-xl .card.add .plus{
+    font-size:42px;margin-bottom:8px;
+  }
+  #rowApps.size-xl .card.add p{
+    font-size:11.5px;max-width:150px;line-height:1.35;
   }
 
   /* ============ BARIS 3 : PENGATURAN CEPAT ============ */
@@ -336,10 +416,15 @@
     :root{--card-w:236px;--card-h:126px;}
     main{top:88px;bottom:92px;scroll-padding-top:36px;padding-bottom:36px;}
     .card{padding:14px 18px;}
-    #rowApps.size-m .card{width:176px;height:98px;padding:10px 12px;}
+    #rowApps.size-m .card, #rowSources.size-m .card{width:176px;height:98px;padding:10px 12px;}
     #rowApps.size-m .logo-box{width:44px;height:44px;}
-    #rowApps.size-s .card{width:102px;height:102px;}
-    #rowApps.size-s .logo-box{width:54px;height:54px;} .card h3{font-size:16.5px;}
+    #rowSources.size-m .card-icon{width:40px;height:40px;}
+    #rowApps.size-s .card, #rowSources.size-s .card{width:102px;height:102px;}
+    #rowApps.size-s .logo-box{width:54px;height:54px;}
+    #rowSources.size-s .card-icon{width:50px;height:50px;}
+    #rowApps.size-xl .card, #rowSources.size-xl .card{width:190px;height:246px;padding:18px 16px;}
+    #rowSources.size-xl .card-icon{width:58px;height:58px;}
+    #rowApps.size-xl .logo-box{width:64px;height:64px;} .card h3{font-size:16.5px;}
     .card-icon,.logo-box{width:52px;height:52px;right:16px;}
     .set{width:248px;padding:11px 14px;} .row{padding:26px 50px 18px;margin-top:0;margin-bottom:0;}
     .lane-head{padding:0 56px;}
@@ -378,7 +463,7 @@
 <main id="mainContainer">
   <!-- ===== BARIS 1 : SUMBER & INPUT ===== -->
   <section class="lane" id="laneSources">
-    <div class="lane-head"><h2>Sumber &amp; Input</h2><em>Siaran TV, Pemutar Media &amp; Port HDMI</em></div>
+    <div class="lane-head"><h2>Sumber &amp; Input</h2><em id="sourcesSubtitle">Siaran TV, Pemutar Media &amp; Port HDMI</em></div>
     <div class="row" id="rowSources">
       <button type="button" class="item card" data-action="livetv" data-name="Live TV's">
         <span class="tab"></span><h3>Live TV's</h3>
@@ -509,12 +594,19 @@
         </div>
         <span class="set-val" id="valFavCount">6 / 9 Favorit &rarr;</span>
       </button>
-      <button type="button" class="set-opt modal-item" data-opt="card_size">
+      <button type="button" class="set-opt modal-item" data-opt="input_card_size" id="btnInputCardSize">
         <div>
-          <b>Ukuran Kartu Favorit</b>
-          <span>Pilihan: Kecil (Square Icon), Sedang (Kompak), Besar (Penuh)</span>
+          <b>Ukuran Kartu Sumber &amp; Input</b>
+          <span>Kecil (Square), Sedang (Kompak), Besar (L), Poster Hero (XL)</span>
         </div>
-        <span class="set-val" id="valCardSize">Besar (L)</span>
+        <span class="set-val" id="valInputCardSize">Besar (L)</span>
+      </button>
+      <button type="button" class="set-opt modal-item" data-opt="app_card_size" id="btnAppCardSize">
+        <div>
+          <b>Ukuran Kartu Aplikasi Favorit</b>
+          <span>Kecil (Square Icon), Sedang (Kompak), Besar (L), Poster Hero (XL)</span>
+        </div>
+        <span class="set-val" id="valAppCardSize">Besar (L)</span>
       </button>
 
       <div class="modal-section-label">2. Kustomisasi Wallpaper (Preset, Auto-Rotate &amp; Gambar Lokal)</div>
@@ -658,33 +750,55 @@
   let autoWallpaperTimer = null;
   let sourcesFirst = true;
   let appCardSize = 'l';
+  let inputCardSize = 'l';
   let currentTimezoneAbbr = 'WIB';
 
   const CARD_SIZES = [
     { id: 'l', name: 'Besar (L)', cls: 'size-l' },
+    { id: 'xl', name: 'Hero (XL)', cls: 'size-xl' },
     { id: 'm', name: 'Sedang (M)', cls: 'size-m' },
     { id: 's', name: 'Kecil (S)', cls: 'size-s' }
   ];
 
   function applyCardSize(){
     const rowApps = document.getElementById('rowApps');
-    if(!rowApps) return;
-    rowApps.classList.remove('size-s', 'size-m', 'size-l');
-    rowApps.classList.add('size-' + appCardSize);
+    if(rowApps){
+      rowApps.classList.remove('size-s', 'size-m', 'size-l', 'size-xl');
+      rowApps.classList.add('size-' + appCardSize);
+    }
+    const rowSources = document.getElementById('rowSources');
+    if(rowSources){
+      rowSources.classList.remove('size-s', 'size-m', 'size-l', 'size-xl');
+      rowSources.classList.add('size-' + inputCardSize);
+    }
 
-    const cur = CARD_SIZES.find(s => s.id === appCardSize) || CARD_SIZES[0];
-    const valEl = document.getElementById('valCardSize');
-    if(valEl) valEl.textContent = cur.name;
+    const curApp = CARD_SIZES.find(s => s.id === appCardSize) || CARD_SIZES[0];
+    const valAppEl = document.getElementById('valAppCardSize');
+    if(valAppEl) valAppEl.textContent = curApp.name;
+
+    const curInput = CARD_SIZES.find(s => s.id === inputCardSize) || CARD_SIZES[0];
+    const valInputEl = document.getElementById('valInputCardSize');
+    if(valInputEl) valInputEl.textContent = curInput.name;
   }
 
-  function cycleCardSize(){
+  function cycleAppCardSize(){
     const idx = CARD_SIZES.findIndex(s => s.id === appCardSize);
     const next = CARD_SIZES[(idx + 1) % CARD_SIZES.length];
     appCardSize = next.id;
     saveConfig();
     applyCardSize();
     rebuildLanes();
-    showToast(`📐 Ukuran Kartu: ${next.name}`);
+    showToast(`📐 Ukuran Aplikasi: ${next.name}`);
+  }
+
+  function cycleInputCardSize(){
+    const idx = CARD_SIZES.findIndex(s => s.id === inputCardSize);
+    const next = CARD_SIZES[(idx + 1) % CARD_SIZES.length];
+    inputCardSize = next.id;
+    saveConfig();
+    applyCardSize();
+    rebuildLanes();
+    showToast(`📺 Ukuran Sumber: ${next.name}`);
   }
   let showSourcesLane = true;
   let showSettingsLane = true;
@@ -714,7 +828,8 @@
       }
       if(weatherMode === 'manual' && !weatherCity) weatherMode = 'auto';
       if(typeof cfg.sourcesFirst === 'boolean') sourcesFirst = cfg.sourcesFirst;
-      if(cfg.appCardSize === 's' || cfg.appCardSize === 'm' || cfg.appCardSize === 'l') appCardSize = cfg.appCardSize;
+      if(['s','m','l','xl'].includes(cfg.appCardSize)) appCardSize = cfg.appCardSize;
+      if(['s','m','l','xl'].includes(cfg.inputCardSize)) inputCardSize = cfg.inputCardSize;
       if(typeof cfg.showSourcesLane === 'boolean') showSourcesLane = cfg.showSourcesLane;
       if(typeof cfg.showSettingsLane === 'boolean') showSettingsLane = cfg.showSettingsLane;
       if(typeof cfg.beamEnabled === 'boolean') beamEnabled = cfg.beamEnabled;
@@ -730,6 +845,7 @@
         autoWallpaperIdx,
         sourcesFirst,
         appCardSize,
+        inputCardSize,
         showSourcesLane,
         showSettingsLane,
         beamEnabled,
@@ -1183,6 +1299,18 @@
         subTitleEl.innerHTML = `<span style="color:var(--yellow);font-weight:700;">${esc(el.dataset.name)}</span> &bull; <span style="color:var(--txt);opacity:.85;">${esc(cat)}</span>`;
       } else {
         subTitleEl.innerHTML = `Menampilkan ${favoritePackages.length}/${MAX_FAVORITES} favorit &bull; Klik + untuk Semua Aplikasi`;
+      }
+    }
+
+    // Dynamic Title pada subtitle baris Sumber & Input saat kartu S difokuskan
+    const sourcesSubEl = document.getElementById('sourcesSubtitle');
+    if(sourcesSubEl){
+      if(inputCardSize === 's' && el.closest('#rowSources') && el.dataset.name){
+        const statEl = el.querySelector('.stat');
+        const statTxt = (statEl && statEl.textContent) ? statEl.textContent : '';
+        sourcesSubEl.innerHTML = `<span style="color:var(--yellow);font-weight:700;">${esc(el.dataset.name)}</span> &bull; <span style="color:var(--txt);opacity:.85;">${esc(statTxt)}</span>`;
+      } else {
+        sourcesSubEl.innerHTML = `Siaran TV, Pemutar Media &amp; Port HDMI`;
       }
     }
 
@@ -2111,7 +2239,8 @@
       else if(opt === 'manage_favs'){
         closeAllModals();
         openAllAppsModal();
-      } else if(opt === 'card_size') cycleCardSize();
+      } else if(opt === 'app_card_size' || opt === 'card_size') cycleAppCardSize();
+      else if(opt === 'input_card_size') cycleInputCardSize();
       else if(opt === 'wallpaper') cycleTheme();
       else if(opt === 'auto_wallpaper') cycleAutoWallpaperInterval();
       else if(opt === 'local_wallpaper') triggerLocalWallpaperPicker();

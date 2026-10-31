@@ -47,10 +47,11 @@ Launcher Android TV modern dengan antarmuka hybrid Kotlin + WebView, dirancang k
 
 ## Perubahan v1.8.0 — Card Sizes, Brand Colors & Smart Clock
 
-- **Ukuran Kartu S/M/L khusus Aplikasi Favorit**:
-  - **L (Besar)**: Kartu besar bergradasi dengan nama, kategori, dan nomor favorit — tampilan default.
-  - **M (Sedang)**: Banner kompak, kartu sedikit lebih kecil, lebih banyak app terlihat tanpa scroll.
-  - **S (Kecil)**: Pure icon square `~100×100px`. Teks tersembunyi; saat fokus, subtitle baris menampilkan `NamaApp • Kategori` secara dinamis.
+- **Kustomisasi Ukuran Kartu S / M / L / XL Mandiri (Sumber & Input + Aplikasi Favorit)**:
+  - **XL (Hero Portrait Poster 200x260px)**: Gaya poster vertikal sinematik tegap (terinspirasi Mi IPTV), kartu tinggi dengan aksen pencahayaan dramatis dan spotlight tab melebar.
+  - **L (Besar 256x142px)**: Kartu landscape standar seimbang bawaan Tiltbox.
+  - **M (Sedang 184x102px)**: Kartu kompak, muat lebih banyak item dalam satu layar.
+  - **S (Kecil 108x108px)**: Pure icon square 1:1, teks disembunyikan dari kartu dan muncul dinamis pada subtitle baris saat fokus.
 - **Siluet Warna Brand pada Kartu** (`hexToCardVars()`):
   - Kotlin `extractDominantColor()` mengekstrak warna dominan dari ikon aplikasi saat runtime; kamus `APP_BRAND_COLORS` menyimpan warna kurasi untuk app populer (YouTube merah, Spotify hijau, Vision+ cyan, MX Player biru, Play Store hijau, dll.).
   - CSS variabel `--card-c1`, `--card-c2`, `--card-c3`, `--card-glow` di-set per kartu lewat Bridge JSON `color` field. Fallback ke teal bawaan bila tidak ada data warna.
