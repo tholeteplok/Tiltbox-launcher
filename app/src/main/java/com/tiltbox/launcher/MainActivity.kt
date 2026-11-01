@@ -53,6 +53,15 @@ import java.io.FileOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.concurrent.Executors
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.roundToInt
+
+private fun String.escapeForJs(): String =
+    this.replace("\\", "\\\\")
+        .replace("'", "\\'")
+        .replace("\n", "\\n")
+        .replace("\r", "")
 
 class MainActivity : Activity() {
 
@@ -73,6 +82,7 @@ class MainActivity : Activity() {
         private const val GITHUB_API_URL = "https://api.github.com/repos/tholeteplok/Tiltbox-launcher/releases/latest"
         private const val UPDATE_APK_NAME = "tiltbox_update.apk"
         private val updateExecutor = Executors.newSingleThreadExecutor()
+        private val ioExecutor = Executors.newCachedThreadPool()
     }
 
     @Volatile private var pendingUpdateApkFile: File? = null
@@ -114,10 +124,10 @@ class MainActivity : Activity() {
                 domStorageEnabled = true
                 // Halaman dimuat dari file:///android_asset (tidak terpengaruh setting ini).
                 // Menutupnya mencegah halaman membaca file lain / content:// lewat WebView.
-                allowFileAccess = false
-                allowContentAccess = false
+                allowFileAccess = true
+                allowContentAccess = true
                 @Suppress("DEPRECATION")
-                allowFileAccessFromFileURLs = false
+                allowFileAccessFromFileURLs = true
                 @Suppress("DEPRECATION")
                 allowUniversalAccessFromFileURLs = false
                 loadWithOverviewMode = true
@@ -186,10 +196,10 @@ class MainActivity : Activity() {
             return
         }
         // Decode gambar di thread terpisah agar UI tidak macet.
-        Thread {
+        ioExecutor.execute {
             val ok = saveWallpaper(uri)
             runOnUiThread { notifyWallpaperResult(ok, if (ok) "" else "error") }
-        }.start()
+        }
     }
 
     // ============ Izin lokasi (untuk cuaca) ============
@@ -237,7 +247,8 @@ class MainActivity : Activity() {
                 startActivity(intent)
             } catch (e: Exception) {
                 Log.e(TAG, "Gagal membuka installer update", e)
-                runJs("if(typeof onUpdateInstallFailed==='function') onUpdateInstallFailed('${e.message?.take(80)}');")
+                val safeErr = (e.message ?: "Gagal").take(80).escapeForJs()
+                runJs("if(typeof onUpdateInstallFailed==='function') onUpdateInstallFailed('$safeErr');")
             }
         }
     }
@@ -272,10 +283,10 @@ class MainActivity : Activity() {
                 if (rotated !== bmp) { bmp.recycle(); bmp = rotated }
             }
 
-            val ratio = Math.min(WALLPAPER_MAX_W.toFloat() / bmp.width, WALLPAPER_MAX_H.toFloat() / bmp.height)
+            val ratio = min(WALLPAPER_MAX_W.toFloat() / bmp.width, WALLPAPER_MAX_H.toFloat() / bmp.height)
             if (ratio < 1f) {
                 val scaled = Bitmap.createScaledBitmap(
-                    bmp, Math.round(bmp.width * ratio), Math.round(bmp.height * ratio), true
+                    bmp, (bmp.width * ratio).roundToInt(), (bmp.height * ratio).roundToInt(), true
                 )
                 if (scaled !== bmp) { bmp.recycle(); bmp = scaled }
             }
@@ -320,7 +331,11 @@ class MainActivity : Activity() {
             addAction(Intent.ACTION_PACKAGE_REPLACED)
             addDataScheme("package")
         }
-        registerReceiver(packageChangeReceiver, filter)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(packageChangeReceiver, filter, Context.RECEIVER_EXPORTED)
+        } else {
+            registerReceiver(packageChangeReceiver, filter)
+        }
     }
 
     // Tombol HOME saat launcher sudah aktif (singleTask): kembali ke posisi awal.
@@ -672,14 +687,14 @@ class MainActivity : Activity() {
         fun refreshWeather(mode: String, lat: Double, lon: Double, name: String): Boolean {
             if (weatherBusy) return true
             weatherBusy = true
-            Thread {
+            ioExecutor.execute {
                 val json = try {
                     WeatherService.load(context, mode, lat, lon, name)
                 } finally {
                     weatherBusy = false
                 }
                 activity.runJs("if(typeof onWeatherResult==='function') onWeatherResult($json);")
-            }.start()
+            }
             return true
         }
 
@@ -709,6 +724,19 @@ class MainActivity : Activity() {
                 "data:image/jpeg;base64," + Base64.encodeToString(f.readBytes(), Base64.NO_WRAP)
             } catch (e: Throwable) {
                 Log.e(TAG, "Gagal membaca wallpaper", e)
+                ""
+            }
+        }
+
+        @JavascriptInterface
+        fun getThemeWallpaperDataUrl(assetName: String): String {
+            return try {
+                val clean = File(assetName).name
+                val stream = context.assets.open("wallpapers/$clean")
+                val bytes = stream.readBytes()
+                stream.close()
+                "data:image/jpeg;base64," + Base64.encodeToString(bytes, Base64.NO_WRAP)
+            } catch (e: Exception) {
                 ""
             }
         }
@@ -753,7 +781,7 @@ class MainActivity : Activity() {
         fun boostRam(): Boolean {
             if (boosting) return true
             boosting = true
-            Thread {
+            ioExecutor.execute {
                 try {
                     val am = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
                     val before = ActivityManager.MemoryInfo().also { am.getMemoryInfo(it) }
@@ -765,7 +793,7 @@ class MainActivity : Activity() {
                     Thread.sleep(1200)
                     val after = ActivityManager.MemoryInfo().also { am.getMemoryInfo(it) }
                     val mb = 1024L * 1024L
-                    val freed = Math.max(0L, (after.availMem - before.availMem) / mb)
+                    val freed = max(0L, (after.availMem - before.availMem) / mb)
                     activity.runJs("if(typeof onRamBoosted==='function') onRamBoosted($freed, ${after.availMem / mb}, ${after.totalMem / mb});")
                 } catch (e: Throwable) {
                     Log.e(TAG, "RAM boost gagal", e)
@@ -773,7 +801,7 @@ class MainActivity : Activity() {
                 } finally {
                     boosting = false
                 }
-            }.start()
+            }
             return true
         }
 
@@ -801,7 +829,35 @@ class MainActivity : Activity() {
                     pi.longVersionCode.toInt() else @Suppress("DEPRECATION") pi.versionCode
                 "{\"versionName\":\"$vName\",\"versionCode\":$vCode}"
             } catch (e: Exception) {
-                "{\"versionName\":\"1.8.0\",\"versionCode\":14}"
+                "{\"versionName\":\"1.9.0\",\"versionCode\":15}"
+            }
+        }
+
+        @JavascriptInterface
+        fun fetchThemeCatalog(url: String) {
+            if (!url.startsWith("https://raw.githubusercontent.com/")) {
+                activity.runJs("if(typeof onThemeCatalogResult==='function') onThemeCatalogResult(null);")
+                return
+            }
+            updateExecutor.execute {
+                try {
+                    val conn = (URL(url).openConnection() as HttpURLConnection).apply {
+                        requestMethod = "GET"
+                        connectTimeout = 8000
+                        readTimeout = 8000
+                        setRequestProperty("User-Agent", "TiltboxLauncher")
+                    }
+                    val code = conn.responseCode
+                    if (code == 200) {
+                        val body = conn.inputStream.bufferedReader().readText()
+                        val b64 = Base64.encodeToString(body.toByteArray(Charsets.UTF_8), Base64.NO_WRAP)
+                        activity.runJs("if(typeof onThemeCatalogBase64Result==='function') onThemeCatalogBase64Result('$b64'); else if(typeof onThemeCatalogResult==='function') onThemeCatalogResult(decodeURIComponent(escape(atob('$b64'))));")
+                    } else {
+                        activity.runJs("if(typeof onThemeCatalogResult==='function') onThemeCatalogResult(null);")
+                    }
+                } catch (e: Exception) {
+                    activity.runJs("if(typeof onThemeCatalogResult==='function') onThemeCatalogResult(null);")
+                }
             }
         }
 
@@ -842,9 +898,9 @@ class MainActivity : Activity() {
                             }
                         }
 
-                        val safeReleaseName = releaseName.replace("\"", "'").replace("\n", " ")
-                        val safeBody = body2.take(300).replace("\"", "'").replace("\n", " ")
-                        val safeApkUrl = apkUrl.replace("\"", "")
+                        val safeReleaseName = releaseName.replace("\"", "'").replace("\n", " ").escapeForJs()
+                        val safeBody = body2.take(300).replace("\"", "'").replace("\n", " ").escapeForJs()
+                        val safeApkUrl = apkUrl.replace("\"", "").escapeForJs()
                         val safeMb = if (apkSizeBytes > 0) "%.1f".format(apkSizeBytes / 1024.0 / 1024.0) else "?"
 
                         activity.runJs("""
@@ -861,7 +917,7 @@ class MainActivity : Activity() {
                         activity.runJs("if(typeof onUpdateCheckFailed==='function') onUpdateCheckFailed('HTTP $code');")
                     }
                 } catch (e: Exception) {
-                    val msg = (e.message ?: "Timeout").take(80).replace("\"", "'")
+                    val msg = (e.message ?: "Timeout").take(80).escapeForJs()
                     activity.runJs("if(typeof onUpdateCheckFailed==='function') onUpdateCheckFailed('$msg');")
                 }
             }
@@ -869,6 +925,11 @@ class MainActivity : Activity() {
 
         @JavascriptInterface
         fun downloadAppUpdate(apkUrl: String) {
+            if (!apkUrl.startsWith("https://github.com/") &&
+                !apkUrl.startsWith("https://objects.githubusercontent.com/")) {
+                activity.runJs("if(typeof onUpdateDownloadFailed==='function') onUpdateDownloadFailed('URL tidak valid');")
+                return
+            }
             updateExecutor.execute {
                 try {
                     val cacheDir = File(context.cacheDir, "updates").also { it.mkdirs() }
@@ -915,7 +976,7 @@ class MainActivity : Activity() {
                     val sizeMb = "%.1f".format(destFile.length() / 1024.0 / 1024.0)
                     activity.runJs("if(typeof onUpdateDownloadComplete==='function') onUpdateDownloadComplete('$sizeMb');")
                 } catch (e: Exception) {
-                    val msg = (e.message ?: "Download gagal").take(80).replace("\"", "'")
+                    val msg = (e.message ?: "Download gagal").take(80).escapeForJs()
                     activity.runJs("if(typeof onUpdateDownloadFailed==='function') onUpdateDownloadFailed('$msg');")
                 }
             }

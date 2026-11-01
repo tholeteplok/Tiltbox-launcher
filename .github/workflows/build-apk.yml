@@ -30,6 +30,8 @@ jobs:
       - name: Grant Execute Permission for Gradlew
         run: chmod +x gradlew
 
+      # Catatan: Untuk build release signed production, konfigurasikan signingConfigs di app/build.gradle
+      # dan gunakan assembleRelease beserta GitHub Secrets untuk keystore (KEYSTORE_BASE64, ALIAS, PASS).
       - name: Build Debug APK
         run: ./gradlew assembleDebug --stacktrace
 

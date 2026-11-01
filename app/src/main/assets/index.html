@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; font-src 'self' file:; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
-<title>Tiltbox Launcher v1.8.0 (RT41 Full Customizer Edition)</title>
+<title>Tiltbox Launcher v1.9.0 (RT41 Full Customizer Edition)</title>
 <style>
   @font-face {
     font-family: 'Manrope';
@@ -40,11 +40,7 @@
       background-size:cover;background-position:center;
       transition:background 1.2s ease;}
   .theme-silhouette{position:absolute;left:0;right:0;bottom:0;width:100%;height:45%;pointer-events:none;z-index:1;transition:opacity .6s;}
-  body.theme-oled .bg{background:radial-gradient(700px 420px at 50% 18%, #0c1213 0%, #000000 78%);}
-  body.theme-emerald .bg{background:radial-gradient(880px 500px at 68% 16%, #0f2c29 0%, #040908 78%);}
-  body.theme-royal .bg{background:radial-gradient(880px 500px at 68% 16%, #162038 0%, #060911 78%);}
-  body.theme-sunset .bg{background:radial-gradient(880px 500px at 68% 16%, #331a12 0%, #090605 78%);}
-  body.has-custom-wp .collage{display:none;}
+  body.has-custom-wp .collage, body.has-theme-wp .collage{display:none;}
 
   .collage{position:absolute;left:6%;top:9%;width:34%;height:46%;display:grid;
     grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;grid-gap:10px;gap:10px;
@@ -59,8 +55,11 @@
     background:
       linear-gradient(164deg, transparent 22%, rgba(255,255,255,.045) 36%, transparent 50%),
       radial-gradient(650px 260px at 65% 22%, rgba(246,197,21,.06), transparent 70%);
-    transition:opacity .35s ease;}
-  .beam.off{opacity:0;}
+    transition:opacity .5s ease, background 1s ease;
+    z-index:1;}
+  .beam.off{opacity:0;display:none;}
+  .beam-stencil{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%;pointer-events:none;
+    mix-blend-mode:screen;transition:opacity .6s ease;}
   .vignette{position:absolute;top:0;right:0;bottom:0;left:0;pointer-events:none;
     background:radial-gradient(120% 95% at 50% 40%, rgba(0,0,0,.18) 35%, rgba(0,0,0,.72) 100%);}
 
@@ -69,7 +68,7 @@
     display:flex;justify-content:space-between;align-items:center;}
 
   .logo-txt{font-size:26px;font-weight:800;letter-spacing:-.5px;color:var(--txt);user-select:none;}
-  .logo-txt span{color:var(--yellow);} .logo-txt sup{font-size:9px;color:var(--muted);margin-left:2px;}
+  .logo-txt span{color:var(--brand-accent);} .logo-txt sup{font-size:9px;color:var(--muted);margin-left:2px;}
 
   .header-actions{display:flex;align-items:center;} .header-actions > * + *{margin-left:12px;}
   .ctrl{width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.11);
@@ -89,7 +88,7 @@
   .lane-head{padding:0 64px;display:flex;align-items:baseline;} .lane-head > * + *{margin-left:12px;}
   .lane-head h2{font-size:11.5px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.88);}
   .lane-head h2::before{content:"";display:inline-block;width:16px;height:3px;border-radius:2px;
-    background:var(--yellow);margin-right:10px;vertical-align:middle;}
+    background:var(--brand-accent);margin-right:10px;vertical-align:middle;}
   .lane-head em{font-style:normal;font-size:10px;color:var(--muted);letter-spacing:.05em;}
   .row{display:flex;overflow-x:auto;padding:26px 50px 18px;width:100%;} .row > * + *{margin-left:18px;
     align-items:center;scroll-snap-type:x proximity;scrollbar-width:none;
@@ -181,46 +180,93 @@
     font-size:10px;max-width:130px;
   }
 
-  /* --- Ukuran S (Kecil - Pure Icon Square 1:1) --- */
+  /* --- Ukuran S (Kecil - Style Kartu S Pengaturan Cepat) --- */
   #rowApps.size-s .card,
   #rowSources.size-s .card{
-    width:108px;height:108px;padding:0;border-radius:20px;
-    align-items:center;justify-content:center;
+    width: 108px;
+    height: 108px;
+    padding: 14px 8px 12px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
   }
   #rowApps.size-s .card h3,
+  #rowSources.size-s .card h3{
+    display: block !important;
+    font-size: 11.5px;
+    font-weight: 700;
+    line-height: 1.25;
+    max-width: 94px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--txt);
+    margin-top: auto;
+    width: 100%;
+    text-align: center;
+  }
   #rowApps.size-s .card .count,
   #rowApps.size-s .card .stat,
-  #rowSources.size-s .card h3,
   #rowSources.size-s .card .count,
   #rowSources.size-s .card .stat{
-    display:none !important;
+    display: none !important;
   }
   #rowApps.size-s .logo-box{
-    position:static;transform:none;right:auto;top:auto;
-    width:58px;height:58px;border-radius:15px;
-    box-shadow:0 8px 20px rgba(0,0,0,.5);
+    position: static;
+    transform: none;
+    right: auto;
+    top: auto;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    box-shadow: 0 6px 16px rgba(0,0,0,.45);
+    flex: 0 0 auto;
   }
   #rowSources.size-s .card-icon{
-    position:static;transform:none;right:auto;top:auto;
-    width:54px;height:54px;border-radius:14px;
-    background:rgba(255,255,255,.08);display:grid;place-items:center;
+    position: static;
+    transform: none;
+    right: auto;
+    top: auto;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.1);
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
   }
   #rowSources.size-s .card-icon svg{
-    width:32px;height:32px;
+    width: 22px;
+    height: 22px;
   }
   #rowApps.size-s .tab,
   #rowSources.size-s .tab{
-    width:42px;height:9px;
+    width: 42px;
+    height: 9px;
   }
   #rowApps.size-s .card.add{
-    flex-direction:column;padding:8px;
+    flex-direction: column;
+    padding: 14px 8px 12px;
+    align-items: center;
+    justify-content: space-between;
   }
-  #rowApps.size-s .card.add > * + *{margin-top:4px;}
   #rowApps.size-s .card.add .plus{
-    font-size:28px;
+    font-size: 26px;
+    line-height: 1;
+    margin-top: 4px;
   }
   #rowApps.size-s .card.add p{
-    font-size:9.5px;max-width:90px;line-height:1.2;
+    font-size: 11px;
+    font-weight: 700;
+    max-width: 90px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: auto;
   }
 
   /* --- Ukuran XL (Hero Portrait Poster 200 × 260 px - Style Mi IPTV) --- */
@@ -301,20 +347,70 @@
     display:grid;place-items:center;border:1px solid rgba(255,255,255,.1);
   }
 
-  /* ============ BARIS 3 : PENGATURAN CEPAT ============ */
-  .set{display:flex;align-items:center;width:276px;} .set > * + *{margin-left:14px;padding:13px 16px;border-radius:18px;color:var(--txt);
-    background:linear-gradient(150deg,rgba(255,255,255,.11),rgba(18,26,28,.82));
-    border:1px solid rgba(255,255,255,.13);
-    box-shadow:0 10px 24px rgba(0,0,0,.4);}
-  .s-ico{width:40px;height:40px;flex:0 0 auto;border-radius:12px;background:rgba(255,255,255,.08);
-    border:1px solid rgba(255,255,255,.09);display:grid;place-items:center;transition:.25s;}
-  .s-ico svg{width:19px;height:19px;}
-  .s-txt b{display:block;font-size:13px;font-weight:700;}
-  .s-txt span{font-size:10px;color:var(--muted);}
-  .set.focus{transform:scale(1.03);border-color:rgba(255,255,255,.38);z-index:5;
-    background:linear-gradient(150deg,rgba(255,255,255,.16) 0%,rgba(24,34,36,.88) 100%);
-    box-shadow:0 14px 32px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.24);}
-  .set.focus .s-ico{background:rgba(255,255,255,.16);color:#fff;border-color:rgba(255,255,255,.32);}
+  /* ============ BARIS 4 : PENGATURAN CEPAT (KARTU S TERPADU) ============ */
+  .set{
+    width: 108px;
+    height: 108px;
+    border-radius: 20px;
+    padding: 14px 8px 12px;
+    color: var(--txt);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+    background: linear-gradient(150deg, rgba(255,255,255,.11), rgba(18,26,28,.82));
+    border: 1px solid rgba(255,255,255,.13);
+    box-shadow: 0 10px 24px rgba(0,0,0,.4);
+    position: relative;
+    cursor: pointer;
+    transition: transform .22s cubic-bezier(.2,.8,.4,1), border-color .22s, box-shadow .22s, background .22s;
+  }
+  .s-ico{
+    width: 44px;
+    height: 44px;
+    flex: 0 0 auto;
+    border-radius: 14px;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.1);
+    display: grid;
+    place-items: center;
+    color: #fff;
+    transition: .22s;
+  }
+  .s-ico svg{width: 22px; height: 22px;}
+  .s-txt{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: auto;
+  }
+  .s-txt b{
+    display: block;
+    font-size: 11.5px;
+    font-weight: 700;
+    line-height: 1.25;
+    max-width: 94px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--txt);
+  }
+  .s-txt span{display: none;}
+  .set.focus{
+    transform: translateY(-5px) scale(1.05);
+    border-color: var(--brand-accent, var(--yellow));
+    z-index: 5;
+    background: linear-gradient(150deg, rgba(255,255,255,.16) 0%, rgba(24,34,36,.9) 100%);
+    box-shadow: 0 0 0 2px var(--brand-accent, var(--yellow)), 0 16px 36px rgba(0,0,0,.65);
+  }
+  .set.focus .s-ico{
+    background: rgba(255,255,255,.18);
+    border-color: rgba(255,255,255,.35);
+    transform: scale(1.06);
+  }
 
   /* ============ 1. BOTTOM BAR TRANSPARAN & DINAMIS (FROSTED GLASS + AUTO HIDE/SHOW) ============ */
   footer{
@@ -426,41 +522,219 @@
   .pill-btn.fav-on{background:rgba(246,197,21,.2);color:var(--yellow);border-color:rgba(246,197,21,.5);}
 
   
-  /* ============ THEME STORE MODAL STYLES ============ */
-  .store-card-wrap{max-width:960px;width:92vw;}
-  .store-status-pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:700;margin-left:8px;}
-  .store-status-pill.online{background:rgba(29,185,84,.18);color:#1db954;border:1px solid rgba(29,185,84,.4);}
-  .store-status-pill.offline{background:rgba(255,165,0,.18);color:#ffa500;border:1px solid rgba(255,165,0,.4);}
+  /* ============ THEME STORE MODAL STYLES (FULLSCREEN THEME HUB) ============ */
+  #themeStoreModal{
+    position:fixed;top:0;right:0;bottom:0;left:0;
+    width:100vw;height:100vh;
+    background:rgba(6,9,10,.98);
+    backdrop-filter:blur(28px);
+    z-index:100;
+    display:none;
+    padding:0;
+    place-items:stretch;
+  }
+  #themeStoreModal.active{display:flex;flex-direction:column;}
 
-  .store-filter-row{display:flex;align-items:center;padding:0 24px 14px;border-bottom:1px solid rgba(255,255,255,.07);overflow-x:auto;}
-  .store-filter-row > * + *{margin-left:8px;}
-  .store-chip{padding:6px 14px;border-radius:999px;font-size:11.5px;font-weight:700;background:rgba(255,255,255,.06);color:var(--muted);border:1px solid rgba(255,255,255,.1);cursor:pointer;white-space:nowrap;transition:.2s;}
-  .store-chip.active{background:rgba(246,197,21,.18);color:var(--yellow);border-color:var(--yellow);}
-  .store-chip.mf{outline:2px solid var(--yellow) !important;color:#fff !important;background:rgba(246,197,21,.3) !important;}
+  #themeStoreModal .store-card-wrap{
+    width:100vw;height:100vh;max-width:none;max-height:none;
+    border-radius:0;border:none;background:transparent;box-shadow:none;
+    padding:0;display:flex;flex-direction:column;overflow:hidden;
+  }
+  #themeStoreModal .modal-head{
+    flex-shrink:0;
+    padding:26px 56px 20px;
+    background:linear-gradient(180deg, rgba(6,9,10,1) 0%, rgba(6,9,10,0.95) 75%, rgba(6,9,10,0) 100%);
+    border-bottom:1px solid rgba(255,255,255,.07);
+    box-shadow:0 16px 36px rgba(0,0,0,0.55);
+    z-index:10;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  #themeStoreModal .modal-body{
+    flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;
+    padding:32px 56px 60px;scroll-behavior:smooth;
+    scroll-padding-top:36px;
+  }
+  #themeStoreModal .modal-body::-webkit-scrollbar{width:6px;}
+  #themeStoreModal .modal-body::-webkit-scrollbar-track{background:rgba(255,255,255,.03);border-radius:999px;}
+  #themeStoreModal .modal-body::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:999px;}
+  #themeStoreModal .modal-body::-webkit-scrollbar-thumb:hover{background:var(--brand-accent, var(--yellow));}
 
-  .store-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));gap:14px;padding:16px 4px;}
-  .store-item-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;position:relative;transition:all .2s;}
-  .store-item-card.is-active{border-color:rgba(246,197,21,.45);background:rgba(246,197,21,.04);}
+  .store-head-left{
+    display:flex;align-items:center;gap:18px;
+  }
+  .store-head-title{
+    font-size:26px;font-weight:800;letter-spacing:-.5px;color:var(--txt);margin:0;
+  }
+  .store-head-title span{
+    color:var(--brand-accent, var(--yellow));
+  }
+  .store-quota-pill{
+    display:inline-block;padding:5px 14px;border-radius:999px;font-size:11.5px;font-weight:700;
+    background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.85);
+  }
+  .store-quota-pill.full{
+    background:rgba(246,197,21,.16);border-color:var(--brand-accent, var(--yellow));color:var(--brand-accent, var(--yellow));
+  }
 
-  .store-mini-preview{height:76px;border-radius:10px;position:relative;overflow:hidden;margin-bottom:12px;border:1px solid rgba(255,255,255,.1);box-shadow:inset 0 0 20px rgba(0,0,0,.6);}
-  .store-mini-card{width:86px;height:48px;border-radius:7px;position:absolute;bottom:-6px;right:16px;transform:rotate(-4deg);box-shadow:0 8px 20px rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.3);display:flex;align-items:flex-end;padding:4px 6px;}
-  .store-mini-tab{position:absolute;top:0;left:10px;width:28px;height:5px;border-radius:0 0 3px 3px;}
-  .store-badge{position:absolute;top:8px;left:8px;padding:2px 7px;border-radius:6px;font-size:9.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;}
-  .store-badge.free{background:rgba(29,185,84,.2);color:#22c55e;border:1px solid rgba(34,197,94,.4);}
-  .store-badge.premium{background:rgba(236,72,153,.2);color:#f472b6;border:1px solid rgba(244,114,182,.4);}
-  .store-badge.holiday{background:rgba(245,166,35,.2);color:#fbbf24;border:1px solid rgba(251,191,36,.4);}
+  .store-section-header{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    margin:24px 0 12px;
+  }
+  .store-section-header .store-section-title{
+    margin:0;flex:1;
+  }
+  .store-section-toggle-btn{
+    padding:7px 16px;border-radius:999px;font-size:11.5px;font-weight:700;
+    background:rgba(255,255,255,.07);color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.14);
+    cursor:pointer;transition:.2s;white-space:nowrap;margin-left:14px;
+  }
+  .store-section-toggle-btn:hover, .store-section-toggle-btn.mf{
+    background:rgba(246,197,21,.2);border-color:var(--brand-accent, var(--yellow));color:var(--brand-accent, var(--yellow));outline:none;
+  }
 
-  .store-meta h4{font-size:13.5px;font-weight:700;margin:0 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .store-meta p{font-size:11px;color:var(--muted);line-height:1.35;margin:0 0 8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;height:30px;}
-  .store-author{font-size:10px;color:var(--muted);opacity:.7;margin-bottom:8px;}
+  .store-section-title{
+    font-size:13px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--txt);margin:24px 0 12px;display:flex;align-items:center;
+  }
+  .store-section-title::after{
+    content:'';flex:1;height:1px;background:rgba(255,255,255,.09);margin-left:14px;
+  }
 
-  .store-actions{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;}
-  .store-btn{flex:1;padding:7px 12px;border-radius:8px;font-size:11.5px;font-weight:700;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);color:#fff;cursor:pointer;transition:.2s;text-align:center;}
-  .store-btn.primary{background:var(--yellow);color:#0a0e10;border-color:var(--yellow);}
-  .store-btn.active{background:rgba(246,197,21,.15);color:var(--yellow);border-color:var(--yellow);cursor:default;}
-  .store-btn.premium-buy{background:linear-gradient(135deg, #ec4899, #8b5cf6);color:#fff;border:none;}
-  .store-btn-del{padding:7px 10px;border-radius:8px;font-size:11px;background:rgba(255,59,48,.12);color:#ff453a;border:1px solid rgba(255,59,48,.3);cursor:pointer;}
-  .store-btn.mf, .store-btn-del.mf{outline:2px solid #fff !important;outline-offset:2px;box-shadow:0 0 12px rgba(255,255,255,.5);}
+  .store-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(400px, 1fr));
+    gap:20px;
+    padding:6px 0 20px;
+  }
+  .store-item-card{
+    height:180px;
+    border-radius:20px;
+    border:1.5px solid rgba(255,255,255,.1);
+    position:relative;
+    overflow:hidden;
+    padding:16px 20px 14px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    cursor:pointer;
+    outline:none;
+    background-size:cover;
+    background-position:center;
+    box-shadow:0 12px 30px rgba(0,0,0,.7);
+    transition:transform .22s cubic-bezier(0.2,0,0,1), border-color .22s, box-shadow .22s;
+  }
+  .store-item-card:hover{
+    border-color:rgba(255,255,255,.28);
+    transform:translateY(-2px);
+  }
+  .store-item-card.is-active{
+    border-color:rgba(246,197,21,.55);
+  }
+  .store-item-card.card-focused,
+  .store-item-card.mf{
+    outline:none !important;
+    border-color:var(--brand-accent, var(--yellow)) !important;
+    transform:translateY(-4px) scale(1.02);
+    box-shadow:0 0 0 2px var(--brand-accent, var(--yellow)), 0 20px 42px rgba(0,0,0,.85) !important;
+    z-index:10;
+  }
+
+  .store-card-scrim{
+    position:absolute;top:0;right:0;bottom:0;left:0;
+    pointer-events:none;
+    background:linear-gradient(180deg, rgba(7,10,12,0.38) 0%, rgba(7,10,12,0.72) 48%, rgba(7,10,12,0.95) 100%);
+    z-index:1;
+  }
+  .store-card-content{
+    position:relative;z-index:2;height:100%;
+    display:flex;flex-direction:column;justify-content:space-between;
+  }
+
+  .store-card-top{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+  }
+  .store-badge{
+    display:inline-block;padding:3px 9px;border-radius:6px;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  }
+  .store-badge.free{background:rgba(29,185,84,.22);color:#22c55e;border:1px solid rgba(34,197,94,.4);}
+  .store-badge.premium{background:rgba(236,72,153,.22);color:#f472b6;border:1px solid rgba(244,114,182,.4);}
+  .store-badge.holiday{background:rgba(245,166,35,.22);color:#fbbf24;border:1px solid rgba(251,191,36,.4);}
+  .store-badge.builtin{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.22);}
+
+  .store-card-status-badges{
+    display:flex;align-items:center;gap:6px;
+  }
+  .store-status-chip{
+    display:inline-flex;align-items:center;gap:4px;padding:2.5px 8px;border-radius:6px;font-size:10px;font-weight:700;
+    background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.18);color:#fff;
+  }
+  .store-status-chip.active{
+    background:rgba(246,197,21,0.2);border-color:var(--brand-accent, var(--yellow));color:var(--brand-accent, var(--yellow));
+  }
+  .store-status-chip.pinned{
+    background:rgba(255,255,255,0.14);color:#f0f0f0;
+  }
+
+  .store-card-accent-pill{
+    width:36px;height:5px;border-radius:0 0 4px 4px;margin-left:auto;
+  }
+
+  .store-card-mid{
+    margin:8px 0 10px;
+  }
+  .store-card-title{
+    font-size:16.5px;font-weight:800;margin:0 0 3px;color:#fff;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    text-shadow:0 2px 6px rgba(0,0,0,0.9);
+  }
+  .store-card-desc{
+    font-size:11.5px;color:rgba(255,255,255,.78);line-height:1.35;margin:0 0 4px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .store-card-author{
+    font-size:10.5px;color:rgba(255,255,255,.55);
+  }
+  .store-card-author b{
+    color:rgba(255,255,255,.8);
+  }
+
+  .store-actions{
+    display:flex;align-items:center;gap:10px;margin-top:auto;
+  }
+  .store-btn{
+    flex:1;padding:8px 12px;border-radius:10px;font-size:11.5px;font-weight:700;
+    border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.12);backdrop-filter:blur(8px);
+    color:#fff;cursor:pointer;transition:.2s;text-align:center;
+  }
+  .store-btn.primary{
+    background:var(--brand-accent, var(--yellow));color:#0a0e10;border-color:var(--brand-accent, var(--yellow));
+  }
+  .store-btn.active{
+    background:rgba(246,197,21,.18);color:var(--brand-accent, var(--yellow));border-color:var(--brand-accent, var(--yellow));cursor:default;
+  }
+  .store-btn.premium-buy{
+    background:linear-gradient(135deg, #ec4899, #8b5cf6);color:#fff;border:none;
+  }
+  .store-btn-del{
+    padding:8px 10px;border-radius:10px;font-size:11px;background:rgba(255,59,48,.16);color:#ff453a;border:1px solid rgba(255,59,48,.35);cursor:pointer;
+  }
+  
+  .store-pin-btn{
+    padding:8px 12px;border-radius:10px;font-size:11.5px;font-weight:700;
+    background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(8px);
+    color:rgba(255,255,255,.85);cursor:pointer;transition:.2s;white-space:nowrap;
+  }
+  .store-pin-btn.pin-active{
+    background:rgba(246,197,21,.18);border-color:var(--brand-accent, var(--yellow));color:var(--brand-accent, var(--yellow));
+  }
+  .store-pin-btn.pin-locked{
+    opacity:.45;cursor:not-allowed;border-style:dashed;
+  }
+  .store-btn.mf, .store-btn-del.mf, .store-pin-btn.mf{
+    outline:2px solid #fff !important;outline-offset:2px;box-shadow:0 0 14px rgba(255,255,255,.6);
+  }
 
   .qr-box{width:160px;height:160px;background:#fff;border-radius:12px;padding:8px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 30px rgba(0,0,0,.8);margin:0 auto;}
 
@@ -470,14 +744,23 @@
   .grid-app-top.mf{border-radius:12px;}
 
   /* ============ TOAST & HINT ============ */
-  .toast{position:fixed;left:50%;bottom:88px;transform:translate(-50%,16px);z-index:200;
-    display:flex;align-items:center;padding:11px 22px;border-radius:999px;}
-  .toast > * + *{margin-left:10px;
-    background:#141c1e;border:1px solid var(--yellow);
+  .toast{
+    position:fixed;left:50%;bottom:88px;transform:translate(-50%,16px);z-index:200;
+    display:flex;align-items:center;padding:11px 22px;border-radius:999px;
+    background:#141c1e;border:1px solid var(--brand-accent, var(--yellow));
     box-shadow:0 16px 40px rgba(0,0,0,.75);
-    font-size:12.5px;font-weight:700;color:#fff;opacity:0;pointer-events:none;transition:.3s;}
-  .toast.show{opacity:1;transform:translate(-50%,0);}
-  .t-dot{width:8px;height:8px;border-radius:50%;background:var(--yellow);box-shadow:0 0 8px var(--yellow);}
+    font-size:12.5px;font-weight:700;color:#fff;
+    opacity:0;pointer-events:none;
+    transition:transform .3s cubic-bezier(0.2,0,0,1), opacity .3s;
+  }
+  .toast > * + *{margin-left:10px;}
+  .toast.show{opacity:1;pointer-events:auto;transform:translate(-50%,0);}
+  .t-dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--brand-accent, var(--yellow));
+    box-shadow:0 0 8px var(--brand-accent, var(--yellow));
+    flex-shrink:0;
+  }
   .hint{position:fixed;bottom:78px;left:50%;transform:translateX(-50%);z-index:5;
     font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);opacity:.55;transition:opacity 1s;pointer-events:none;}
   .hint.hide{opacity:0;}
@@ -496,7 +779,7 @@
     #rowSources.size-xl .card-icon{width:58px;height:58px;}
     #rowApps.size-xl .logo-box{width:64px;height:64px;} #rowThemes .card{width:176px;height:98px;padding:10px 12px;} .card h3{font-size:16.5px;}
     .card-icon,.logo-box{width:52px;height:52px;right:16px;}
-    .set{width:248px;padding:11px 14px;} .row{padding:26px 50px 18px;margin-top:0;margin-bottom:0;}
+    .set{width:102px;height:102px;padding:12px 6px;} .row{padding:26px 50px 18px;margin-top:0;margin-bottom:0;}
     .lane-head{padding:0 56px;}
   }
   @media (max-width:900px){
@@ -510,7 +793,9 @@
 
 <div class="bg" id="bgLayer">
   <div class="collage"><div></div><div></div><div></div><div></div></div>
-  <div class="beam" id="beamBg"></div>
+  <div class="beam" id="beamBg">
+    <svg id="beamStencilSvg" class="beam-stencil" viewBox="0 0 960 540" preserveAspectRatio="none"></svg>
+  </div>
   <svg id="themeSilhouette" class="theme-silhouette" viewBox="0 0 960 540" preserveAspectRatio="none" style="display:none;"></svg>
   <div class="vignette"></div>
 </div>
@@ -534,26 +819,26 @@
 <main id="mainContainer">
   <!-- ===== BARIS 1 : SUMBER & INPUT ===== -->
   <section class="lane" id="laneSources">
-    <div class="lane-head"><h2>Sumber &amp; Input</h2><em id="sourcesSubtitle">Siaran TV, Pemutar Media &amp; Port HDMI</em></div>
+    <div class="lane-head"><h2>Sumber &amp; Input</h2><em id="sourcesSubtitle">HDMI &amp; Perangkat Terhubung</em></div>
     <div class="row" id="rowSources">
       <button type="button" class="item card" data-action="livetv" data-name="Live TV's">
         <span class="tab"></span><h3>Live TV's</h3>
-        <div class="card-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="20" width="50" height="36" rx="9"/><path d="M24 20 18 9M40 20 46 9"/><polyline points="22,40 29,33 35,41 43,31" stroke="#f6c515"/></svg></div>
+        <div class="card-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="20" width="50" height="36" rx="9"/><path d="M24 20 18 9M40 20 46 9"/><polyline points="22,40 29,33 35,41 43,31" stroke="var(--brand-accent)"/></svg></div>
         <div><p class="count">Siaran TV</p><p class="stat">Buka Live TV</p></div>
       </button>
       <button type="button" class="item card" data-action="media" data-name="Media Player">
         <span class="tab"></span><h3>Media</h3>
-        <div class="card-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20a6 6 0 0 1 6-6h10l6 6h18a6 6 0 0 1 6 6v20a6 6 0 0 1-6 6H14a6 6 0 0 1-6-6z"/><path d="M28 30l12 7-12 7z" stroke="#f6c515"/></svg></div>
+        <div class="card-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 20a6 6 0 0 1 6-6h10l6 6h18a6 6 0 0 1 6 6v20a6 6 0 0 1-6 6H14a6 6 0 0 1-6-6z"/><path d="M28 30l12 7-12 7z" stroke="var(--brand-accent)"/></svg></div>
         <div><p class="count">USB &amp; File Lokal</p><p class="stat">Buka pemutar</p></div>
       </button>
       <button type="button" class="item card" data-action="hdmi" data-port="HDMI1" data-name="HDMI 1">
         <span class="tab"></span><h3>HDMI 1</h3>
-        <div class="card-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 22h44v12l-6 6H16l-6-6z"/><path d="M20 28v6M28 28v6M36 28v6M44 28v6" stroke="#f6c515"/><path d="M32 40v10"/></svg></div>
+        <div class="card-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 22h44v12l-6 6H16l-6-6z"/><path d="M20 28v6M28 28v6M36 28v6M44 28v6" stroke="var(--brand-accent)"/><path d="M32 40v10"/></svg></div>
         <div><p class="count">Input HDMI</p><p class="stat"><span class="dot off"></span>Memeriksa…</p></div>
       </button>
       <button type="button" class="item card" data-action="hdmi" data-port="HDMI2" data-name="HDMI 2">
         <span class="tab"></span><h3>HDMI 2</h3>
-        <div class="card-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 22h44v12l-6 6H16l-6-6z"/><path d="M20 28v6M28 28v6M36 28v6M44 28v6" stroke="#f6c515"/><path d="M32 40v10"/></svg></div>
+        <div class="card-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 22h44v12l-6 6H16l-6-6z"/><path d="M20 28v6M28 28v6M36 28v6M44 28v6" stroke="var(--brand-accent)"/><path d="M32 40v10"/></svg></div>
         <div><p class="count">Input HDMI</p><p class="stat"><span class="dot off"></span>Memeriksa…</p></div>
       </button>
       <button type="button" class="item card" data-action="hdmi" data-port="AV" data-name="AV Input">
@@ -563,23 +848,23 @@
       </button>
       <button type="button" class="item card" data-action="cast" data-name="Screen Cast">
         <span class="tab"></span><h3>Cast</h3>
-        <div class="card-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="14" width="48" height="34" rx="6"/><path d="M14 42a10 10 0 0 1 10 10M14 34a18 18 0 0 1 18 18" stroke="#f6c515"/><circle cx="15" cy="47" r="2.5" fill="#f6c515" stroke="none"/></svg></div>
+        <div class="card-icon"><svg viewBox="0 0 64 64" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="14" width="48" height="34" rx="6"/><path d="M14 42a10 10 0 0 1 10 10M14 34a18 18 0 0 1 18 18" stroke="var(--brand-accent)"/><circle cx="15" cy="47" r="2.5" fill="var(--brand-accent)" stroke="none"/></svg></div>
         <div><p class="count">Miracast / Cast</p><p class="stat">Buka Cast</p></div>
       </button>
     </div>
   </section>
 
-  <!-- ===== BARIS 2 : APLIKASI FAVORIT (MAKS 9 + OVERLAY GRID SEMUA APLIKASI) ===== -->
+  <!-- ===== BARIS 2 : APLIKASI FAVORIT ===== -->
   <section class="lane" id="laneApps">
-    <div class="lane-head"><h2>Aplikasi Favorit</h2><em id="favCountSubtitle">Menampilkan 6/9 favorit • Klik + untuk Semua Aplikasi</em></div>
+    <div class="lane-head"><h2>Aplikasi Favorit</h2><em id="favCountSubtitle">Akses Cepat Aplikasi Favorit</em></div>
     <div class="row" id="rowApps">
-      <!-- Dirender secara dinamis (Maksimal 9 Aplikasi Favorit + Kartu Semua Aplikasi) -->
+      <!-- Dirender secara dinamis -->
     </div>
   </section>
 
   <!-- ===== BARIS 3 : TEMA & SUASANA ===== -->
   <section class="lane" id="laneThemes">
-    <div class="lane-head"><h2>Tema &amp; Suasana</h2><em id="themeSubtitle">Ganti suasana TV &amp; tema perayaan otomatis</em></div>
+    <div class="lane-head"><h2>Tema &amp; Suasana</h2><em id="themeSubtitle">Gaya Visual &amp; Perayaan</em></div>
     <div class="row" id="rowThemes">
       <!-- Dirender dinamis oleh renderThemesLane() -->
     </div>
@@ -587,37 +872,37 @@
 
   <!-- ===== BARIS 4 : PENGATURAN CEPAT ===== -->
   <section class="lane" id="laneSettings">
-    <div class="lane-head"><h2>Pengaturan Cepat</h2><em>kustomisasi baris, wallpaper lokal, memori RT41</em></div>
+    <div class="lane-head"><h2>Pengaturan Cepat</h2><em id="settingsSubtitle">Kustomisasi Launcher &amp; Sistem</em></div>
     <div class="row" id="rowSettings">
-      <button type="button" class="item set" data-action="customizer" data-name="Kustomisasi Tiltbox">
+      <button type="button" class="item set" data-action="customizer" data-name="Kustomisasi">
         <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg></span>
-        <span class="s-txt"><b>Kustomisasi &amp; Wallpaper</b><span>Baris, favorit (maks 9) &amp; foto lokal</span></span>
+        <span class="s-txt"><b>Kustomisasi</b></span>
       </button>
-      <button type="button" class="item set" data-action="order" data-name="Urutan Launcher">
+      <button type="button" class="item set" data-action="order" data-name="Urutan Baris">
         <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16m0 0l-3-3m3 3l3-3M17 20V4m0 0l-3 3m3-3l3 3"/></svg></span>
-        <span class="s-txt"><b>Tukar Urutan Baris</b><span id="subRowOrder">Sumber &rarr; Aplikasi</span></span>
+        <span class="s-txt"><b>Urutan Baris</b><span id="subRowOrder" style="display:none;"></span></span>
       </button>
-      <button type="button" class="item set" data-action="local_wp" data-name="Wallpaper Gambar Lokal">
+      <button type="button" class="item set" data-action="local_wp" data-name="Wallpaper">
         <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span>
-        <span class="s-txt"><b>Wallpaper Lokal</b><span id="subLocalWp">Pilih gambar dari TV / USB</span></span>
+        <span class="s-txt"><b>Wallpaper</b><span id="subLocalWp" style="display:none;"></span></span>
       </button>
-      <button type="button" class="item set" data-action="boost" data-name="Penyegar TV">
+      <button type="button" class="item set" data-action="boost" data-name="Penyegar RAM">
         <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>
-        <span class="s-txt"><b>Penyegar TV</b><span id="subRamBoost">Bersihkan aplikasi latar</span></span>
+        <span class="s-txt"><b>Penyegar RAM</b><span id="subRamBoost" style="display:none;"></span></span>
       </button>
-      <button type="button" class="item set" data-action="tcl_settings" data-name="Gambar & Suara TCL">
+      <button type="button" class="item set" data-action="tcl_settings" data-name="Audio &amp; Visual">
         <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></svg></span>
-        <span class="s-txt"><b>Gambar &amp; Suara TCL</b><span>Setelan panel &amp; audio TV+</span></span>
+        <span class="s-txt"><b>Audio &amp; Visual</b></span>
       </button>
-      <button type="button" class="item set" data-action="settings" data-name="Pengaturan TV">
+      <button type="button" class="item set" data-action="settings" data-name="Setelan TV">
         <span class="s-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="3"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
-        <span class="s-txt"><b>Setelan Sistem</b><span>Pengaturan sistem TV</span></span>
+        <span class="s-txt"><b>Setelan TV</b></span>
       </button>
     </div>
   </section>
 </main>
 
-<p class="hint" id="hint">↑ ↓ ← → navigasi D-Pad (Scroll Down = Auto-Hide Bottom Bar, Scroll Up = Auto-Show)</p>
+<p class="hint" id="hint">Navigasi D-Pad • Tekan OK untuk memilih</p>
 
 <!-- ============ 1. FROSTED GLASS SEMI-TRANSPARENT DYNAMIC BOTTOM BAR ============ -->
 <footer id="bottomBar">
@@ -640,108 +925,108 @@
 <div class="modal-overlay" id="customizerModal">
   <div class="modal-card">
     <div class="modal-head">
-      <h3>Kustomisasi <span>Tiltbox</span></h3>
+      <h3>Kustomisasi <span>Launcher</span></h3>
       <button type="button" class="close-btn" id="btnCloseCustomizer">✕ Tutup (BACK)</button>
     </div>
     <div class="modal-body" id="customizerOptions">
-      <div class="modal-section-label">1. Kustomisasi Urutan &amp; Visibilitas Baris</div>
+      <div class="modal-section-label">1. Tata Letak &amp; Baris</div>
       <button type="button" class="set-opt modal-item" data-opt="order">
         <div>
-          <b>Tukar Posisi Baris Utama</b>
-          <span>Ubah susunan antara Sumber &amp; Input dengan Aplikasi Favorit</span>
+          <b>Tukar Posisi Baris</b>
+          <span>Ubah urutan baris Sumber dan Aplikasi</span>
         </div>
         <span class="set-val" id="valRowOrder">Sumber &rarr; Aplikasi</span>
       </button>
       <button type="button" class="set-opt modal-item" data-opt="toggle_sources">
         <div>
-          <b>Visibilitas Baris Sumber &amp; Input</b>
-          <span>Tampilkan atau sembunyikan baris Live TV &amp; HDMI</span>
+          <b>Baris Sumber &amp; Input</b>
+          <span>Tampilkan atau sembunyikan di beranda</span>
         </div>
         <span class="set-val" id="valShowSources">Tampil</span>
       </button>
       <button type="button" class="set-opt modal-item" data-opt="toggle_themes">
         <div>
-          <b>Visibilitas Baris Tema &amp; Suasana</b>
-          <span>Tampilkan atau sembunyikan baris tema di beranda</span>
+          <b>Baris Tema &amp; Suasana</b>
+          <span>Tampilkan atau sembunyikan di beranda</span>
         </div>
         <span class="set-val" id="valShowThemes">Tampil</span>
       </button>
       <button type="button" class="set-opt modal-item" data-opt="toggle_seasonal_mode">
         <div>
           <b>Tema Hari Raya Otomatis</b>
-          <span>Beralih tema otomatis saat Natal, Lebaran &amp; hari raya</span>
+          <span>Beralih otomatis saat hari raya</span>
         </div>
         <span class="set-val" id="valSeasonalMode">Aktif (Kalender)</span>
       </button>
       <button type="button" class="set-opt modal-item" data-opt="toggle_settings">
         <div>
-          <b>Visibilitas Baris Pengaturan Cepat</b>
-          <span>Tampilkan atau sembunyikan baris ke-4 di bawah</span>
+          <b>Baris Pengaturan Cepat</b>
+          <span>Tampilkan atau sembunyikan di beranda</span>
         </div>
         <span class="set-val" id="valShowSettings">Tampil</span>
       </button>
       <button type="button" class="set-opt modal-item" data-opt="manage_favs">
         <div>
-          <b>Susunan Aplikasi Favorit (Maks 9) &amp; Semua Aplikasi</b>
-          <span>Pin/unpin dan geser urutan aplikasi favorit di beranda</span>
+          <b>Susunan Aplikasi Favorit</b>
+          <span>Kelola pin dan susunan di beranda</span>
         </div>
         <span class="set-val" id="valFavCount">6 / 9 Favorit &rarr;</span>
       </button>
       <button type="button" class="set-opt modal-item" data-opt="input_card_size" id="btnInputCardSize">
         <div>
-          <b>Ukuran Kartu Sumber &amp; Input</b>
-          <span>Kecil (Square), Sedang (Kompak), Besar (L), Poster Hero (XL)</span>
+          <b>Ukuran Kartu Input</b>
+          <span>Pilih ukuran kartu sumber &amp; input</span>
         </div>
         <span class="set-val" id="valInputCardSize">Besar (L)</span>
       </button>
       <button type="button" class="set-opt modal-item" data-opt="app_card_size" id="btnAppCardSize">
         <div>
-          <b>Ukuran Kartu Aplikasi Favorit</b>
-          <span>Kecil (Square Icon), Sedang (Kompak), Besar (L), Poster Hero (XL)</span>
+          <b>Ukuran Kartu Aplikasi</b>
+          <span>Pilih ukuran kartu aplikasi favorit</span>
         </div>
         <span class="set-val" id="valAppCardSize">Besar (L)</span>
       </button>
 
-      <div class="modal-section-label">2. Kustomisasi Wallpaper (Preset, Auto-Rotate &amp; Gambar Lokal)</div>
+      <div class="modal-section-label">2. Wallpaper &amp; Tampilan Visual</div>
       <button type="button" class="set-opt modal-item" data-opt="wallpaper">
         <div>
           <b>Preset Tema Sinematik</b>
-          <span>Obsidian Dark, Pure OLED, Emerald Cinema, Royal, Sunset</span>
+          <span>Pilih tema visual beranda</span>
         </div>
         <span class="set-val" id="valWallpaper">Obsidian Dark</span>
       </button>
       <button type="button" class="set-opt modal-item" data-opt="auto_wallpaper">
         <div>
-          <b>Rotasi Otomatis Preset Wallpaper</b>
-          <span>Ganti tema preset otomatis (Nonaktif / 15 dtk / 5 mnt / 15 mnt / 30 mnt / 1 jam)</span>
+          <b>Rotasi Otomatis Tema</b>
+          <span>Ganti preset tema secara berkala</span>
         </div>
         <span class="set-val" id="valAutoWallpaper">Nonaktif (Manual)</span>
       </button>
       <button type="button" class="set-opt modal-item" data-opt="local_wallpaper">
         <div>
-          <b>Pilih Wallpaper Gambar Lokal</b>
-          <span>Muat foto/gambar kustom dari memori internal TV atau USB</span>
+          <b>Wallpaper Gambar Lokal</b>
+          <span>Muat gambar dari TV atau USB</span>
         </div>
         <span class="set-val" id="valLocalWallpaper">Pilih Berkas...</span>
       </button>
       <button type="button" class="set-opt modal-item" data-opt="reset_wallpaper">
         <div>
-          <b>Hapus Wallpaper Lokal</b>
-          <span>Kembalikan latar ke preset sinematik bawaan</span>
+          <b>Reset Wallpaper</b>
+          <span>Kembalikan ke preset tema bawaan</span>
         </div>
         <span class="set-val">Reset</span>
       </button>
       <button type="button" class="set-opt modal-item" data-opt="beam">
         <div>
           <b>Sorotan Cahaya Beam</b>
-          <span>Efek pencahayaan diagonal sinematik</span>
+          <span>Efek pencahayaan sinematik</span>
         </div>
         <span class="set-val" id="valBeam">Aktif</span>
       </button>
       <div class="modal-section-label">3. Pembaruan Aplikasi</div>
       <button type="button" class="set-opt modal-item" data-opt="check_update" id="btnCheckUpdate">
         <div>
-          <b>Periksa Pembaruan Launcher</b>
+          <b>Periksa Pembaruan</b>
           <span>Versi saat ini: <span id="valCurrentVersion">…</span></span>
         </div>
         <span class="set-val" id="valUpdateStatus">Periksa</span>
@@ -764,7 +1049,7 @@
       <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:14px;">
         <div style="text-align:center;padding:10px 18px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);">
           <div style="font-size:10px;color:var(--muted);text-transform:uppercase;margin-bottom:2px;">Terpasang</div>
-          <div style="font-size:17px;font-weight:800;" id="updateCurrentVer">v1.8.0</div>
+          <div style="font-size:17px;font-weight:800;" id="updateCurrentVer">v1.9.0</div>
         </div>
         <div style="font-size:20px;color:var(--yellow);">→</div>
         <div style="text-align:center;padding:10px 18px;border-radius:10px;background:rgba(246,197,21,.1);border:1px solid rgba(246,197,21,.35);">
@@ -808,8 +1093,8 @@
   <div class="modal-card" style="max-width:880px;">
     <div class="modal-head">
       <div>
-        <h3>Semua <span>Aplikasi</span> &amp; Susunan Favorit</h3>
-        <p style="font-size:11.5px;color:var(--muted);margin-top:2px;">Klik ikon aplikasi untuk membuka, klik <b>★ Favorit</b> (Maks 9), atau gunakan <b>◀ ▶</b> untuk menggeser urutan favorit.</p>
+        <h3>Semua <span>Aplikasi</span></h3>
+        <p style="font-size:11.5px;color:var(--muted);margin-top:2px;">Buka aplikasi atau kelola favorit beranda</p>
       </div>
       <button type="button" class="close-btn" id="btnCloseAllApps">✕ Tutup (BACK)</button>
     </div>
@@ -819,32 +1104,35 @@
   </div>
 </div>
 
-<!-- THEME STORE MODAL -->
+<!-- THEME STORE MODAL (FULLSCREEN THEME HUB) -->
 <div class="modal-overlay" id="themeStoreModal">
   <div class="modal-card store-card-wrap">
-    <div class="modal-head">
-      <div>
-        <h3>Toko Tema <span>Komunitas &amp; Eksklusif</span></h3>
-        <p style="font-size:11.5px;color:var(--muted);margin-top:2px;">
-          Jelajahi tema sinematik baru dari cloud &amp; komunitas. 
-          <span id="storeStatusBadge" class="store-status-pill online">● Cloud Terhubung</span>
-        </p>
+    <div class="modal-head store-head-clean">
+      <div class="store-head-left">
+        <h3 class="store-head-title">Toko <span>Tema</span></h3>
+        <span id="pinnedThemeCountBadge" class="store-quota-pill">9 / 9 Disematkan</span>
       </div>
-      <button type="button" class="close-btn" id="btnCloseThemeStore">✕ Tutup (BACK)</button>
+      <div class="store-head-right">
+        <button type="button" class="close-btn" id="btnCloseThemeStore">✕ Kembali (BACK)</button>
+      </div>
     </div>
 
-    <!-- Filter Chips -->
-    <div class="store-filter-row" id="storeFilterRow">
-      <button type="button" class="store-chip active" data-filter="all">Semua Tema</button>
-      <button type="button" class="store-chip" data-filter="Hari Raya">Hari Raya</button>
-      <button type="button" class="store-chip" data-filter="free">Gratis (Komunitas)</button>
-      <button type="button" class="store-chip" data-filter="premium">Premium</button>
-      <button type="button" class="store-chip" data-filter="installed">Terpasang di TV</button>
-    </div>
+    <!-- Store Grid Body Multi-Section -->
+    <div class="modal-body">
+      <!-- Seksi 1: Tema Bawaan -->
+      <div class="store-section-title">1. Tema Bawaan Sinematik</div>
+      <div class="store-grid" id="storeGridBuiltin"></div>
 
-    <!-- Store Grid Body -->
-    <div class="modal-body" style="max-height:480px;overflow-y:auto;">
-      <div class="store-grid" id="storeGrid"></div>
+      <!-- Seksi 2: Tema Musiman & Hari Raya -->
+      <div class="store-section-header">
+        <div class="store-section-title">2. Tema Musiman &amp; Hari Raya</div>
+        <button type="button" class="store-section-toggle-btn store-header-btn" id="btnToggleSeasonalHub">📅 Hari Raya Otomatis: AKTIF</button>
+      </div>
+      <div class="store-grid" id="storeGridFestive"></div>
+
+      <!-- Seksi 3: Tema Cloud & Komunitas -->
+      <div class="store-section-title">3. Tema Cloud &amp; Komunitas</div>
+      <div class="store-grid" id="storeGridCloud"></div>
     </div>
   </div>
 </div>
@@ -941,7 +1229,7 @@
   ];
 
   let lanes = [];
-  let cols = [0, 0, 0];
+  let cols = {};
   let r = 0;
   let lastScrollTop = 0;
   let toastTimer = null;
@@ -1009,6 +1297,24 @@
   // ============ THEME ENGINE & SEASONAL STORE ============
   const THEME_STORE_CATALOG_URL = 'https://raw.githubusercontent.com/tholeteplok/tiltbox-themes/main/catalog.json';
 
+  // Helper pembuat lampu sorot sinematik bioskop (Anamorphic Projector Beam)
+  function getCinematicBeam(accent, glowColor){
+    return {
+      cone: 'linear-gradient(164deg, transparent 20%, rgba(255,255,255,0.045) 36%, transparent 52%)',
+      glow: `radial-gradient(700px 280px at 68% 22%, ${glowColor || 'rgba(246,197,21,0.08)'}, transparent 70%)`,
+      stencil: `<g fill="none" opacity="0.85">
+        <line x1="380" y1="135" x2="960" y2="135" stroke="${accent}" stroke-width="1.8" opacity="0.45" filter="drop-shadow(0 0 8px ${accent})"/>
+        <line x1="480" y1="135" x2="880" y2="135" stroke="#fff" stroke-width="1.2" opacity="0.75"/>
+        <g transform="translate(680, 135)">
+          <path d="M0 -45 Q2 -5 45 0 Q2 5 0 45 Q-2 5 -45 0 Q-2 -5 0 -45 Z" fill="rgba(255,255,255,0.75)" filter="drop-shadow(0 0 10px ${accent})"/>
+          <circle cx="0" cy="0" r="5" fill="#fff"/>
+        </g>
+        <circle cx="590" cy="175" r="32" stroke="${accent}" stroke-width="1.2" opacity="0.18"/>
+        <circle cx="760" cy="95" r="20" stroke="${accent}" stroke-width="1.2" opacity="0.15"/>
+      </g>`
+    };
+  }
+
   const BUILTIN_THEMES = {
     'default_obsidian': {
       name: 'Obsidian Dark',
@@ -1023,6 +1329,7 @@
         '--tab-glow': 'rgba(246,197,21,.75)',
         '--brand-accent': '#f6c515'
       },
+      beam: getCinematicBeam('#f6c515', 'rgba(246,197,21,0.09)'),
       silhouette: null
     },
     'festive_christmas': {
@@ -1038,6 +1345,29 @@
         '--tab-color': '#ff3844',
         '--tab-glow': 'rgba(255,56,68,.75)',
         '--brand-accent': '#ff3844'
+      },
+      wallpaperAsset: 'wallpapers/festive_christmas.jpg',
+      beam: {
+        cone: 'linear-gradient(160deg, transparent 18%, rgba(255,56,68,0.07) 36%, transparent 54%)',
+        glow: 'radial-gradient(750px 320px at 70% 20%, rgba(255,56,68,0.2), transparent 72%)',
+        stencil: `<g fill="none" opacity="0.9">
+          <g transform="translate(650, 68) scale(1.05)">
+            <path d="M24 85 C28 50, 55 25, 85 15 C98 10, 110 22, 116 38 C120 48, 126 55, 134 58" stroke="rgba(255,56,68,0.75)" stroke-width="4" fill="rgba(255,56,68,0.16)"/>
+            <circle cx="138" cy="62" r="12" fill="rgba(255,255,255,0.85)" filter="drop-shadow(0 0 8px rgba(255,255,255,0.95))"/>
+            <rect x="15" y="80" width="85" height="18" rx="9" fill="rgba(255,255,255,0.8)" filter="drop-shadow(0 0 6px rgba(255,255,255,0.85))"/>
+          </g>
+          <g transform="translate(550, 120) scale(0.85)" stroke="rgba(255,255,255,0.75)" stroke-width="2.5" stroke-linecap="round">
+            <line x1="50" y1="10" x2="50" y2="90"/>
+            <line x1="10" y1="50" x2="90" y2="50"/>
+            <line x1="22" y1="22" x2="78" y2="78"/>
+            <line x1="22" y1="78" x2="78" y2="22"/>
+            <path d="M50 25 L42 33 M50 25 L58 33 M50 75 L42 67 M50 75 L58 67"/>
+            <path d="M25 50 L33 42 M25 50 L33 58 M75 50 L67 42 M75 50 L67 58"/>
+            <circle cx="50" cy="50" r="4" fill="rgba(255,255,255,0.9)"/>
+          </g>
+          <circle cx="810" cy="90" r="2.5" fill="#fff" opacity="0.8"/>
+          <circle cx="770" cy="220" r="2" fill="#fff" opacity="0.6"/>
+        </g>`
       },
       silhouette: '<path d="M0 500 L80 460 L160 480 L280 430 L420 470 L580 420 L720 460 L860 430 L960 460 L960 540 L0 540 Z" fill="rgba(255,255,255,0.045)"/><path d="M0 515 L120 485 L240 500 L380 465 L520 495 L680 455 L820 490 L960 475 L960 540 L0 540 Z" fill="rgba(0,0,0,0.5)"/>'
     },
@@ -1055,7 +1385,98 @@
         '--tab-glow': 'rgba(245,166,35,.75)',
         '--brand-accent': '#f5a623'
       },
+      wallpaperAsset: 'wallpapers/festive_eid.jpg',
+      beam: {
+        cone: 'linear-gradient(160deg, transparent 18%, rgba(66,215,125,0.06) 36%, transparent 54%)',
+        glow: 'radial-gradient(750px 320px at 70% 20%, rgba(245,166,35,0.2), transparent 72%)',
+        stencil: `<g fill="none" opacity="0.9">
+          <line x1="710" y1="0" x2="710" y2="60" stroke="rgba(245,166,35,0.55)" stroke-width="2"/>
+          <g transform="translate(670, 60) scale(0.95)">
+            <path d="M44 0 L32 20 L56 20 Z" fill="rgba(245,166,35,0.75)"/>
+            <rect x="24" y="20" width="40" height="8" rx="2" fill="rgba(245,166,35,0.65)"/>
+            <polygon points="20,28 68,28 60,78 28,78" fill="rgba(66,215,125,0.14)" stroke="rgba(245,166,35,0.65)" stroke-width="2"/>
+            <path d="M34 34 L54 34 L48 70 L40 70 Z" fill="rgba(245,166,35,0.85)" filter="drop-shadow(0 0 10px rgba(245,166,35,0.95))"/>
+            <rect x="26" y="78" width="36" height="6" rx="2" fill="rgba(245,166,35,0.65)"/>
+            <path d="M32 84 L44 96 L56 84 Z" fill="rgba(245,166,35,0.65)"/>
+          </g>
+          <g transform="translate(565, 95) scale(0.9)">
+            <path d="M50 15 C30 15, 15 32, 15 52 C15 72, 30 89, 50 89 C38 79, 32 66, 32 52 C32 38, 38 25, 50 15 Z" fill="rgba(245,166,35,0.7)" filter="drop-shadow(0 0 12px rgba(245,166,35,0.9))"/>
+            <polygon points="56,48 59,55 66,55 60,59 62,66 56,62 50,66 52,59 46,55 53,55" fill="rgba(245,166,35,0.9)"/>
+          </g>
+        </g>`
+      },
       silhouette: '<path d="M0 510 Q120 470 240 510 T480 500 T720 510 T960 495 L960 540 L0 540 Z" fill="rgba(66,215,125,0.04)"/><circle cx="840" cy="440" r="26" fill="none" stroke="rgba(245,166,35,0.18)" stroke-width="4"/>'
+    },
+    'festive_cny_2027': {
+      name: 'Lampion Oriental Imlek',
+      category: 'Hari Raya',
+      season: { start: '01-20', end: '02-15' },
+      tokens: {
+        '--bg-base': '#120306',
+        '--bg-grad-1': '#2e070e',
+        '--card-fallback-c1': 'rgba(230,18,35,.78)',
+        '--card-fallback-c2': 'rgba(122,12,20,.62)',
+        '--card-fallback-c3': 'rgba(26,5,8,.82)',
+        '--tab-color': '#f6c515',
+        '--tab-glow': 'rgba(246,197,21,.75)',
+        '--brand-accent': '#f6c515'
+      },
+      wallpaperAsset: 'wallpapers/festive_cny_2027.jpg',
+      beam: {
+        cone: 'linear-gradient(160deg, transparent 18%, rgba(230,18,35,0.07) 36%, transparent 54%)',
+        glow: 'radial-gradient(750px 320px at 70% 20%, rgba(230,18,35,0.22), transparent 72%)',
+        stencil: `<g fill="none" opacity="0.9">
+          <line x1="705" y1="0" x2="705" y2="55" stroke="rgba(246,197,21,0.65)" stroke-width="2"/>
+          <g transform="translate(655, 55) scale(1)">
+            <rect x="36" y="0" width="28" height="8" rx="2" fill="rgba(246,197,21,0.85)"/>
+            <ellipse cx="50" cy="48" rx="42" ry="40" fill="rgba(230,18,35,0.2)" stroke="rgba(246,197,21,0.6)" stroke-width="2.5"/>
+            <ellipse cx="50" cy="48" rx="24" ry="40" stroke="rgba(246,197,21,0.45)" stroke-width="1.8" fill="none"/>
+            <line x1="50" y1="8" x2="50" y2="88" stroke="rgba(246,197,21,0.75)" stroke-width="2"/>
+            <circle cx="50" cy="48" r="14" fill="rgba(246,197,21,0.8)" filter="drop-shadow(0 0 10px rgba(246,197,21,0.95))"/>
+            <rect x="38" y="88" width="24" height="8" rx="2" fill="rgba(246,197,21,0.85)"/>
+            <line x1="44" y1="96" x2="44" y2="135" stroke="rgba(246,197,21,0.75)" stroke-width="2"/>
+            <line x1="50" y1="96" x2="50" y2="144" stroke="rgba(246,197,21,0.9)" stroke-width="2.5"/>
+            <line x1="56" y1="96" x2="56" y2="135" stroke="rgba(246,197,21,0.75)" stroke-width="2"/>
+          </g>
+          <circle cx="585" cy="145" r="12" stroke="rgba(246,197,21,0.5)" stroke-width="2" fill="none"/>
+          <rect x="581" y="141" width="8" height="8" stroke="rgba(246,197,21,0.5)" stroke-width="1.5" fill="none"/>
+        </g>`
+      },
+      silhouette: '<path d="M0 500 L60 480 L120 495 L180 470 L260 490 L340 455 L420 485 L500 450 L620 490 L740 460 L860 490 L960 470 L960 540 L0 540 Z" fill="rgba(230,18,35,0.04)"/><circle cx="120" cy="440" r="16" fill="rgba(246,197,21,0.12)"/><line x1="120" y1="420" x2="120" y2="440" stroke="rgba(246,197,21,0.2)" stroke-width="2"/>'
+    },
+    'festive_halloween': {
+      name: 'Malam Seram Halloween',
+      category: 'Hari Raya',
+      season: { start: '10-20', end: '11-05' },
+      tokens: {
+        '--bg-base': '#08040d',
+        '--bg-grad-1': '#220930',
+        '--card-fallback-c1': 'rgba(255,119,0,.78)',
+        '--card-fallback-c2': 'rgba(179,71,0,.62)',
+        '--card-fallback-c3': 'rgba(27,12,38,.82)',
+        '--tab-color': '#ff7700',
+        '--tab-glow': 'rgba(255,119,0,.75)',
+        '--brand-accent': '#ff7700'
+      },
+      wallpaperAsset: 'wallpapers/festive_halloween.jpg',
+      beam: {
+        cone: 'linear-gradient(160deg, transparent 18%, rgba(255,119,0,0.08) 36%, transparent 54%)',
+        glow: 'radial-gradient(750px 320px at 70% 20%, rgba(255,119,0,0.22), transparent 72%)',
+        stencil: `<g fill="none" opacity="0.9">
+          <g transform="translate(635, 70) scale(1.05)">
+            <path d="M58 20 C62 8, 74 6, 78 4 C76 10, 72 16, 68 22 Z" fill="rgba(255,140,0,0.6)"/>
+            <path d="M30 40 C10 40, 0 65, 0 85 C0 115, 25 135, 60 135 C95 135, 120 115, 120 85 C120 65, 110 40, 90 40 C80 40, 70 48, 60 48 C50 48, 40 40, 30 40 Z" fill="rgba(255,119,0,0.14)" stroke="rgba(255,119,0,0.4)" stroke-width="2.5"/>
+            <path d="M40 42 C25 50, 20 70, 20 90 C20 112, 35 132, 60 134 C85 132, 100 112, 100 90 C100 70, 95 50, 80 42" stroke="rgba(255,140,0,0.25)" stroke-width="2" fill="none"/>
+            <polygon points="36,66 48,78 28,78" fill="rgba(255,210,60,0.85)" filter="drop-shadow(0 0 8px rgba(255,170,0,0.9))"/>
+            <polygon points="84,66 92,78 72,78" fill="rgba(255,210,60,0.85)" filter="drop-shadow(0 0 8px rgba(255,170,0,0.9))"/>
+            <polygon points="60,80 66,90 54,90" fill="rgba(255,210,60,0.8)"/>
+            <path d="M26 98 L36 106 L44 98 L52 106 L60 98 L68 106 L76 98 L86 106 L94 98 C90 120, 30 120, 26 98 Z" fill="rgba(255,220,70,0.9)" filter="drop-shadow(0 0 10px rgba(255,170,0,0.95))"/>
+          </g>
+          <path d="M540 180 Q555 165 570 178 Q580 162 590 182 Q565 190 540 180 Z" fill="rgba(255,140,0,0.3)"/>
+          <path d="M780 70 Q792 58 804 68 Q812 55 820 72 Q800 78 780 70 Z" fill="rgba(255,140,0,0.25)"/>
+        </g>`
+      },
+      silhouette: '<path d="M0 520 L100 490 L200 510 L300 470 L400 515 L500 475 L620 510 L750 480 L880 505 L960 490 L960 540 L0 540 Z" fill="rgba(0,0,0,0.6)"/>'
     },
     'pure_oled': {
       name: 'Pure OLED Black',
@@ -1069,6 +1490,14 @@
         '--tab-color': '#ffffff',
         '--tab-glow': 'rgba(255,255,255,.6)',
         '--brand-accent': '#ffffff'
+      },
+      beam: {
+        cone: 'linear-gradient(164deg, transparent 24%, rgba(255,255,255,0.02) 36%, transparent 48%)',
+        glow: 'radial-gradient(500px 200px at 68% 22%, rgba(255,255,255,0.035), transparent 70%)',
+        stencil: `<g fill="none" opacity="0.5">
+          <line x1="520" y1="135" x2="840" y2="135" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+          <circle cx="680" cy="135" r="3" fill="#fff"/>
+        </g>`
       },
       silhouette: null
     },
@@ -1085,6 +1514,39 @@
         '--tab-glow': 'rgba(78,205,160,.75)',
         '--brand-accent': '#4ecd9f'
       },
+      beam: getCinematicBeam('#4ecd9f', 'rgba(78,205,160,0.1)'),
+      silhouette: null
+    },
+    'royal_midnight': {
+      name: 'Royal Midnight',
+      category: 'Sinematik',
+      tokens: {
+        '--bg-base': '#060911',
+        '--bg-grad-1': '#162038',
+        '--card-fallback-c1': 'rgba(100,149,237,.78)',
+        '--card-fallback-c2': 'rgba(40,65,120,.62)',
+        '--card-fallback-c3': 'rgba(12,20,45,.82)',
+        '--tab-color': '#6495ed',
+        '--tab-glow': 'rgba(100,149,237,.75)',
+        '--brand-accent': '#6495ed'
+      },
+      beam: getCinematicBeam('#6495ed', 'rgba(100,149,237,0.1)'),
+      silhouette: null
+    },
+    'sunset_amber': {
+      name: 'Sunset Amber',
+      category: 'Sinematik',
+      tokens: {
+        '--bg-base': '#090605',
+        '--bg-grad-1': '#331a12',
+        '--card-fallback-c1': 'rgba(255,140,0,.78)',
+        '--card-fallback-c2': 'rgba(160,60,20,.62)',
+        '--card-fallback-c3': 'rgba(40,15,8,.82)',
+        '--tab-color': '#ff9900',
+        '--tab-glow': 'rgba(255,153,0,.75)',
+        '--brand-accent': '#ff9900'
+      },
+      beam: getCinematicBeam('#ff9900', 'rgba(255,153,0,0.11)'),
       silhouette: null
     }
   };
@@ -1115,6 +1577,8 @@
           '--tab-glow': 'rgba(246,197,21,.75)',
           '--brand-accent': '#f6c515'
         },
+        wallpaperAsset: 'wallpapers/festive_cny_2027.jpg',
+        beam: BUILTIN_THEMES['festive_cny_2027'].beam,
         silhouette: '<path d="M0 500 L60 480 L120 495 L180 470 L260 490 L340 455 L420 485 L500 450 L620 490 L740 460 L860 490 L960 470 L960 540 L0 540 Z" fill="rgba(230,18,35,0.04)"/><circle cx="120" cy="440" r="16" fill="rgba(246,197,21,0.12)"/><line x1="120" y1="420" x2="120" y2="440" stroke="rgba(246,197,21,0.2)" stroke-width="2"/>'
       },
       {
@@ -1137,6 +1601,15 @@
           '--tab-color': '#ff2233',
           '--tab-glow': 'rgba(255,34,51,.75)',
           '--brand-accent': '#ff2233'
+        },
+        beam: {
+          cone: 'linear-gradient(160deg, transparent 18%, rgba(240,30,45,0.07) 36%, transparent 54%)',
+          glow: 'radial-gradient(750px 320px at 70% 20%, rgba(240,30,45,0.2), transparent 72%)',
+          stencil: `<g fill="none" opacity="0.85">
+            <rect x="660" y="80" width="70" height="22" rx="3" fill="rgba(240,30,45,0.7)"/>
+            <rect x="660" y="102" width="70" height="22" rx="3" fill="rgba(255,255,255,0.7)"/>
+            <line x1="660" y1="65" x2="660" y2="155" stroke="rgba(255,255,255,0.8)" stroke-width="3"/>
+          </g>`
         },
         silhouette: '<path d="M0 510 Q140 470 280 505 T560 480 T840 505 T960 485 L960 540 L0 540 Z" fill="rgba(240,30,45,0.04)"/><rect x="460" y="440" width="40" height="70" fill="rgba(255,255,255,0.06)"/>'
       },
@@ -1161,6 +1634,8 @@
           '--tab-glow': 'rgba(255,119,0,.75)',
           '--brand-accent': '#ff7700'
         },
+        wallpaperAsset: 'wallpapers/festive_halloween.jpg',
+        beam: BUILTIN_THEMES['festive_halloween'].beam,
         silhouette: '<path d="M0 500 C150 470 300 520 450 490 C600 460 750 515 960 480 L960 540 L0 540 Z" fill="rgba(179,71,0,0.04)"/><path d="M780 430 L800 460 L830 465 L805 485 L815 515 L785 495 L755 515 L765 485 L740 465 L770 460 Z" fill="rgba(255,119,0,0.08)"/>'
       },
       {
@@ -1183,6 +1658,18 @@
           '--tab-color': '#00f0ff',
           '--tab-glow': 'rgba(0,240,255,.85)',
           '--brand-accent': '#00f0ff'
+        },
+        beam: {
+          cone: 'linear-gradient(160deg, transparent 18%, rgba(0,240,255,0.08) 36%, transparent 54%)',
+          glow: 'radial-gradient(750px 320px at 70% 20%, rgba(255,0,128,0.22), transparent 72%)',
+          stencil: `<g fill="none" opacity="0.85">
+            <line x1="320" y1="130" x2="960" y2="130" stroke="#00f0ff" stroke-width="2" opacity="0.6" filter="drop-shadow(0 0 10px #00f0ff)"/>
+            <line x1="420" y1="140" x2="900" y2="140" stroke="#ff0080" stroke-width="1.5" opacity="0.5" filter="drop-shadow(0 0 8px #ff0080)"/>
+            <g transform="translate(680, 130)">
+              <polygon points="0,-35 25,0 0,35 -25,0" stroke="#00f0ff" stroke-width="2" fill="rgba(0,240,255,0.2)"/>
+              <circle cx="0" cy="0" r="5" fill="#ff0080" filter="drop-shadow(0 0 6px #ff0080)"/>
+            </g>
+          </g>`
         },
         silhouette: '<rect x="120" y="420" width="70" height="90" fill="rgba(0,240,255,0.035)"/><rect x="220" y="380" width="90" height="130" fill="rgba(255,0,128,0.035)"/><rect x="340" y="440" width="60" height="70" fill="rgba(0,240,255,0.035)"/><rect x="620" y="400" width="80" height="110" fill="rgba(255,0,128,0.035)"/>'
       },
@@ -1207,6 +1694,17 @@
           '--tab-glow': 'rgba(255,0,170,.8)',
           '--brand-accent': '#ff00aa'
         },
+        beam: {
+          cone: 'linear-gradient(160deg, transparent 18%, rgba(255,0,170,0.08) 36%, transparent 54%)',
+          glow: 'radial-gradient(750px 320px at 70% 20%, rgba(255,102,0,0.22), transparent 72%)',
+          stencil: `<g fill="none" opacity="0.85">
+            <circle cx="680" cy="130" r="50" fill="rgba(255,102,0,0.3)" filter="drop-shadow(0 0 15px rgba(255,0,170,0.6))"/>
+            <line x1="620" y1="130" x2="740" y2="130" stroke="#000" stroke-width="3" opacity="0.6"/>
+            <line x1="630" y1="140" x2="730" y2="140" stroke="#000" stroke-width="3" opacity="0.6"/>
+            <line x1="645" y1="150" x2="715" y2="150" stroke="#000" stroke-width="3" opacity="0.6"/>
+            <line x1="360" y1="165" x2="960" y2="165" stroke="#ff00aa" stroke-width="1.8" opacity="0.6" filter="drop-shadow(0 0 8px #ff00aa)"/>
+          </g>`
+        },
         silhouette: '<circle cx="480" cy="460" r="70" fill="rgba(255,102,0,0.06)"/><line x1="0" y1="510" x2="960" y2="510" stroke="rgba(255,0,170,0.12)" stroke-width="2"/><line x1="0" y1="525" x2="960" y2="525" stroke="rgba(255,0,170,0.2)" stroke-width="2"/>'
       }
     ]
@@ -1214,12 +1712,69 @@
 
   let activeThemeId = 'default_obsidian';
   let seasonalThemeEnabled = true;
-  let showThemesLane = true;
   let downloadedThemes = {};
   let unlockedThemes = ['cyberpunk_neon_2099_demo']; // preset demo unlocked
   let currentCatalogThemes = [...BUILTIN_CLOUD_CATALOG.themes];
   let storeActiveFilter = 'all';
   let currentPayingTheme = null;
+
+  // Pinning Tema ke Baris Tema & Suasana (Maksimal 9 tema)
+  const MAX_PINNED_THEMES = 9;
+  const DEFAULT_PINNED_THEMES = [
+    'default_obsidian',
+    'pure_oled',
+    'emerald_cinema',
+    'royal_midnight',
+    'sunset_amber',
+    'festive_christmas',
+    'festive_eid',
+    'festive_cny_2027',
+    'festive_halloween'
+  ];
+  let pinnedThemeIds = [...DEFAULT_PINNED_THEMES];
+
+  function loadPinnedThemes(){
+    try {
+      const raw = localStorage.getItem('tiltbox_pinned_themes_v1');
+      if(raw){
+        const parsed = JSON.parse(raw);
+        if(Array.isArray(parsed) && parsed.length > 0){
+          pinnedThemeIds = parsed.slice(0, MAX_PINNED_THEMES);
+          return;
+        }
+      }
+    } catch(e){}
+    pinnedThemeIds = [...DEFAULT_PINNED_THEMES];
+  }
+
+  function savePinnedThemes(){
+    try {
+      localStorage.setItem('tiltbox_pinned_themes_v1', JSON.stringify(pinnedThemeIds.slice(0, MAX_PINNED_THEMES)));
+    } catch(e){}
+  }
+
+  function togglePinTheme(tid){
+    const idx = pinnedThemeIds.indexOf(tid);
+    if(idx !== -1){
+      pinnedThemeIds.splice(idx, 1);
+      savePinnedThemes();
+      renderThemesLane();
+      rebuildLanes();
+      renderThemeStore();
+      showToast('📌 Tema dilepas dari Beranda (' + pinnedThemeIds.length + '/' + MAX_PINNED_THEMES + ')');
+    } else {
+      if(pinnedThemeIds.length >= MAX_PINNED_THEMES){
+        showToast('⚠️ Kuota Beranda penuh (9/9). Lepas tema lain terlebih dahulu.');
+        return;
+      }
+      pinnedThemeIds.push(tid);
+      savePinnedThemes();
+      renderThemesLane();
+      rebuildLanes();
+      renderThemeStore();
+      showToast('📌 Tema dipasang ke Beranda (' + pinnedThemeIds.length + '/' + MAX_PINNED_THEMES + ')');
+    }
+  }
 
   function getThemeById(themeId){
     if(BUILTIN_THEMES[themeId]) return BUILTIN_THEMES[themeId];
@@ -1230,14 +1785,64 @@
     return BUILTIN_THEMES['default_obsidian'];
   }
 
+  const _themeWpCache = {};
+  function getThemeWallpaperUrl(assetName){
+    if(!assetName) return '';
+    if(_themeWpCache[assetName]) return _themeWpCache[assetName];
+    if(hasBridge('getThemeWallpaperDataUrl')){
+      try {
+        const dUrl = window.TiltboxBridge.getThemeWallpaperDataUrl(assetName);
+        if(dUrl){
+          _themeWpCache[assetName] = dUrl;
+          return dUrl;
+        }
+      } catch(e){}
+    }
+    return assetName;
+  }
+
   function applyTheme(themeId, showToastNotice){
     const theme = getThemeById(themeId);
     activeThemeId = themeId || 'default_obsidian';
     const root = document.documentElement;
 
+    // Reset legacy preset classes on body so background gradient vars are respected
+    const hasCustomWp = document.body.classList.contains('has-custom-wp');
+    const hasThemeWp = !hasCustomWp && !!(theme && theme.wallpaperAsset);
+    document.body.className = '';
+    if(hasCustomWp) document.body.classList.add('has-custom-wp');
+    if(hasThemeWp) document.body.classList.add('has-theme-wp');
+
     if(theme && theme.tokens){
       for(const [prop, val] of Object.entries(theme.tokens)){
         root.style.setProperty(prop, val);
+      }
+    }
+
+    // Apply photographic wallpaper if theme defines wallpaperAsset (and no local user custom wallpaper)
+    const bgLayer = document.getElementById('bgLayer');
+    if(bgLayer){
+      if(customWallpaperDataUrl){
+        bgLayer.style.backgroundImage = `linear-gradient(180deg, rgba(7,9,10,0.45) 0%, rgba(5,7,8,0.82) 100%), url("${customWallpaperDataUrl}")`;
+      } else if(theme && theme.wallpaperAsset){
+        const wpUrl = getThemeWallpaperUrl(theme.wallpaperAsset);
+        bgLayer.style.backgroundImage = `linear-gradient(180deg, rgba(7,9,10,0.25) 0%, rgba(5,7,8,0.68) 100%), url("${wpUrl}")`;
+      } else {
+        bgLayer.style.backgroundImage = '';
+      }
+    }
+
+    // Update Dynamic Beam Light & Stencil Shape
+    const beamEl = document.getElementById('beamBg');
+    const beamSvg = document.getElementById('beamStencilSvg');
+    if(beamEl && theme){
+      const b = theme.beam || {};
+      const cone = b.cone || 'linear-gradient(164deg, transparent 22%, rgba(255,255,255,.045) 36%, transparent 50%)';
+      const glow = b.glow || 'radial-gradient(650px 260px at 65% 22%, rgba(246,197,21,.06), transparent 70%)';
+      beamEl.style.background = `${cone}, ${glow}`;
+      beamEl.classList.toggle('off', !beamEnabled);
+      if(beamSvg){
+        beamSvg.innerHTML = b.stencil || '';
       }
     }
 
@@ -1253,6 +1858,14 @@
     }
 
     renderThemesLane();
+    rebuildLanes();
+    const themesLaneIdx = lanes.findIndex(l => l.some(el => el.closest && el.closest('#rowThemes')));
+    if(themesLaneIdx !== -1 && r === themesLaneIdx){
+      focusItem(r, cols[r] || 0, false);
+    }
+    const valWp = document.getElementById('valWallpaper');
+    if(valWp && theme) valWp.textContent = theme.name;
+
     saveConfig();
 
     if(showToastNotice && theme){
@@ -1293,7 +1906,14 @@
     seasonalThemeEnabled = !seasonalThemeEnabled;
     const valEl = document.getElementById('valSeasonalMode');
     if(valEl) valEl.textContent = seasonalThemeEnabled ? 'Aktif (Kalender)' : 'Nonaktif (Terkunci)';
+    const hubBtn = document.getElementById('btnToggleSeasonalHub');
+    if(hubBtn) hubBtn.textContent = '📅 Hari Raya Otomatis: ' + (seasonalThemeEnabled ? 'AKTIF' : 'NONAKTIF');
     renderThemesLane();
+    rebuildLanes();
+    const themesLaneIdx = lanes.findIndex(l => l.some(el => el.closest && el.closest('#rowThemes')));
+    if(themesLaneIdx !== -1 && r === themesLaneIdx){
+      focusItem(r, cols[r] || 0, false);
+    }
     saveConfig();
     showToast(seasonalThemeEnabled ? 'Tema Hari Raya Otomatis diaktifkan' : 'Tema Hari Raya Otomatis dinonaktifkan');
     if(seasonalThemeEnabled) checkSeasonalTheme();
@@ -1313,28 +1933,31 @@
     if(!row) return;
     row.innerHTML = '';
 
-    // 1. Kartu Kontrol Musiman
-    const btnSeasonal = document.createElement('button');
-    btnSeasonal.type = 'button';
-    btnSeasonal.className = 'item card theme-card';
-    btnSeasonal.dataset.action = 'toggle_seasonal';
-    btnSeasonal.dataset.name = 'Tema Musiman';
-    btnSeasonal.innerHTML = `
+    // 1. Kartu Paling Kiri (Index 0): + Toko Tema (Pusat Pengaturan Tema)
+    const btnStore = document.createElement('button');
+    btnStore.type = 'button';
+    btnStore.className = 'item card theme-card';
+    btnStore.dataset.action = 'theme_store';
+    btnStore.dataset.name = 'Toko Tema';
+    btnStore.innerHTML = `
       <span class="tab"></span>
       <div style="display:flex;align-items:center;justify-content:space-between;">
-        <span class="theme-icon-box"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 16l2 2 4-4" stroke="var(--yellow)"/></svg></span>
-        <span class="stat" style="font-size:10px;color:var(--yellow);font-weight:700;">${seasonalThemeEnabled ? 'AUTO' : 'MANUAL'}</span>
+        <span class="theme-icon-box"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+        <span class="stat" style="font-size:10px;color:var(--yellow);font-weight:700;">STORE</span>
       </div>
       <div>
-        <h3 style="font-size:13.5px;">Tema Musiman</h3>
-        <p class="stat">${seasonalThemeEnabled ? 'Otomatis (Kalender)' : 'Manual (Terkunci)'}</p>
+        <h3 style="font-size:13.5px;color:var(--yellow);">+ Toko Tema</h3>
+        <p class="stat">Kelola Semua Tema</p>
       </div>
     `;
-    btnSeasonal.onclick = () => { toggleSeasonalTheme(); };
-    row.appendChild(btnSeasonal);
+    btnStore.onclick = () => { openThemeStoreModal(); };
+    row.appendChild(btnStore);
 
-    // 2. Kartu Tema Built-in
-    for(const [tid, th] of Object.entries(BUILTIN_THEMES)){
+    // 2. Kartu Tema Pilihan (Maksimal 9 tema dari pinnedThemeIds)
+    const displayList = pinnedThemeIds.slice(0, MAX_PINNED_THEMES);
+    displayList.forEach(tid => {
+      const th = getThemeById(tid);
+      if(!th) return;
       const isActive = (activeThemeId === tid);
       const btn = document.createElement('button');
       btn.type = 'button';
@@ -1347,10 +1970,12 @@
         ? 'linear-gradient(90deg, ' + (th.tokens['--card-fallback-c1'] || '#fff') + ', ' + (th.tokens['--card-fallback-c2'] || '#888') + ', ' + (th.tokens['--tab-color'] || '#f6c515') + ')'
         : 'linear-gradient(90deg, #f6c515, #1db954)';
 
+      const categoryLabel = th.category ? th.category.toUpperCase() : 'TEMA';
+
       btn.innerHTML = `
-        <span class="tab" style="background:${th.tokens['--tab-color'] || 'var(--yellow)'};"></span>
+        <span class="tab" style="background:${th.tokens && th.tokens['--tab-color'] ? th.tokens['--tab-color'] : 'var(--yellow)'};"></span>
         <div style="display:flex;align-items:center;justify-content:space-between;">
-          <span style="font-size:9.5px;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;">${esc(th.category || 'Tema')}</span>
+          <span style="font-size:9.5px;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;">${esc(categoryLabel)}</span>
           ${isActive ? '<span style="font-size:10.5px;color:var(--yellow);font-weight:800;">✓ Aktif</span>' : ''}
         </div>
         <div>
@@ -1360,56 +1985,7 @@
       `;
       btn.onclick = () => { applyTheme(tid, true); };
       row.appendChild(btn);
-    }
-
-    // 3. Kartu Tema Cloud Terunduh (Tersimpan Lokal di TV)
-    for(const [tid, th] of Object.entries(downloadedThemes)){
-      const isActive = (activeThemeId === tid);
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'item card theme-card' + (isActive ? ' active-theme' : '');
-      btn.dataset.action = 'select_theme';
-      btn.dataset.themeId = tid;
-      btn.dataset.name = th.name;
-
-      const gradPreview = th.tokens && th.tokens['--card-fallback-c2']
-        ? 'linear-gradient(90deg, ' + (th.tokens['--card-fallback-c1'] || '#fff') + ', ' + (th.tokens['--card-fallback-c2'] || '#888') + ', ' + (th.tokens['--tab-color'] || '#f6c515') + ')'
-        : 'linear-gradient(90deg, #ec4899, #8b5cf6)';
-
-      btn.innerHTML = `
-        <span class="tab" style="background:${th.tokens['--tab-color'] || 'var(--yellow)'};"></span>
-        <div style="display:flex;align-items:center;justify-content:space-between;">
-          <span style="font-size:9.5px;color:var(--yellow);letter-spacing:.05em;text-transform:uppercase;">CLOUD • ${esc(th.category || 'Tema')}</span>
-          ${isActive ? '<span style="font-size:10.5px;color:var(--yellow);font-weight:800;">✓ Aktif</span>' : ''}
-        </div>
-        <div>
-          <h3 style="font-size:13px;">${esc(th.name)}</h3>
-          <div class="theme-preview-bar" style="background:${gradPreview};"></div>
-        </div>
-      `;
-      btn.onclick = () => { applyTheme(tid, true); };
-      row.appendChild(btn);
-    }
-
-    // 4. Kartu "+ Toko Tema Cloud"
-    const btnStore = document.createElement('button');
-    btnStore.type = 'button';
-    btnStore.className = 'item card theme-card';
-    btnStore.dataset.action = 'theme_store';
-    btnStore.dataset.name = 'Toko Tema Cloud';
-    btnStore.innerHTML = `
-      <span class="tab"></span>
-      <div style="display:flex;align-items:center;justify-content:space-between;">
-        <span class="theme-icon-box"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"/></svg></span>
-        <span class="stat" style="font-size:10px;color:var(--yellow);font-weight:700;">STORE</span>
-      </div>
-      <div>
-        <h3 style="font-size:13.5px;color:var(--yellow);">+ Toko Tema</h3>
-        <p class="stat">Cloud &amp; Komunitas</p>
-      </div>
-    `;
-    btnStore.onclick = () => { openThemeStoreModal(); };
-    row.appendChild(btnStore);
+    });
   }
 
   // ============ CLOUD THEME STORE LOGIC & MODAL ============
@@ -1420,36 +1996,24 @@
     } catch(e){}
   }
 
-  function fetchThemeCatalog(){
-    const badge = document.getElementById('storeStatusBadge');
-    if(badge){
-      badge.textContent = '● Memeriksa Cloud…';
-      badge.className = 'store-status-pill offline';
+  window.onThemeCatalogBase64Result = function(b64){
+    try {
+      if(!b64) throw new Error('empty b64');
+      const jsonStr = new TextDecoder().decode(Uint8Array.from(atob(b64), c => c.charCodeAt(0)));
+      window.onThemeCatalogResult(jsonStr);
+    } catch(e){
+      window.onThemeCatalogResult(null);
     }
+  };
 
-    let isDone = false;
-    const timer = setTimeout(() => {
-      if(!isDone){
-        isDone = true;
-        // Fallback gracefully without freezing
-        currentCatalogThemes = [...BUILTIN_CLOUD_CATALOG.themes];
-        if(badge){
-          badge.textContent = '○ Mode Offline (Katalog Lokal)';
-          badge.className = 'store-status-pill offline';
-        }
-        renderThemeStore(storeActiveFilter);
-      }
-    }, 4500);
-
-    fetch(THEME_STORE_CATALOG_URL)
-      .then(res => {
-        if(!res.ok) throw new Error('HTTP ' + res.status);
-        return res.json();
-      })
-      .then(data => {
-        if(isDone) return;
-        isDone = true;
-        clearTimeout(timer);
+  window.onThemeCatalogResult = function(jsonStr){
+    if(window._themeCatalogDone) return;
+    window._themeCatalogDone = true;
+    if(window._themeCatalogTimer) clearTimeout(window._themeCatalogTimer);
+    const badge = document.getElementById('storeStatusBadge');
+    try {
+      if(jsonStr){
+        const data = JSON.parse(jsonStr);
         if(data && Array.isArray(data.themes)){
           currentCatalogThemes = data.themes;
         } else {
@@ -1460,141 +2024,291 @@
           badge.className = 'store-status-pill online';
         }
         renderThemeStore(storeActiveFilter);
-      })
-      .catch(err => {
-        if(isDone) return;
-        isDone = true;
-        clearTimeout(timer);
+        return;
+      }
+    } catch(e){}
+    currentCatalogThemes = [...BUILTIN_CLOUD_CATALOG.themes];
+    if(badge){
+      badge.textContent = '○ Mode Offline (Katalog Lokal)';
+      badge.className = 'store-status-pill offline';
+    }
+    renderThemeStore(storeActiveFilter);
+  };
+
+  function fetchThemeCatalog(){
+    const badge = document.getElementById('storeStatusBadge');
+    if(badge){
+      badge.textContent = '● Memeriksa Cloud…';
+      badge.className = 'store-status-pill offline';
+    }
+
+    window._themeCatalogDone = false;
+    if(window._themeCatalogTimer) clearTimeout(window._themeCatalogTimer);
+    window._themeCatalogTimer = setTimeout(() => {
+      if(!window._themeCatalogDone){
+        window._themeCatalogDone = true;
         currentCatalogThemes = [...BUILTIN_CLOUD_CATALOG.themes];
         if(badge){
           badge.textContent = '○ Mode Offline (Katalog Lokal)';
           badge.className = 'store-status-pill offline';
         }
         renderThemeStore(storeActiveFilter);
-      });
+      }
+    }, 8500);
+
+    if(hasBridge('fetchThemeCatalog')){
+      try {
+        window.TiltboxBridge.fetchThemeCatalog(THEME_STORE_CATALOG_URL);
+      } catch(e){
+        window.onThemeCatalogResult(null);
+      }
+    } else {
+      // Browser preview fallback
+      try {
+        fetch(THEME_STORE_CATALOG_URL)
+          .then(res => res.json())
+          .then(data => window.onThemeCatalogResult(JSON.stringify(data)))
+          .catch(() => window.onThemeCatalogResult(null));
+      } catch(e){
+        window.onThemeCatalogResult(null);
+      }
+    }
   }
 
-  function renderThemeStore(filter){
-    storeActiveFilter = filter || 'all';
-    const grid = document.getElementById('storeGrid');
-    if(!grid) return;
-    grid.innerHTML = '';
+  function createThemeStoreCard(item, tid, type){
+    const card = document.createElement('div');
+    const isActive = (activeThemeId === tid);
+    const isPinned = (pinnedThemeIds.indexOf(tid) !== -1);
+    const isPinFull = (pinnedThemeIds.length >= MAX_PINNED_THEMES);
+    const isDownloaded = !!downloadedThemes[tid];
+    const isPremium = (item.tier === 'premium');
+    const isUnlocked = isDownloaded || unlockedThemes.indexOf(tid) !== -1;
 
-    // Update chips active state
-    document.querySelectorAll('.store-chip').forEach(c => {
-      c.classList.toggle('active', c.dataset.filter === storeActiveFilter);
-    });
+    card.className = 'store-item-card' + (isActive ? ' is-active' : '');
+    card.dataset.themeId = tid;
 
-    let list = [...currentCatalogThemes];
-    if(storeActiveFilter === 'free'){
-      list = list.filter(t => t.tier === 'free');
-    } else if(storeActiveFilter === 'premium'){
-      list = list.filter(t => t.tier === 'premium');
-    } else if(storeActiveFilter === 'Hari Raya'){
-      list = list.filter(t => t.category === 'Hari Raya');
-    } else if(storeActiveFilter === 'installed'){
-      list = list.filter(t => !!downloadedThemes[t.id]);
-    }
+    const bgBase = item.tokens ? (item.tokens['--bg-base'] || '#0a0a0a') : '#0a0a0a';
+    const bgGrad = item.tokens ? (item.tokens['--bg-grad-1'] || '#1a1a1a') : '#1a1a1a';
+    const cardC1 = item.tokens ? (item.tokens['--card-fallback-c1'] || '#444') : '#444';
+    const tabColor = item.tokens ? (item.tokens['--tab-color'] || '#f6c515') : '#f6c515';
 
-    if(list.length === 0){
-      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);font-size:13px;">Tidak ada tema dalam kategori ini.</div>';
-      return;
-    }
-
-    list.forEach(item => {
-      const isDownloaded = !!downloadedThemes[item.id];
-      const isActive = (activeThemeId === item.id);
-      const isPremium = (item.tier === 'premium');
-      const isUnlocked = isDownloaded || unlockedThemes.indexOf(item.id) !== -1;
-
-      const card = document.createElement('div');
-      card.className = 'store-item-card' + (isActive ? ' is-active' : '');
-
-      const bgBase = item.tokens ? (item.tokens['--bg-base'] || '#0a0a0a') : '#0a0a0a';
-      const bgGrad = item.tokens ? (item.tokens['--bg-grad-1'] || '#1a1a1a') : '#1a1a1a';
-      const cardC1 = item.tokens ? (item.tokens['--card-fallback-c1'] || '#444') : '#444';
-      const cardC2 = item.tokens ? (item.tokens['--card-fallback-c2'] || '#222') : '#222';
-      const tabColor = item.tokens ? (item.tokens['--tab-color'] || '#f6c515') : '#f6c515';
-
-      let badgeHtml = '';
-      if(isPremium){
-        badgeHtml = '<span class="store-badge premium">' + esc(item.price || 'Premium') + '</span>';
-      } else if(item.category === 'Hari Raya'){
-        badgeHtml = '<span class="store-badge holiday">Hari Raya</span>';
+    // Preview Wallpaper Asli atau Gradasi Sinematik Langsung pada Latar Kartu
+    if(item.wallpaperAsset){
+      const wpUrl = getThemeWallpaperUrl(item.wallpaperAsset);
+      if(wpUrl){
+        card.style.backgroundImage = `url("${wpUrl}")`;
       } else {
-        badgeHtml = '<span class="store-badge free">Gratis</span>';
+        card.style.background = `linear-gradient(135deg, ${bgBase}, ${bgGrad})`;
       }
+    } else {
+      card.style.background = `radial-gradient(ellipse at 85% 15%, ${cardC1} 0%, transparent 65%), linear-gradient(135deg, ${bgGrad} 0%, ${bgBase} 100%)`;
+    }
 
-      card.innerHTML = `
-        <div class="store-mini-preview" style="background:linear-gradient(135deg, ${bgBase}, ${bgGrad});">
-          ${badgeHtml}
-          <div class="store-mini-card" style="background:linear-gradient(155deg, ${cardC1}, ${cardC2});">
-            <span class="store-mini-tab" style="background:${tabColor};box-shadow:0 0 8px ${tabColor};"></span>
+    let badgeHtml = '';
+    if(isPremium){
+      badgeHtml = '<span class="store-badge premium">' + esc(item.price || 'Premium') + '</span>';
+    } else if(item.category === 'Hari Raya'){
+      badgeHtml = '<span class="store-badge holiday">Hari Raya</span>';
+    } else if(type === 'builtin'){
+      badgeHtml = '<span class="store-badge builtin">Bawaan</span>';
+    } else {
+      badgeHtml = '<span class="store-badge free">Gratis</span>';
+    }
+
+    const desc = item.description || (type === 'builtin' ? 'Tema sinematik bawaan Tiltbox Launcher.' : 'Tema dinamis kualitas tinggi untuk Tiltbox.');
+    const authorText = type === 'builtin' ? 'Tiltbox System' : (item.author || 'Komunitas');
+
+    card.innerHTML = `
+      <div class="store-card-scrim"></div>
+      <div class="store-card-content">
+        <div class="store-card-top">
+          <div class="store-badge-wrap">${badgeHtml}</div>
+          <div class="store-card-status-badges">
+            ${isActive ? '<span class="store-status-chip active">✓ Aktif</span>' : ''}
+            ${isPinned ? '<span class="store-status-chip pinned">📌 Di Beranda</span>' : ''}
           </div>
+          <div class="store-card-accent-pill" style="background:${tabColor};box-shadow:0 0 10px ${tabColor};"></div>
         </div>
-        <div class="store-meta">
-          <h4>${esc(item.name)}</h4>
-          <p>${esc(item.description || 'Tema dinamis kualitas tinggi untuk Tiltbox.')}</p>
-          <div class="store-author">Kreator: <b>${esc(item.author || 'Komunitas')}</b></div>
+        <div class="store-card-mid">
+          <h4 class="store-card-title">${esc(item.name)}</h4>
+          <p class="store-card-desc">${esc(desc)}</p>
+          <div class="store-card-author">Kreator: <b>${esc(authorText)}</b></div>
         </div>
         <div class="store-actions"></div>
-      `;
+      </div>
+    `;
 
-      const actionsDiv = card.querySelector('.store-actions');
+    const actionsDiv = card.querySelector('.store-actions');
 
-      if(isActive){
-        const actBtn = document.createElement('button');
-        actBtn.type = 'button';
-        actBtn.className = 'store-btn active';
-        actBtn.textContent = '✓ Sedang Aktif';
-        actionsDiv.appendChild(actBtn);
-      } else if(isDownloaded){
-        const actBtn = document.createElement('button');
-        actBtn.type = 'button';
-        actBtn.className = 'store-btn primary';
-        actBtn.textContent = 'Terapkan Tema';
-        actBtn.onclick = () => {
-          applyTheme(item.id, true);
-          renderThemeStore(storeActiveFilter);
-        };
-        actionsDiv.appendChild(actBtn);
+    // 1. Tombol Aksi Kiri (Terapkan / Unduh / Beli)
+    if(isActive){
+      const actBtn = document.createElement('button');
+      actBtn.type = 'button';
+      actBtn.className = 'store-btn active';
+      actBtn.textContent = '✓ Aktif';
+      actBtn.disabled = true;
+      actionsDiv.appendChild(actBtn);
+    } else if(isPremium && !isUnlocked){
+      const buyBtn = document.createElement('button');
+      buyBtn.type = 'button';
+      buyBtn.className = 'store-btn premium-buy';
+      buyBtn.textContent = 'Beli / Aktivasi';
+      buyBtn.onclick = (e) => {
+        e.stopPropagation();
+        openQrPaymentModal(item);
+      };
+      actionsDiv.appendChild(buyBtn);
+    } else if(type === 'cloud' && !isDownloaded && !BUILTIN_THEMES[tid]){
+      const dlBtn = document.createElement('button');
+      dlBtn.type = 'button';
+      dlBtn.className = 'store-btn primary';
+      dlBtn.textContent = 'Unduh & Pasang';
+      dlBtn.onclick = (e) => {
+        e.stopPropagation();
+        downloadedThemes[tid] = item;
+        saveCustomThemes();
+        applyTheme(tid, true);
+        if(pinnedThemeIds.indexOf(tid) === -1 && pinnedThemeIds.length < MAX_PINNED_THEMES){
+          pinnedThemeIds.push(tid);
+          savePinnedThemes();
+        }
+        renderThemesLane();
+        rebuildLanes();
+        renderThemeStore();
+        showToast('⬇️ Tema ' + item.name + ' berhasil diunduh & diterapkan!');
+      };
+      actionsDiv.appendChild(dlBtn);
+    } else {
+      const applyBtn = document.createElement('button');
+      applyBtn.type = 'button';
+      applyBtn.className = 'store-btn primary';
+      applyBtn.textContent = 'Terapkan';
+      applyBtn.onclick = (e) => {
+        e.stopPropagation();
+        applyTheme(tid, true);
+        renderThemeStore();
+        renderThemesLane();
+        rebuildLanes();
+        showToast('✨ Tema ' + item.name + ' berhasil diterapkan!');
+      };
+      actionsDiv.appendChild(applyBtn);
 
+      if(type === 'cloud' && isDownloaded && !BUILTIN_THEMES[tid]){
         const delBtn = document.createElement('button');
         delBtn.type = 'button';
         delBtn.className = 'store-btn-del';
         delBtn.textContent = 'Hapus';
-        delBtn.onclick = () => {
-          delete downloadedThemes[item.id];
+        delBtn.title = 'Hapus dari TV';
+        delBtn.onclick = (e) => {
+          e.stopPropagation();
+          delete downloadedThemes[tid];
+          const pIdx = pinnedThemeIds.indexOf(tid);
+          if(pIdx !== -1){
+            pinnedThemeIds.splice(pIdx, 1);
+            savePinnedThemes();
+          }
           saveCustomThemes();
+          if(activeThemeId === tid) applyTheme('default_obsidian', true);
           renderThemesLane();
-          renderThemeStore(storeActiveFilter);
+          rebuildLanes();
+          renderThemeStore();
           showToast('🗑️ Tema dihapus dari TV');
         };
         actionsDiv.appendChild(delBtn);
-      } else if(isPremium && !isUnlocked){
-        const buyBtn = document.createElement('button');
-        buyBtn.type = 'button';
-        buyBtn.className = 'store-btn premium-buy';
-        buyBtn.textContent = 'Beli / Aktivasi';
-        buyBtn.onclick = () => { openQrPaymentModal(item); };
-        actionsDiv.appendChild(buyBtn);
-      } else {
-        const dlBtn = document.createElement('button');
-        dlBtn.type = 'button';
-        dlBtn.className = 'store-btn primary';
-        dlBtn.textContent = 'Unduh & Pasang';
-        dlBtn.onclick = () => {
-          downloadedThemes[item.id] = item;
-          saveCustomThemes();
-          applyTheme(item.id, true);
-          renderThemeStore(storeActiveFilter);
-          showToast('⬇️ Tema ' + item.name + ' berhasil diunduh!');
-        };
-        actionsDiv.appendChild(dlBtn);
       }
+    }
 
-      grid.appendChild(card);
+    // 2. Tombol Pin Beranda (Maksimal 9)
+    const pinBtn = document.createElement('button');
+    pinBtn.type = 'button';
+    if(isPinned){
+      pinBtn.className = 'store-pin-btn pin-active';
+      pinBtn.textContent = '✓ Di Beranda';
+      pinBtn.title = 'Klik untuk melepas dari beranda';
+    } else if(isPinFull){
+      pinBtn.className = 'store-pin-btn pin-locked';
+      pinBtn.textContent = '🔒 Penuh (9/9)';
+      pinBtn.title = 'Batas maksimal 9 tema tercapai. Lepas tema lain terlebih dahulu.';
+    } else {
+      pinBtn.className = 'store-pin-btn';
+      pinBtn.textContent = '+ Pin Beranda';
+      pinBtn.title = 'Klik untuk menampilkan tema di beranda';
+    }
+    pinBtn.onclick = (e) => {
+      e.stopPropagation();
+      togglePinTheme(tid);
+    };
+    actionsDiv.appendChild(pinBtn);
+
+    return card;
+  }
+
+  function renderThemeStore(){
+    const gridBuiltin = document.getElementById('storeGridBuiltin');
+    const gridFestive = document.getElementById('storeGridFestive');
+    const gridCloud = document.getElementById('storeGridCloud');
+    if(!gridBuiltin || !gridFestive || !gridCloud) return;
+
+    gridBuiltin.innerHTML = '';
+    gridFestive.innerHTML = '';
+    gridCloud.innerHTML = '';
+
+    // Update Header Status & Button
+    const badge = document.getElementById('pinnedThemeCountBadge');
+    if(badge){
+      const isFull = (pinnedThemeIds.length >= MAX_PINNED_THEMES);
+      badge.textContent = `${pinnedThemeIds.length} / ${MAX_PINNED_THEMES} Disematkan`;
+      badge.classList.toggle('full', isFull);
+    }
+    const btnSeasonalHub = document.getElementById('btnToggleSeasonalHub');
+    if(btnSeasonalHub){
+      btnSeasonalHub.textContent = `📅 Hari Raya Otomatis: ${seasonalThemeEnabled ? 'AKTIF' : 'NONAKTIF'}`;
+    }
+
+    // 1. Seksi 1: Tema Bawaan Sinematik
+    const builtinKeys = ['default_obsidian', 'pure_oled', 'emerald_cinema', 'royal_midnight', 'sunset_amber'];
+    builtinKeys.forEach(tid => {
+      const th = BUILTIN_THEMES[tid];
+      if(th) gridBuiltin.appendChild(createThemeStoreCard(th, tid, 'builtin'));
     });
+
+    // 2. Seksi 2: Tema Musiman & Hari Raya
+    const festiveRendered = {};
+    for(const [tid, th] of Object.entries(BUILTIN_THEMES)){
+      if(th.category === 'Hari Raya'){
+        gridFestive.appendChild(createThemeStoreCard(th, tid, 'festive'));
+        festiveRendered[tid] = true;
+      }
+    }
+    currentCatalogThemes.forEach(t => {
+      if(t.category === 'Hari Raya' && !festiveRendered[t.id]){
+        gridFestive.appendChild(createThemeStoreCard(t, t.id, 'cloud'));
+        festiveRendered[t.id] = true;
+      }
+    });
+
+    // 3. Seksi 3: Tema Cloud & Komunitas
+    const cloudRendered = {};
+    currentCatalogThemes.forEach(t => {
+      if(t.category !== 'Hari Raya' && !BUILTIN_THEMES[t.id]){
+        gridCloud.appendChild(createThemeStoreCard(t, t.id, 'cloud'));
+        cloudRendered[t.id] = true;
+      }
+    });
+    for(const [tid, th] of Object.entries(downloadedThemes)){
+      if(!festiveRendered[tid] && !cloudRendered[tid] && !BUILTIN_THEMES[tid]){
+        gridCloud.appendChild(createThemeStoreCard(th, tid, 'cloud'));
+        cloudRendered[tid] = true;
+      }
+    }
+
+    // Pulihkan fokus stabil jika modal Toko Tema sedang aktif
+    if(activeModal() && activeModal().id === 'themeStoreModal'){
+      if(!modalFocusEl || !document.contains(modalFocusEl)){
+        const firstFocus = gridBuiltin.querySelector('.store-btn') || document.getElementById('btnToggleSeasonalHub') || document.getElementById('btnCloseThemeStore');
+        setModalFocus(firstFocus);
+      }
+    }
   }
 
   function generateQrSvg(urlText){
@@ -1628,9 +2342,12 @@
     const m = document.getElementById('themeStoreModal');
     if(!m) return;
     m.classList.add('active');
+    renderThemeStore();
     fetchThemeCatalog();
-    setModalFocus(null);
-    restoreModalFocus('');
+    const storeBody = m.querySelector('.modal-body');
+    if(storeBody) storeBody.scrollTop = 0;
+    const activeCardBtn = m.querySelector('.store-item-card.is-active .store-btn') || m.querySelector('.store-btn') || document.getElementById('btnCloseThemeStore');
+    setModalFocus(activeCardBtn);
   }
 
   function openQrPaymentModal(themeItem){
@@ -1657,7 +2374,7 @@
   function unlockThemeWithCode(){
     const input = document.getElementById('licenseCodeInput');
     const code = (input.value || '').trim().toUpperCase();
-    if(code === 'TILT99' || code === 'PREM26' || code.length >= 6){
+    if(code === 'TILT99' || code === 'PREM26'){
       if(currentPayingTheme){
         if(unlockedThemes.indexOf(currentPayingTheme.id) === -1){
           unlockedThemes.push(currentPayingTheme.id);
@@ -1714,6 +2431,7 @@
       } catch(e){}
       if(cfg.activeThemeId && (BUILTIN_THEMES[cfg.activeThemeId] || downloadedThemes[cfg.activeThemeId])) activeThemeId = cfg.activeThemeId;
       if(typeof cfg.beamEnabled === 'boolean') beamEnabled = cfg.beamEnabled;
+      loadPinnedThemes();
     } catch(e){}
   }
 
@@ -1784,19 +2502,33 @@
   // ============ 3. WALLPAPER ENGINE (PRESET + LOCAL IMAGE) ============
   function applyWallpaperState(){
     const bgLayer = document.getElementById('bgLayer');
-    document.body.className = THEMES[currentThemeIdx].cls;
+    const currentTheme = getThemeById(activeThemeId);
+    const hasThemeWp = !customWallpaperDataUrl && !!(currentTheme && currentTheme.wallpaperAsset);
+    document.body.classList.toggle('has-theme-wp', hasThemeWp);
+
     if(customWallpaperDataUrl){
       document.body.classList.add('has-custom-wp');
-      bgLayer.style.backgroundImage = `linear-gradient(180deg, rgba(7,9,10,0.45) 0%, rgba(5,7,8,0.82) 100%), url("${customWallpaperDataUrl}")`;
+      if(bgLayer) bgLayer.style.backgroundImage = `linear-gradient(180deg, rgba(7,9,10,0.45) 0%, rgba(5,7,8,0.82) 100%), url("${customWallpaperDataUrl}")`;
       document.getElementById('valLocalWallpaper').textContent = 'Aktif (Gambar Lokal)';
-      document.getElementById('subLocalWp').textContent = 'Wallpaper lokal aktif';
+      const subL = document.getElementById('subLocalWp');
+      if(subL) subL.textContent = 'Wallpaper lokal aktif';
     } else {
       document.body.classList.remove('has-custom-wp');
-      bgLayer.style.backgroundImage = '';
+      if(bgLayer){
+        if(currentTheme && currentTheme.wallpaperAsset){
+          const wpUrl = getThemeWallpaperUrl(currentTheme.wallpaperAsset);
+          bgLayer.style.backgroundImage = `linear-gradient(180deg, rgba(7,9,10,0.25) 0%, rgba(5,7,8,0.68) 100%), url("${wpUrl}")`;
+        } else {
+          bgLayer.style.backgroundImage = '';
+        }
+      }
       document.getElementById('valLocalWallpaper').textContent = 'Pilih Berkas...';
-      document.getElementById('subLocalWp').textContent = 'Pilih gambar dari TV / USB';
+      const subL = document.getElementById('subLocalWp');
+      if(subL) subL.textContent = 'Pilih gambar dari TV / USB';
     }
-    document.getElementById('valWallpaper').textContent = THEMES[currentThemeIdx].name;
+    if(currentTheme){
+      document.getElementById('valWallpaper').textContent = currentTheme.name;
+    }
     const autoCfg = AUTO_WALLPAPER_INTERVALS[autoWallpaperIdx] || AUTO_WALLPAPER_INTERVALS[0];
     document.getElementById('valAutoWallpaper').textContent = autoCfg.label;
     document.getElementById('beamBg').classList.toggle('off', !beamEnabled);
@@ -1812,10 +2544,12 @@
     if(autoCfg.ms > 0){
       autoWallpaperTimer = setInterval(() => {
         if(document.hidden || customWallpaperDataUrl) return;
-        currentThemeIdx = (currentThemeIdx + 1) % THEMES.length;
-        saveConfig();
-        applyWallpaperState();
-        showToast(`🔄 Auto-Wallpaper: ${THEMES[currentThemeIdx].name}`);
+        const keys = Object.keys(BUILTIN_THEMES);
+        let idx = keys.indexOf(activeThemeId);
+        idx = (idx + 1) % keys.length;
+        applyTheme(keys[idx], false);
+        const nextTh = BUILTIN_THEMES[keys[idx]];
+        if(nextTh) showToast(`🔄 Auto-Wallpaper: ${nextTh.name}`);
       }, autoCfg.ms);
     }
   }
@@ -1849,7 +2583,8 @@
 
     const orderLabel = sourcesFirst ? 'Sumber → Aplikasi' : 'Aplikasi → Sumber';
     document.getElementById('valRowOrder').textContent = orderLabel;
-    document.getElementById('subRowOrder').textContent = orderLabel;
+    const subRO = document.getElementById('subRowOrder');
+    if(subRO) subRO.textContent = orderLabel;
     document.getElementById('valShowSources').textContent = showSourcesLane ? 'Tampil' : 'Disembunyikan';
     const valThemesEl = document.getElementById('valShowThemes');
     if(valThemesEl) valThemesEl.textContent = showThemesLane ? 'Tampil' : 'Disembunyikan';
@@ -2005,9 +2740,10 @@
 
     const favSet = new Set(favApps.map(a => a.packageName));
 
-    document.getElementById('favCountSubtitle').textContent =
-      `Menampilkan ${favApps.length}/${MAX_FAVORITES} favorit • Klik + untuk Semua Aplikasi (${installedAppsList.length})`;
-    document.getElementById('valFavCount').textContent = `${favApps.length} / ${MAX_FAVORITES} Favorit →`;
+    const favSub = document.getElementById('favCountSubtitle');
+    if(favSub) favSub.textContent = `Akses Cepat Aplikasi Favorit (${favApps.length})`;
+    const valFav = document.getElementById('valFavCount');
+    if(valFav) valFav.textContent = `${favApps.length} / ${MAX_FAVORITES} Favorit →`;
 
     favApps.forEach((app, idx) => {
       const btn = document.createElement('button');
@@ -2188,7 +2924,7 @@
         const cat = (cntEl && cntEl.textContent) ? cntEl.textContent : 'Aplikasi Favorit';
         subTitleEl.innerHTML = `<span style="color:var(--yellow);font-weight:700;">${esc(el.dataset.name)}</span> &bull; <span style="color:var(--txt);opacity:.85;">${esc(cat)}</span>`;
       } else {
-        subTitleEl.innerHTML = `Menampilkan ${favoritePackages.length}/${MAX_FAVORITES} favorit &bull; Klik + untuk Semua Aplikasi`;
+        subTitleEl.textContent = 'Akses Cepat Aplikasi Favorit';
       }
     }
 
@@ -2200,7 +2936,7 @@
         const statTxt = (statEl && statEl.textContent) ? statEl.textContent : '';
         sourcesSubEl.innerHTML = `<span style="color:var(--yellow);font-weight:700;">${esc(el.dataset.name)}</span> &bull; <span style="color:var(--txt);opacity:.85;">${esc(statTxt)}</span>`;
       } else {
-        sourcesSubEl.innerHTML = `Siaran TV, Pemutar Media &amp; Port HDMI`;
+        sourcesSubEl.textContent = 'HDMI & Perangkat Terhubung';
       }
     }
 
@@ -2264,7 +3000,8 @@
     boostBusy = false;
     if(freed < 0){ showToast('RAM Booster gagal dijalankan'); return; }
     document.getElementById('ramBoosterText').textContent = `${avail} MB Bebas`;
-    document.getElementById('subRamBoost').textContent = `Tersedia ${avail} MB`;
+    const subRB = document.getElementById('subRamBoost');
+    if(subRB) subRB.textContent = `Tersedia ${avail} MB`;
     showToast(freed > 0
       ? `⚡ ${freed} MB dibebaskan • Tersedia ${avail} dari ${total} MB`
       : `RAM sudah optimal • Tersedia ${avail} dari ${total} MB`);
@@ -2795,10 +3532,10 @@
   }
 
   function cycleTheme(){
-    currentThemeIdx = (currentThemeIdx + 1) % THEMES.length;
-    saveConfig();
-    applyWallpaperState();
-    showToast(`Preset Tema: ${THEMES[currentThemeIdx].name}`);
+    const keys = Object.keys(BUILTIN_THEMES);
+    let idx = keys.indexOf(activeThemeId);
+    idx = (idx + 1) % keys.length;
+    applyTheme(keys[idx], true);
   }
 
   function triggerLocalWallpaperPicker(){
@@ -2857,8 +3594,8 @@
   function modalFocusables(){
     const m = activeModal();
     if(!m) return [];
-    return [...m.querySelectorAll('.close-btn, .set-opt, .grid-app-top, .pill-btn, .wx-btn, .store-chip, .store-btn, .store-btn-del, #licenseCodeInput, #btnDownloadUpdate, #btnInstallNow, #btnDismissUpdate')]
-      .filter(el => el.getClientRects().length > 0);
+    return [...m.querySelectorAll('.close-btn, .set-opt, .grid-app-top, .pill-btn, .wx-btn, .store-header-btn, .store-btn, .store-pin-btn, .store-btn-del, #licenseCodeInput, #btnDownloadUpdate, #btnInstallNow, #btnDismissUpdate')]
+      .filter(el => el.getClientRects().length > 0 && !el.disabled);
   }
 
   function setModalFocus(el){
@@ -2866,7 +3603,86 @@
     modalFocusEl = el || null;
     if(modalFocusEl){
       modalFocusEl.classList.add('mf');
-      modalFocusEl.scrollIntoView({block:'nearest', inline:'nearest'});
+      document.querySelectorAll('.store-item-card.card-focused').forEach(c => c.classList.remove('card-focused'));
+      const parentCard = modalFocusEl.closest ? modalFocusEl.closest('.store-item-card') : null;
+      if(parentCard) parentCard.classList.add('card-focused');
+
+      const storeModal = modalFocusEl.closest ? modalFocusEl.closest('#themeStoreModal') : null;
+      if(storeModal){
+        const storeBody = storeModal.querySelector('.modal-body');
+        if(storeBody){
+          // 1. Jika fokus di tombol [✕ Kembali] di header: reset scrollTop ke 0 mulus
+          if(modalFocusEl.id === 'btnCloseThemeStore'){
+            storeBody.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+          }
+
+          // 2. Jika elemen berada di dalam kartu tema:
+          if(parentCard){
+            const grid = parentCard.parentElement;
+            const isFirstRowOfBuiltin = (grid && grid.id === 'storeGridBuiltin') &&
+              (grid.firstElementChild && (parentCard.offsetTop <= grid.firstElementChild.offsetTop + 10));
+
+            // Jika kartu baris paling atas di seksi pertama: kunci scrollTop selalu 0
+            if(isFirstRowOfBuiltin){
+              storeBody.scrollTo({ top: 0, behavior: 'smooth' });
+              return;
+            }
+
+            // Untuk kartu lainnya: hitung batas kartu & judul seksi di atasnya
+            const cRect = storeBody.getBoundingClientRect();
+            const cardRect = parentCard.getBoundingClientRect();
+            const head = storeModal.querySelector('.modal-head');
+            const headBottom = head ? head.getBoundingClientRect().bottom : cRect.top;
+            const safeHeadroom = 28;
+            const minAllowedTop = headBottom + safeHeadroom;
+
+            let targetTop = cardRect.top;
+            // Jika kartu adalah baris pertama dalam grid seksinya, sertakan header seksi di atasnya
+            if(grid && grid.firstElementChild && (parentCard.offsetTop <= grid.firstElementChild.offsetTop + 10)){
+              const prevHeader = grid.previousElementSibling;
+              if(prevHeader && (prevHeader.classList.contains('store-section-title') || prevHeader.classList.contains('store-section-header'))){
+                targetTop = prevHeader.getBoundingClientRect().top;
+              }
+            }
+
+            if(targetTop < minAllowedTop){
+              storeBody.scrollTop -= (minAllowedTop - targetTop);
+            } else if(cardRect.bottom > cRect.bottom - 24){
+              storeBody.scrollTop += (cardRect.bottom - cRect.bottom + 36);
+            }
+            return;
+          }
+
+          // 3. Jika elemen adalah tombol di seksi header (seperti saklar hari raya otomatis):
+          if(modalFocusEl.classList.contains('store-section-toggle-btn') || modalFocusEl.classList.contains('store-header-btn')){
+            const cRect = storeBody.getBoundingClientRect();
+            const elRect = modalFocusEl.getBoundingClientRect();
+            const head = storeModal.querySelector('.modal-head');
+            const headBottom = head ? head.getBoundingClientRect().bottom : cRect.top;
+            const minAllowedTop = headBottom + 28;
+            if(elRect.top < minAllowedTop){
+              storeBody.scrollTop -= (minAllowedTop - elRect.top);
+            } else if(elRect.bottom > cRect.bottom - 24){
+              storeBody.scrollTop += (elRect.bottom - cRect.bottom + 36);
+            }
+            return;
+          }
+        }
+      } else {
+        const storeBody = modalFocusEl.closest && modalFocusEl.closest('.store-card-wrap .modal-body');
+        if(storeBody){
+          const cRect = storeBody.getBoundingClientRect();
+          const elRect = modalFocusEl.getBoundingClientRect();
+          if(elRect.bottom > cRect.bottom - 20){
+            storeBody.scrollTop += (elRect.bottom - cRect.bottom + 32);
+          } else if(elRect.top < cRect.top + 28){
+            storeBody.scrollTop -= (cRect.top - elRect.top + 36);
+          }
+        } else {
+          modalFocusEl.scrollIntoView({block:'nearest', inline:'nearest'});
+        }
+      }
     }
   }
 
@@ -2880,6 +3696,8 @@
     if(d.wx) return 'W:' + d.wx;
     if(el.id) return 'I:' + el.id;
     if(d.opt) return 'O:' + d.opt;
+    if(d.themeId) return 'TH:' + d.themeId;
+    if(d.filter) return 'F:' + d.filter;
     return '';
   }
 
@@ -2919,51 +3737,102 @@
       return;
     }
 
-    // Modal kustomisasi: daftar vertikal
+    // Modal Toko Tema (Fullscreen Hub)
     if(m.id === 'themeStoreModal'){
-      const closeBtn = m.querySelector('#btnCloseThemeStore');
-      const chips = [...m.querySelectorAll('.store-chip')];
-      const actionBtns = [...m.querySelectorAll('.store-btn, .store-btn-del')];
-      if(modalFocusEl === closeBtn){
-        if(dir === 'down'){
-          const activeChip = chips.find(c => c.classList.contains('active')) || chips[0];
-          if(activeChip) setModalFocus(activeChip);
+      const curRect = modalFocusEl.getBoundingClientRect();
+      const cx = curRect.left + curRect.width / 2;
+      const cy = curRect.top + curRect.height / 2;
+
+      // Penanganan khusus: Turun dari tombol Kembali di header langsung ke baris teratas tema bawaan
+      if(modalFocusEl.id === 'btnCloseThemeStore' && dir === 'down'){
+        const firstGrid = document.getElementById('storeGridBuiltin');
+        const firstRowBtns = firstGrid ? [...firstGrid.querySelectorAll('.store-btn, .store-pin-btn')] : [];
+        if(firstRowBtns.length > 0){
+          let target = firstRowBtns[0];
+          let minXDist = Infinity;
+          for(const btn of firstRowBtns){
+            const br = btn.getBoundingClientRect();
+            const bx = br.left + br.width / 2;
+            const xDist = Math.abs(bx - cx);
+            if(xDist < minXDist){
+              minXDist = xDist;
+              target = btn;
+            }
+          }
+          setModalFocus(target);
+          return;
         }
-        return;
       }
-      const chipIdx = chips.indexOf(modalFocusEl);
-      if(chipIdx !== -1){
-        if(dir === 'left' && chipIdx > 0) setModalFocus(chips[chipIdx - 1]);
-        else if(dir === 'right' && chipIdx < chips.length - 1) setModalFocus(chips[chipIdx + 1]);
-        else if(dir === 'up') setModalFocus(closeBtn);
-        else if(dir === 'down' && actionBtns.length > 0) setModalFocus(actionBtns[0]);
-        return;
+
+      // Penanganan khusus: Naik dari baris pertama seksi 1 langsung ke tombol Kembali di header
+      const curCard = modalFocusEl.closest ? modalFocusEl.closest('.store-item-card') : null;
+      const curGrid = curCard ? curCard.parentElement : null;
+      const isCurFirstRowBuiltin = curGrid && curGrid.id === 'storeGridBuiltin' &&
+        curGrid.firstElementChild && (curCard.offsetTop <= curGrid.firstElementChild.offsetTop + 10);
+
+      if(isCurFirstRowBuiltin && dir === 'up'){
+        const btnClose = document.getElementById('btnCloseThemeStore');
+        if(btnClose){
+          setModalFocus(btnClose);
+          return;
+        }
       }
-      const btnIdx = actionBtns.indexOf(modalFocusEl);
-      if(btnIdx !== -1){
-        const cards = [...m.querySelectorAll('.store-item-card')];
-        let colCount = 1;
-        if(cards.length > 1){
-          const firstTop = cards[0].offsetTop;
-          for(let c = 1; c < cards.length; c++){
-            if(cards[c].offsetTop === firstTop) colCount++; else break;
+
+      let bestEl = null;
+      let bestDist = Infinity;
+
+      for(const cand of list){
+        if(cand === modalFocusEl) continue;
+        const cr = cand.getBoundingClientRect();
+        if(cr.width === 0 || cr.height === 0) continue;
+        const kx = cr.left + cr.width / 2;
+        const ky = cr.top + cr.height / 2;
+
+        let isValid = false;
+        let dist = 0;
+
+        if(dir === 'right'){
+          if(kx > cx + 4){
+            isValid = true;
+            const dx = kx - cx;
+            const dy = Math.abs(ky - cy);
+            dist = dx + dy * 2.5;
+          }
+        } else if(dir === 'left'){
+          if(kx < cx - 4){
+            isValid = true;
+            const dx = cx - kx;
+            const dy = Math.abs(ky - cy);
+            dist = dx + dy * 2.5;
+          }
+        } else if(dir === 'down'){
+          if(ky > cy + 4){
+            isValid = true;
+            const dy = ky - cy;
+            const dx = Math.abs(kx - cx);
+            dist = dy + dx * 1.5;
+          }
+        } else if(dir === 'up'){
+          if(ky < cy - 4){
+            isValid = true;
+            const dy = cy - ky;
+            const dx = Math.abs(kx - cx);
+            dist = dy + dx * 1.5;
+            // Jika masih ada elemen konten di atas kursor, jangan prioritaskan tombol header close
+            if(cand.id === 'btnCloseThemeStore'){
+              dist += 1000;
+            }
           }
         }
-        colCount = Math.max(1, colCount);
-        if(dir === 'left' && btnIdx > 0) setModalFocus(actionBtns[btnIdx - 1]);
-        else if(dir === 'right' && btnIdx < actionBtns.length - 1) setModalFocus(actionBtns[btnIdx + 1]);
-        else if(dir === 'up'){
-          if(btnIdx - colCount >= 0) setModalFocus(actionBtns[btnIdx - colCount]);
-          else {
-            const activeChip = chips.find(c => c.classList.contains('active')) || chips[0];
-            setModalFocus(activeChip);
-          }
+
+        if(isValid && dist < bestDist){
+          bestDist = dist;
+          bestEl = cand;
         }
-        else if(dir === 'down'){
-          if(btnIdx + colCount < actionBtns.length) setModalFocus(actionBtns[btnIdx + colCount]);
-        }
-        return;
       }
+
+      if(bestEl) setModalFocus(bestEl);
+      return;
     }
 
     if(m.id === 'qrPaymentModal'){
@@ -3084,6 +3953,12 @@
     } else if(act === 'tcl_settings'){
       showToast('Membuka Setelan Gambar & Suara TCL…');
       bridgeOK('launchTclPictureAudioSettings', 'Gagal membuka setelan TCL');
+    } else if(act === 'select_theme'){
+      applyTheme(el.dataset.themeId, true);
+    } else if(act === 'toggle_seasonal'){
+      toggleSeasonalTheme();
+    } else if(act === 'theme_store'){
+      openThemeStoreModal();
     } else if(act === 'settings'){
       showToast('Membuka Pengaturan Sistem Android TV…');
       bridgeOK('launchSettings', 'Gagal membuka pengaturan sistem');
@@ -3179,12 +4054,31 @@
   // ============ IN-APP UPDATER ENGINE ============
   let pendingUpdateApkUrl = '';
   let pendingUpdateApkSizeMb = '?';
+  let currentInstalledVersion = '1.9.0';
+  window.isManualUpdateCheck = false;
+
+  function normalizeVer(v){
+    return String(v || '').replace(/^[vV]/, '').trim();
+  }
+
+  function isNewerVersion(latest, current){
+    const l = normalizeVer(latest).split('.').map(n => parseInt(n, 10) || 0);
+    const c = normalizeVer(current).split('.').map(n => parseInt(n, 10) || 0);
+    for(let i = 0; i < Math.max(l.length, c.length); i++){
+      const lNum = l[i] || 0;
+      const cNum = c[i] || 0;
+      if(lNum > cNum) return true;
+      if(lNum < cNum) return false;
+    }
+    return false;
+  }
 
   function initUpdaterVersionDisplay(){
     try {
       if(hasBridge('getAppVersionInfo')){
         const info = JSON.parse(window.TiltboxBridge.getAppVersionInfo());
-        const ver = info.versionName || '1.8.0';
+        const ver = info.versionName || '1.9.0';
+        currentInstalledVersion = ver;
         const elV = document.getElementById('valCurrentVersion');
         if(elV) elV.textContent = 'v' + ver;
         const elCur = document.getElementById('updateCurrentVer');
@@ -3194,6 +4088,7 @@
   }
 
   window.onUpdateCheckResult = function(info){
+    initUpdaterVersionDisplay();
     const latestTag = info.latestTag || '';
     const releaseName = info.releaseName || latestTag;
     const body = info.body || '';
@@ -3204,12 +4099,26 @@
     pendingUpdateApkSizeMb = apkSizeMb;
 
     const valStatus = document.getElementById('valUpdateStatus');
-    if(valStatus) valStatus.textContent = latestTag;
 
     if(!latestTag){
-      showToast('Tidak ada informasi rilis dari server');
+      if(valStatus) valStatus.textContent = 'Gagal';
+      if(window.isManualUpdateCheck) showToast('Tidak ada informasi rilis dari server');
+      window.isManualUpdateCheck = false;
       return;
     }
+
+    // Verifikasi apakah versi server benar-benar lebih baru dari versi terpasang
+    if(!isNewerVersion(latestTag, currentInstalledVersion)){
+      if(valStatus) valStatus.textContent = 'Terbaru (' + latestTag + ')';
+      if(window.isManualUpdateCheck){
+        showToast('✅ Anda sudah menggunakan versi terbaru (' + latestTag + ')');
+      }
+      window.isManualUpdateCheck = false;
+      return; // Versi sudah mutakhir, JANGAN buka modal update!
+    }
+
+    if(valStatus) valStatus.textContent = latestTag;
+    window.isManualUpdateCheck = false;
 
     const titleEl = document.getElementById('updateVersionTitle');
     if(titleEl) titleEl.textContent = releaseName;
@@ -3278,11 +4187,13 @@
   function checkForUpdates(){
     const valStatus = document.getElementById('valUpdateStatus');
     if(valStatus) valStatus.textContent = 'Memeriksa…';
+    window.isManualUpdateCheck = true;
     if(hasBridge('checkForAppUpdates')){
       window.TiltboxBridge.checkForAppUpdates();
     } else {
       showToast('🌐 Update check tersedia di TV asli');
       if(valStatus) valStatus.textContent = 'Periksa';
+      window.isManualUpdateCheck = false;
     }
   }
 
@@ -3317,6 +4228,7 @@
   // Auto-check update on boot (once, silently after 8 seconds)
   setTimeout(function(){
     initUpdaterVersionDisplay();
+    window.isManualUpdateCheck = false;
     if(hasBridge('checkForAppUpdates')){
       window.TiltboxBridge.checkForAppUpdates();
     }
@@ -3346,13 +4258,22 @@
   if(btnInstallEl) btnInstallEl.addEventListener('click', installDownloadedUpdate);
   const btnCloseStoreEl = document.getElementById('btnCloseThemeStore');
   if(btnCloseStoreEl) btnCloseStoreEl.addEventListener('click', closeAllModals);
+  const btnToggleSeasonalHubEl = document.getElementById('btnToggleSeasonalHub');
+  if(btnToggleSeasonalHubEl) btnToggleSeasonalHubEl.addEventListener('click', toggleSeasonalTheme);
   const btnCloseQrEl = document.getElementById('btnCloseQrPayment');
   if(btnCloseQrEl) btnCloseQrEl.addEventListener('click', closeQrPaymentModal);
   const btnApplyLicEl = document.getElementById('btnApplyLicense');
   if(btnApplyLicEl) btnApplyLicEl.addEventListener('click', unlockThemeWithCode);
-  document.querySelectorAll('.store-chip').forEach(btn => {
-    btn.addEventListener('click', () => { renderThemeStore(btn.dataset.filter); });
-  });
+  const storeModalEl = document.getElementById('themeStoreModal');
+  if(storeModalEl){
+    storeModalEl.addEventListener('wheel', e => {
+      const storeBody = storeModalEl.querySelector('.modal-body');
+      if(storeBody){
+        storeBody.scrollTop += e.deltaY;
+        if(storeBody.scrollTop < 24) storeBody.scrollTop = 0;
+      }
+    }, { passive: true });
+  }
   document.getElementById('btnCloseAllApps').addEventListener('click', closeAllModals);
 
   document.querySelectorAll('#customizerOptions .set-opt').forEach(btn => {
@@ -3410,9 +4331,8 @@
   // Segarkan jam & RAM segera saat kembali dari aplikasi lain
   document.addEventListener('visibilitychange', () => { if(!document.hidden){ tick(); updateRamStatus(); updateInputStatus(); requestWeather(false); } });
   setInterval(tick, 10000);
-  setInterval(() => { updateRamStatus(); updateInputStatus(); }, 15000);
+  setInterval(() => { updateRamStatus(); updateInputStatus(); }, 12000);
   setInterval(() => { if(!document.hidden) requestWeather(false); }, 5 * 60 * 1000);
-  setInterval(updateRamStatus, 8000);
   setTimeout(() => document.getElementById('hint').classList.add('hide'), 6000);
 </script>
 </body>

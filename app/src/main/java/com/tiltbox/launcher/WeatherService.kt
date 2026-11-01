@@ -197,7 +197,7 @@ object WeatherService {
             conn.readTimeout = 10_000
             conn.requestMethod = "GET"
             conn.setRequestProperty("Accept", "application/json")
-            conn.setRequestProperty("User-Agent", "TiltboxLauncher/1.7")
+            conn.setRequestProperty("User-Agent", "TiltboxLauncher/1.9")
             val code = conn.responseCode
             if (code !in 200..299) throw IOException("HTTP $code")
             val serverDateMs = conn.date
